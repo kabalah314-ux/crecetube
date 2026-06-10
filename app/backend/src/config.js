@@ -17,8 +17,9 @@ const localDbPath = resolve(ROOT, process.env.DB_PATH || "app/backend/data/crece
 
 export const cfg = {
   PORT: Number(process.env.PORT || 8001),
-  // libSQL/Turso: file: en local, libsql:// en producción (Vercel env: DB_URL + DB_AUTH_TOKEN).
-  DB_URL: process.env.DB_URL || `file:${localDbPath}`,
+  // libSQL/Turso: file: en local, libsql:// en producción. Acepta DB_URL/DB_AUTH_TOKEN
+  // o los nombres TURSO_* (los inyecta la integración de Turso en Vercel sin copiar nada).
+  DB_URL: process.env.DB_URL || process.env.TURSO_DATABASE_URL || `file:${localDbPath}`,
   DB_AUTH_TOKEN: process.env.DB_AUTH_TOKEN || process.env.TURSO_AUTH_TOKEN || "",
   LLM_API_KEY: process.env.LLM_API_KEY || "",
   LLM_PROVIDER: process.env.LLM_PROVIDER || "openrouter",
