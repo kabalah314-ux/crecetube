@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build -w app/frontend",
+  "outputDirectory": "app/frontend/dist",
+  "framework": null,
+  "functions": {
+    "api/index.mjs": {
+      "maxDuration": 60
+    }
+  },
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api" },
+    { "source": "/((?!assets/|favicon|.*\\.\\w+$).*)", "destination": "/index.html" }
+  ]
+}

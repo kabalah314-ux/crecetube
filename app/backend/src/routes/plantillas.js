@@ -9,16 +9,19 @@ const TIPOS = [
   "pantalla_final", "tarjeta", "checklist", "banner", "trailer",
 ];
 
-const get = (db, id) => {
-  const t = jparse(db.prepare("SELECT data FROM templates WHERE id=?").get(id));
+const get = async (db, id) => {
+  const t = jparse(await db.get("SELECT data FROM templates WHERE id=?", [id]));
   if (!t) throw notFound("Plantilla", "TEMPLATE_NOT_FOUND");
   return t;
 };
 
 const save = (db, t) =>
-  db.prepare("INSERT OR REPLACE INTO templates(id,data,tipo,esPrecargada) VALUES(?,?,?,?)").run(
-    t.id, JSON.stringify(t), t.tipo, t.esPrecargada ? 1 : 0
-  );
+  db.run("INSERT OR REPLACE INTO templates(id,data,tipo,esPrecargada) VALUES(?,?,?,?)", [
+    t.id,
+    JSON.stringify(t),
+    t.tipo,
+    t.esPrecargada ? 1 : 0,
+  ]);
 
 // Resuelve {variables}; las no provistas se quedan visibles como {nombre} (08 §8.6).
 export function aplicarVariables(contenido, variables = {}) {
@@ -32,14 +35,14 @@ export function aplicarVariables(contenido, variables = {}) {
 const router = Router();
 
 router.get("/", h(async (req, res) => {
-  let rows = req.app.locals.db.prepare("SELECT data FROM templates").all().map(jparse);
+  let rows = (await req.app.locals.db.all("SELECT data FROM templates")).map(jparse);
   if (req.query.tipo) rows = rows.filter((t) => t.tipo === req.query.tipo);
   rows.sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
   res.json(rows);
 }));
 
 router.get("/:id", h(async (req, res) => {
-  res.json(get(req.app.locals.db, req.params.id));
+  res.json(await get(req.app.locals.db, req.params.id));
 }));
 
 router.post("/", h(async (req, res) => {
@@ -47,7 +50,7 @@ router.post("/", h(async (req, res) => {
   const { nombre, tipo, contenido, variablesDinamicas, seccionRelacionadaId, duplicaDe } = req.body ?? {};
 
   if (duplicaDe) {
-    const orig = get(db, duplicaDe);
+    const orig = await get(db, duplicaDe);
     const copia = {
       ...structuredClone(orig),
       id: uuid(),
@@ -57,7 +60,7 @@ router.post("/", h(async (req, res) => {
       createdAt: nowIso(),
       updatedAt: nowIso(),
     };
-    save(db, copia);
+    await save(db, copia);
     return res.status(201).json(copia);
   }
 
@@ -75,13 +78,13 @@ router.post("/", h(async (req, res) => {
     createdAt: nowIso(),
     updatedAt: nowIso(),
   };
-  save(db, t);
+  await save(db, t);
   res.status(201).json(t);
 }));
 
 router.patch("/:id", h(async (req, res) => {
   const db = req.app.locals.db;
-  const t = get(db, req.params.id);
+  const t = await get(db, req.params.id);
   if (!t.esEditable) throw new ApiError("TEMPLATE_NOT_EDITABLE", 403, "Las plantillas precargadas no se editan: duplícala");
   const { nombre, contenido, variablesDinamicas, seccionRelacionadaId, tipo } = req.body ?? {};
   if (nombre !== undefined) t.nombre = nombre;
@@ -90,25 +93,25 @@ router.patch("/:id", h(async (req, res) => {
   if (seccionRelacionadaId !== undefined) t.seccionRelacionadaId = seccionRelacionadaId;
   if (tipo !== undefined && TIPOS.includes(tipo)) t.tipo = tipo;
   t.updatedAt = nowIso();
-  save(db, t);
+  await save(db, t);
   res.json(t);
 }));
 
 router.delete("/:id", h(async (req, res) => {
   const db = req.app.locals.db;
-  const t = get(db, req.params.id);
+  const t = await get(db, req.params.id);
   if (t.esPrecargada) throw new ApiError("TEMPLATE_NOT_EDITABLE", 403, "Las plantillas precargadas no se eliminan");
-  db.prepare("DELETE FROM templates WHERE id=?").run(t.id);
+  await db.run("DELETE FROM templates WHERE id=?", [t.id]);
   res.json({ ok: true, id: t.id });
 }));
 
 router.post("/:id/aplicar", h(async (req, res) => {
-  const t = get(req.app.locals.db, req.params.id);
+  const t = await get(req.app.locals.db, req.params.id);
   res.json({ texto: aplicarVariables(t.contenido, req.body?.variables ?? {}) });
 }));
 
 router.get("/:id/descargar", h(async (req, res) => {
-  const t = get(req.app.locals.db, req.params.id);
+  const t = await get(req.app.locals.db, req.params.id);
   const formato = req.query.formato ?? "md";
   if (formato === "pdf")
     throw new ApiError("VALIDATION_ERROR", 422, "PDF disponible en fase 2; usa md o txt (08 §8.6)");

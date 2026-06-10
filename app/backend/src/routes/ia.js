@@ -12,7 +12,7 @@ const esFree = (modelo) => modelo === "openrouter/free" || modelo?.endsWith(":fr
 const router = Router();
 
 router.post("/test-conexion", h(async (req, res) => {
-  const profile = getProfileRow(req.app.locals.db);
+  const profile = await getProfileRow(req.app.locals.db);
   const override = req.body?.iaConfig;
   const iaCfg = resolveIaConfig(override ? { iaConfig: { ...profile?.iaConfig, ...override } } : profile);
   res.json(await testConexion(iaCfg));
@@ -24,18 +24,16 @@ router.post("/generar", h(async (req, res) => {
   const gen = GENERADORES[tipo];
   if (!gen) throw new ApiError("VALIDATION_ERROR", 422, `Generador desconocido: ${tipo}`);
 
-  const profile = getProfileRow(db);
+  const profile = await getProfileRow(db);
   const iaCfg = resolveIaConfig(profile);
 
   const video = videoProjectId
-    ? jparse(db.prepare("SELECT data FROM videos WHERE id=?").get(videoProjectId))
+    ? jparse(await db.get("SELECT data FROM videos WHERE id=?", [videoProjectId]))
     : null;
 
   // contexto extra para analisis_retencion: snapshots serializados (04 §4.6.9)
   if (tipo === "analisis_retencion" && video) {
-    const snaps = db
-      .prepare("SELECT data FROM metric_snapshots WHERE videoProjectId=? ORDER BY fecha")
-      .all(video.id)
+    const snaps = (await db.all("SELECT data FROM metric_snapshots WHERE videoProjectId=? ORDER BY fecha", [video.id]))
       .map(jparse)
       .map((s) => `${s.fecha} (día ${s.diasDesdePublicacion}): vistas ${s.vistas}, CTR ${s.ctr}%, retención ${s.retencionMediaPct}%, dur.media ${s.duracionMediaSeg}s`)
       .join("\n");
@@ -78,13 +76,13 @@ router.post("/generar", h(async (req, res) => {
     costoEstimado: esFree(r.modeloUsado) || esFree(iaCfg.modelo) ? 0 : null,
     createdAt: nowIso(),
   };
-  db.prepare("INSERT INTO ai_interactions(id,data,videoProjectId,tipo,createdAt) VALUES(?,?,?,?,?)").run(
+  await db.run("INSERT INTO ai_interactions(id,data,videoProjectId,tipo,createdAt) VALUES(?,?,?,?,?)", [
     interaction.id,
     JSON.stringify(interaction),
     interaction.videoProjectId,
     tipo,
-    interaction.createdAt
-  );
+    interaction.createdAt,
+  ]);
 
   res.json({ interactionId: interaction.id, resultados, parseFallido });
 }));
@@ -92,7 +90,7 @@ router.post("/generar", h(async (req, res) => {
 router.get("/historial", h(async (req, res) => {
   const db = req.app.locals.db;
   const { videoProjectId, tipo, limit = 20 } = req.query;
-  let rows = db.prepare("SELECT data FROM ai_interactions ORDER BY createdAt DESC").all().map(jparse);
+  let rows = (await db.all("SELECT data FROM ai_interactions ORDER BY createdAt DESC")).map(jparse);
   if (videoProjectId) rows = rows.filter((x) => x.videoProjectId === videoProjectId);
   if (tipo) rows = rows.filter((x) => x.tipo === tipo);
   res.json(rows.slice(0, Number(limit)));
@@ -100,10 +98,10 @@ router.get("/historial", h(async (req, res) => {
 
 router.patch("/historial/:id", h(async (req, res) => {
   const db = req.app.locals.db;
-  const row = jparse(db.prepare("SELECT data FROM ai_interactions WHERE id=?").get(req.params.id));
+  const row = jparse(await db.get("SELECT data FROM ai_interactions WHERE id=?", [req.params.id]));
   if (!row) throw notFound("Interacción", "VALIDATION_ERROR");
   if (typeof req.body?.seleccionUsuario === "string") row.seleccionUsuario = req.body.seleccionUsuario;
-  db.prepare("UPDATE ai_interactions SET data=? WHERE id=?").run(JSON.stringify(row), row.id);
+  await db.run("UPDATE ai_interactions SET data=? WHERE id=?", [JSON.stringify(row), row.id]);
   res.json(row);
 }));
 

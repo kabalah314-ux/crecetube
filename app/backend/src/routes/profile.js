@@ -9,7 +9,7 @@ const NIVELES = ["principiante", "intermedio", "avanzado"];
 const FRECUENCIAS = ["diaria", "2x_semana", "semanal", "quincenal", "mensual"];
 const OBJETIVOS = ["suscriptores", "monetizacion", "influencia", "ventas", "diversion"];
 
-export const getProfileRow = (db) => jparse(db.prepare("SELECT data FROM profile LIMIT 1").get());
+export const getProfileRow = async (db) => jparse(await db.get("SELECT data FROM profile LIMIT 1"));
 
 export const maskProfile = (p) => ({
   ...p,
@@ -27,20 +27,20 @@ function validate(body, errors) {
 const router = Router();
 
 router.get("/", h(async (req, res) => {
-  const p = getProfileRow(req.app.locals.db);
+  const p = await getProfileRow(req.app.locals.db);
   if (!p) throw new ApiError("PROFILE_NOT_FOUND", 404, "No hay perfil aún");
   res.json(maskProfile(p));
 }));
 
 router.get("/ia-status", h(async (req, res) => {
-  const p = getProfileRow(req.app.locals.db);
+  const p = await getProfileRow(req.app.locals.db);
   const ia = p?.iaConfig ?? {};
   res.json({ configured: Boolean(ia.apiKey || cfg.LLM_API_KEY), provider: ia.proveedor || cfg.LLM_PROVIDER });
 }));
 
 router.post("/", h(async (req, res) => {
   const db = req.app.locals.db;
-  if (getProfileRow(db)) throw new ApiError("PROFILE_ALREADY_EXISTS", 409, "El perfil ya existe");
+  if (await getProfileRow(db)) throw new ApiError("PROFILE_ALREADY_EXISTS", 409, "El perfil ya existe");
   const errors = [];
   validate(req.body ?? {}, errors);
   if (errors.length) throw new ApiError("VALIDATION_ERROR", 422, "Datos de perfil inválidos", errors);
@@ -72,13 +72,13 @@ router.post("/", h(async (req, res) => {
   );
   profile.createdAt = now;
   profile.updatedAt = now;
-  db.prepare("INSERT INTO profile(id,data) VALUES(?,?)").run(profile.id, JSON.stringify(profile));
+  await db.run("INSERT INTO profile(id,data) VALUES(?,?)", [profile.id, JSON.stringify(profile)]);
   res.status(201).json(maskProfile(profile));
 }));
 
 router.patch("/", h(async (req, res) => {
   const db = req.app.locals.db;
-  const current = getProfileRow(db);
+  const current = await getProfileRow(db);
   if (!current) throw new ApiError("PROFILE_NOT_FOUND", 404, "No hay perfil aún");
 
   const patch = structuredClone(req.body ?? {});
@@ -94,7 +94,7 @@ router.patch("/", h(async (req, res) => {
   validate(updated, errors);
   if (errors.length) throw new ApiError("VALIDATION_ERROR", 422, "Datos de perfil inválidos", errors);
 
-  db.prepare("UPDATE profile SET data=? WHERE id=?").run(JSON.stringify(updated), updated.id);
+  await db.run("UPDATE profile SET data=? WHERE id=?", [JSON.stringify(updated), updated.id]);
   res.json(maskProfile(updated));
 }));
 

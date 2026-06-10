@@ -3,8 +3,8 @@ import { useRef, useState } from "react";
 import { Upload, Eye } from "lucide-react";
 import { AiBlock } from "../AiBlock";
 import { useStore } from "../../store/useStore";
+import { fileToThumbnailDataUrl } from "../../services/image";
 import type { StepProps } from "./types";
-import type { VideoProject } from "../../types";
 
 const ESTRATEGIAS = ["SEOmarco", "SEOcara", "SEOflecha", "otra"] as const;
 const TIPOS_OK = ["image/jpeg", "image/png", "image/webp"];
@@ -21,21 +21,17 @@ export function StepMiniatura({ video, patch }: StepProps) {
       toast("error", "Formato no válido: usa JPG, PNG o WebP");
       return;
     }
-    if (file.size > 2 * 1024 * 1024) {
-      toast("info", "Ojo: YouTube no acepta miniaturas de más de 2MB. La guardo igualmente.");
-    }
     setSubiendo(true);
     try {
-      const res = await fetch(`/api/videos/${video.id}/miniatura${alternativa ? "?alternativa=1" : ""}`, {
-        method: "POST",
-        headers: { "Content-Type": file.type },
-        body: file,
-      });
-      if (!res.ok) throw new Error();
-      const { video: actualizado } = (await res.json()) as { video: VideoProject };
-      patch({ miniatura: actualizado.miniatura });
+      // Reescala a data-URL ligero y lo guarda en el VideoProject (autosave lo persiste).
+      const dataUrl = await fileToThumbnailDataUrl(file);
+      if (alternativa) {
+        patch({ miniatura: { ...video.miniatura, urlsAlternativas: [...video.miniatura.urlsAlternativas, dataUrl] } });
+      } else {
+        patch({ miniatura: { ...video.miniatura, urlPrincipal: dataUrl } });
+      }
     } catch {
-      toast("error", "No se pudo subir la imagen");
+      toast("error", "No se pudo procesar la imagen");
     } finally {
       setSubiendo(false);
     }

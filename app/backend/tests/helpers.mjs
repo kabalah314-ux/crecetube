@@ -10,7 +10,8 @@ const { createApp } = await import("../src/server.js");
 
 export async function boot() {
   const dir = mkdtempSync(join(tmpdir(), "crecetube-test-"));
-  const app = createApp({ dbPath: join(dir, "test.db") });
+  const dbUrl = "file:" + join(dir, "test.db").replace(/\\/g, "/");
+  const app = await createApp({ dbUrl });
   const srv = app.listen(0);
   await once(srv, "listening");
   const base = `http://127.0.0.1:${srv.address().port}`;

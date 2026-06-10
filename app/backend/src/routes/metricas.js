@@ -6,11 +6,11 @@ import { nowIso, uuid } from "../util.js";
 
 const router = Router();
 
-const snapsDe = (db, videoId) =>
-  db.prepare("SELECT data FROM metric_snapshots WHERE videoProjectId=? ORDER BY fecha").all(videoId).map(jparse);
+const snapsDe = async (db, videoId) =>
+  (await db.all("SELECT data FROM metric_snapshots WHERE videoProjectId=? ORDER BY fecha", [videoId])).map(jparse);
 
-const ultimoSnapPorVideo = (db) => {
-  const todos = db.prepare("SELECT data FROM metric_snapshots ORDER BY fecha").all().map(jparse);
+const ultimoSnapPorVideo = async (db) => {
+  const todos = (await db.all("SELECT data FROM metric_snapshots ORDER BY fecha")).map(jparse);
   const ultimo = new Map();
   for (const s of todos) ultimo.set(s.videoProjectId, s); // ordenados asc → queda el último
   return ultimo;
@@ -29,7 +29,7 @@ function validarSnapshot(body) {
 
 router.get("/resumen", h(async (req, res) => {
   const db = req.app.locals.db;
-  const ultimos = [...ultimoSnapPorVideo(db).values()];
+  const ultimos = [...(await ultimoSnapPorVideo(db)).values()];
   const n = ultimos.length;
   const suma = (f) => ultimos.reduce((a, s) => a + (Number(f(s)) || 0), 0);
   res.json({
@@ -44,9 +44,9 @@ router.get("/resumen", h(async (req, res) => {
 
 router.get("/insights", h(async (req, res) => {
   const db = req.app.locals.db;
-  const ultimos = ultimoSnapPorVideo(db);
+  const ultimos = await ultimoSnapPorVideo(db);
   const videos = new Map(
-    db.prepare("SELECT data FROM videos").all().map(jparse).map((v) => [v.id, v])
+    (await db.all("SELECT data FROM videos")).map(jparse).map((v) => [v.id, v])
   );
   const insights = [];
   let mejorCtr = null;
@@ -67,7 +67,7 @@ router.get("/insights", h(async (req, res) => {
       texto: `“${nombre(peorRet.vid)}” retiene solo el ${peorRet.s.retencionMediaPct}%: revisa el gancho de los primeros 15s y añade roturas de patrón (s9).`,
     });
   for (const [vid, s] of ultimos) {
-    const serie = snapsDe(db, vid);
+    const serie = await snapsDe(db, vid);
     if (serie.length >= 2) {
       const v0 = serie[0].velocidadVisualizacion;
       const v1 = serie.at(-1).velocidadVisualizacion;
@@ -81,7 +81,7 @@ router.get("/insights", h(async (req, res) => {
 }));
 
 router.get("/video/:videoId", h(async (req, res) => {
-  res.json(snapsDe(req.app.locals.db, req.params.videoId));
+  res.json(await snapsDe(req.app.locals.db, req.params.videoId));
 }));
 
 router.post("/snapshot", h(async (req, res) => {
@@ -90,7 +90,7 @@ router.post("/snapshot", h(async (req, res) => {
   const errors = validarSnapshot(body);
   if (errors.length) throw new ApiError("VALIDATION_ERROR", 422, "Snapshot inválido", errors);
 
-  const video = jparse(db.prepare("SELECT data FROM videos WHERE id=?").get(body.videoProjectId));
+  const video = jparse(await db.get("SELECT data FROM videos WHERE id=?", [body.videoProjectId]));
   if (!video) throw notFound("Vídeo", "VIDEO_NOT_FOUND");
 
   const fecha = body.fecha.slice(0, 10);
@@ -121,9 +121,9 @@ router.post("/snapshot", h(async (req, res) => {
   };
 
   try {
-    db.prepare("INSERT INTO metric_snapshots(id,data,videoProjectId,fecha) VALUES(?,?,?,?)").run(
-      snap.id, JSON.stringify(snap), snap.videoProjectId, snap.fecha
-    );
+    await db.run("INSERT INTO metric_snapshots(id,data,videoProjectId,fecha) VALUES(?,?,?,?)", [
+      snap.id, JSON.stringify(snap), snap.videoProjectId, snap.fecha,
+    ]);
   } catch (e) {
     if (String(e.message).includes("UNIQUE"))
       throw new ApiError("DUPLICATE_SNAPSHOT", 409, `Ya hay un snapshot de ese vídeo con fecha ${fecha}`);
@@ -132,27 +132,27 @@ router.post("/snapshot", h(async (req, res) => {
 
   video.metricasIds.push(snap.id);
   video.updatedAt = nowIso();
-  db.prepare("UPDATE videos SET data=?, updatedAt=? WHERE id=?").run(JSON.stringify(video), video.updatedAt, video.id);
+  await db.run("UPDATE videos SET data=?, updatedAt=? WHERE id=?", [JSON.stringify(video), video.updatedAt, video.id]);
 
   res.status(201).json(snap);
 }));
 
 router.patch("/snapshot/:id", h(async (req, res) => {
   const db = req.app.locals.db;
-  const snap = jparse(db.prepare("SELECT data FROM metric_snapshots WHERE id=?").get(req.params.id));
+  const snap = jparse(await db.get("SELECT data FROM metric_snapshots WHERE id=?", [req.params.id]));
   if (!snap) throw notFound("Snapshot", "SNAPSHOT_NOT_FOUND");
   const campos = ["vistas", "impresiones", "ctr", "retencionMediaPct", "duracionMediaSeg", "suscriptoresGanados", "comentarios", "likes", "ingresosEstimados", "rpm", "notas", "diasDesdePublicacion"];
   for (const k of campos) if (req.body?.[k] !== undefined) snap[k] = req.body[k];
   if (snap.ctr < 0 || snap.ctr > 100) throw new ApiError("VALIDATION_ERROR", 422, "ctr debe ser 0-100");
   snap.velocidadVisualizacion = Number((snap.vistas / Math.max(snap.diasDesdePublicacion, 1)).toFixed(2));
-  db.prepare("UPDATE metric_snapshots SET data=? WHERE id=?").run(JSON.stringify(snap), snap.id);
+  await db.run("UPDATE metric_snapshots SET data=? WHERE id=?", [JSON.stringify(snap), snap.id]);
   res.json(snap);
 }));
 
 router.delete("/snapshot/:id", h(async (req, res) => {
   const db = req.app.locals.db;
-  const r = db.prepare("DELETE FROM metric_snapshots WHERE id=?").run(req.params.id);
-  if (!r.changes) throw notFound("Snapshot", "SNAPSHOT_NOT_FOUND");
+  const r = await db.run("DELETE FROM metric_snapshots WHERE id=?", [req.params.id]);
+  if (!r.rowsAffected) throw notFound("Snapshot", "SNAPSHOT_NOT_FOUND");
   res.json({ ok: true });
 }));
 

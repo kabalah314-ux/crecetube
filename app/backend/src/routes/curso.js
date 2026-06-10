@@ -7,11 +7,11 @@ import { nowIso, uuid } from "../util.js";
 const router = Router();
 
 router.get("/estructura", h(async (req, res) => {
-  res.json(getCourseStructure(req.app.locals.db));
+  res.json(await getCourseStructure(req.app.locals.db));
 }));
 
 router.get("/progreso", h(async (req, res) => {
-  const rows = req.app.locals.db.prepare("SELECT data FROM course_progress").all();
+  const rows = await req.app.locals.db.all("SELECT data FROM course_progress");
   res.json(rows.map(jparse));
 }));
 
@@ -19,11 +19,11 @@ router.patch("/progreso/:asignaturaId", h(async (req, res) => {
   const db = req.app.locals.db;
   const { asignaturaId } = req.params;
 
-  const estructura = getCourseStructure(db);
+  const estructura = await getCourseStructure(db);
   const seccion = estructura.secciones.find((s) => s.asignaturas.some((a) => a.id === asignaturaId));
   if (!seccion) throw new ApiError("VALIDATION_ERROR", 422, `Asignatura desconocida: ${asignaturaId}`);
 
-  const actual = jparse(db.prepare("SELECT data FROM course_progress WHERE asignaturaId=?").get(asignaturaId)) ?? {
+  const actual = jparse(await db.get("SELECT data FROM course_progress WHERE asignaturaId=?", [asignaturaId])) ?? {
     id: uuid(),
     asignaturaId,
     seccionId: seccion.id,
@@ -44,10 +44,10 @@ router.patch("/progreso/:asignaturaId", h(async (req, res) => {
   }
   if (Array.isArray(vinculadoAVideoIds)) actual.vinculadoAVideoIds = vinculadoAVideoIds;
 
-  db.prepare("INSERT OR REPLACE INTO course_progress(asignaturaId,data) VALUES(?,?)").run(
+  await db.run("INSERT OR REPLACE INTO course_progress(asignaturaId,data) VALUES(?,?)", [
     asignaturaId,
-    JSON.stringify(actual)
-  );
+    JSON.stringify(actual),
+  ]);
   res.json(actual);
 }));
 

@@ -1,9 +1,11 @@
-// db.js — SQLite estilo documental (08 §8.1): columna data JSON + columnas indexables.
-import Database from "better-sqlite3";
-import { mkdirSync, readFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
-import { cfg } from "./config.js";
+// db.js — libSQL/Turso (compatible SQLite). Local: file: URL. Producción: libsql:// + token.
+// Los seeds se importan estáticamente para que el bundler de Vercel los incluya en la función.
+import { createClient } from "@libsql/client";
+import { mkdirSync } from "node:fs";
+import { dirname } from "node:path";
 import { nowIso } from "./util.js";
+import cursoSeed from "../../guia_maestra/07_curso_seed.json" with { type: "json" };
+import plantillasSeed from "../../guia_maestra/05_plantillas_seed.json" with { type: "json" };
 
 const SCHEMA = `
 CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -46,42 +48,71 @@ CREATE TABLE IF NOT EXISTS metric_snapshots (
 
 export const jparse = (row) => (row ? JSON.parse(row.data) : null);
 
-const getMeta = (db, key) => db.prepare("SELECT value FROM meta WHERE key=?").get(key)?.value;
-const setMeta = (db, key, value) =>
-  db.prepare("INSERT OR REPLACE INTO meta(key,value) VALUES(?,?)").run(key, value);
+// Crea un cliente libSQL y un helper async ergonómico ({get,all,run,batch,exec}).
+// Cada llamada a makeDb es independiente (los tests crean varias instancias).
+export function makeDb(url, authToken) {
+  if (url.startsWith("file:")) {
+    try {
+      mkdirSync(dirname(url.slice("file:".length)), { recursive: true });
+    } catch {
+      /* la carpeta ya existe */
+    }
+  }
+  const client = createClient(url.startsWith("file:") ? { url } : { url, authToken });
+  return {
+    client,
+    async get(sql, args = []) {
+      return (await client.execute({ sql, args })).rows[0] ?? null;
+    },
+    async all(sql, args = []) {
+      return (await client.execute({ sql, args })).rows;
+    },
+    async run(sql, args = []) {
+      return client.execute({ sql, args });
+    },
+    async batch(stmts) {
+      return client.batch(stmts, "write");
+    },
+    async exec(sqlText) {
+      return client.executeMultiple(sqlText);
+    },
+  };
+}
+
+const getMeta = async (db, key) => (await db.get("SELECT value FROM meta WHERE key=?", [key]))?.value;
+const setMeta = (db, key, value) => db.run("INSERT OR REPLACE INTO meta(key,value) VALUES(?,?)", [key, value]);
 
 // Carga de seeds con versionado no destructivo (03 §3.3.5).
-function seed(db) {
-  const curso = JSON.parse(readFileSync(resolve(cfg.SEEDS_DIR, "07_curso_seed.json"), "utf8"));
-  if (curso.version > Number(getMeta(db, "courseSeedVersion") ?? 0)) {
-    setMeta(db, "courseStructure", JSON.stringify(curso));
-    setMeta(db, "courseSeedVersion", String(curso.version));
+async function seed(db) {
+  if (cursoSeed.version > Number((await getMeta(db, "courseSeedVersion")) ?? 0)) {
+    await setMeta(db, "courseStructure", JSON.stringify(cursoSeed));
+    await setMeta(db, "courseSeedVersion", String(cursoSeed.version));
   }
 
-  const tpls = JSON.parse(readFileSync(resolve(cfg.SEEDS_DIR, "05_plantillas_seed.json"), "utf8"));
-  if (tpls.version > Number(getMeta(db, "templatesSeedVersion") ?? 0)) {
-    const sel = db.prepare("SELECT data FROM templates WHERE id=?");
-    const up = db.prepare("INSERT OR REPLACE INTO templates(id,data,tipo,esPrecargada) VALUES(?,?,?,1)");
+  if (plantillasSeed.version > Number((await getMeta(db, "templatesSeedVersion")) ?? 0)) {
     const now = nowIso();
-    db.transaction(() => {
-      for (const p of tpls.plantillas) {
-        const prev = jparse(sel.get(p.id));
-        up.run(p.id, JSON.stringify({ ...p, createdAt: prev?.createdAt ?? now, updatedAt: now }), p.tipo);
-      }
-      setMeta(db, "templatesSeedVersion", String(tpls.version));
-    })();
+    const stmts = [];
+    for (const p of plantillasSeed.plantillas) {
+      const prev = jparse(await db.get("SELECT data FROM templates WHERE id=?", [p.id]));
+      stmts.push({
+        sql: "INSERT OR REPLACE INTO templates(id,data,tipo,esPrecargada) VALUES(?,?,?,1)",
+        args: [p.id, JSON.stringify({ ...p, createdAt: prev?.createdAt ?? now, updatedAt: now }), p.tipo],
+      });
+    }
+    stmts.push({
+      sql: "INSERT OR REPLACE INTO meta(key,value) VALUES(?,?)",
+      args: ["templatesSeedVersion", String(plantillasSeed.version)],
+    });
+    await db.batch(stmts);
   }
 }
 
-export function openDb(dbPath = cfg.DB_PATH) {
-  mkdirSync(dirname(dbPath), { recursive: true });
-  const db = new Database(dbPath);
-  db.pragma("journal_mode = WAL");
-  db.exec(SCHEMA);
-  seed(db);
-  return db;
+// Inicializa esquema + seeds. Idempotente (seguro en cada arranque/cold-start serverless).
+export async function initDb(db) {
+  await db.exec(SCHEMA);
+  await seed(db);
 }
 
-export function getCourseStructure(db) {
-  return JSON.parse(getMeta(db, "courseStructure"));
+export async function getCourseStructure(db) {
+  return JSON.parse(await getMeta(db, "courseStructure"));
 }
