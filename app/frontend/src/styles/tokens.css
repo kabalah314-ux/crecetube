@@ -1,0 +1,149 @@
+/* tokens.css — Sistema de diseño 06_DISENO_UI.md. NO tocar valores sin tocar la guía. */
+
+:root {
+  /* ---- Tema oscuro (defecto, 06 §6.2.1) ---- */
+  --bg-base: #0f0e0c;
+  --bg-elevated: #19170f;
+  --bg-overlay: #1f1c12;
+  --bg-input: #14120c;
+
+  --text-primary: #f5efe0;
+  --text-secondary: #b8b0a0;
+  --text-tertiary: #7a7466;
+  --text-disabled: #4a463c;
+
+  --border-subtle: #2a271e;
+  --border-strong: #423e32;
+
+  --accent-primary: #e94f37;
+  --accent-hover: #f26b55;
+  --accent-active: #c73e29;
+
+  --accent-gold: #e5b454;
+  --accent-mint: #6fbfa5;
+  --accent-coral: #f08c7a;
+  --accent-rust: #d9614a;
+
+  --shadow-card: 0 6px 24px rgba(0, 0, 0, 0.45);
+  --shadow-modal: 0 12px 60px rgba(0, 0, 0, 0.65);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 12px 36px rgba(0, 0, 0, 0.4);
+
+  /* ---- Familias de estrategias (constantes en ambos temas, 06 §6.2.3) ---- */
+  --family-miniaturas: #e94f37;
+  --family-titulos: #e78a3c;
+  --family-tematicas: #5a8fc9;
+  --family-canal: #6fae73;
+  --family-video: #a87cc2;
+  --family-descripcion: #4db5c4;
+  --family-listas: #d9b441;
+  --family-tarjetas: #d77ba1;
+  --family-comunidad: #5bb6a3;
+  --family-crossplatform: #8a8a8a;
+  --family-directos: #9f4a4f;
+  --family-emails: #c77e59;
+  --family-monetizacion: #c99838;
+  --family-mentalidad: #7a9686;
+  --family-analitica: #6e8aad;
+  --family-pasos: #bfa47a;
+
+  /* ---- Estados de VideoProject (06 §6.2.4) ---- */
+  --state-idea: #b8b0a0;
+  --state-investigacion: #5a8fc9;
+  --state-guion: #a87cc2;
+  --state-grabacion: #e78a3c;
+  --state-edicion: #d9b441;
+  --state-publicado: #6fae73;
+  --state-optimizacion: #4db5c4;
+  --state-archivado: #7a7466;
+
+  /* ---- Tipografía (06 §6.3) ---- */
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body: "Manrope", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Menlo", monospace;
+
+  --text-xs: 12px;
+  --lh-xs: 16px;
+  --text-sm: 14px;
+  --lh-sm: 20px;
+  --text-base: 16px;
+  --lh-base: 24px;
+  --text-lg: 18px;
+  --lh-lg: 26px;
+  --text-xl: 22px;
+  --lh-xl: 30px;
+  --text-2xl: 28px;
+  --lh-2xl: 36px;
+  --text-3xl: 36px;
+  --lh-3xl: 44px;
+  --text-4xl: 48px;
+  --lh-4xl: 56px;
+  --text-5xl: 64px;
+  --lh-5xl: 72px;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-bold: 700;
+  --weight-black: 900;
+
+  /* ---- Espaciado (06 §6.4) ---- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  /* ---- Radios y bordes (06 §6.5) ---- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+  --border-thin: 1px;
+  --border-thick: 2px;
+
+  /* ---- Layout ---- */
+  --sidebar-w: 240px;
+  --wizard-maxw: 800px;
+  --context-w: 320px;
+  --content-maxw: 1280px;
+
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  /* ---- Tema claro (06 §6.2.2) ---- */
+  --bg-base: #faf7f1;
+  --bg-elevated: #ffffff;
+  --bg-overlay: #f2ede3;
+  --bg-input: #ffffff;
+
+  --text-primary: #1a1814;
+  --text-secondary: #5c5648;
+  --text-tertiary: #8c8676;
+  --text-disabled: #c9c4b4;
+
+  --border-subtle: #e6e0d2;
+  --border-strong: #c9c4b4;
+
+  --accent-primary: #d6442a;
+  --accent-hover: #e94f37;
+  --accent-active: #b83723;
+
+  --accent-gold: #c99838;
+  --accent-mint: #4a9b82;
+  --accent-coral: #e07b6a;
+  --accent-rust: #c04b36;
+
+  --shadow-card: 0 4px 16px rgba(60, 40, 20, 0.12);
+  --shadow-modal: 0 12px 40px rgba(60, 40, 20, 0.25);
+  --shadow-sm: 0 1px 2px rgba(60, 40, 20, 0.08);
+  --shadow-md: 0 4px 12px rgba(60, 40, 20, 0.1);
+  --shadow-lg: 0 12px 36px rgba(60, 40, 20, 0.18);
+
+  color-scheme: light;
+}

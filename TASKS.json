@@ -1,0 +1,99 @@
+{
+  "proyecto": "CRECETUBE Assistant",
+  "version": "1.0",
+  "ultima_actualizacion": "2026-06-10",
+  "resumen": {
+    "total": 7,
+    "pendientes": 0,
+    "en_progreso": 0,
+    "completadas": 7,
+    "bloqueadas": 0,
+    "tokens_estimados_totales": 0
+  },
+  "tareas": [
+    {
+      "id": "T001",
+      "titulo": "Completar Guía Maestra",
+      "descripcion": "Escribir los archivos faltantes de la guía maestra: 02_FLUJOS_Y_UX.md, 04_MODULO_IA.md, 07_ESQUELETO_CURSO.md, 07_curso_seed.json, 08_ROADMAP_Y_TESTS.md, 09_PROMPTS_CLAUDE_CODE.md",
+      "fase": "documentación",
+      "prioridad": "alta",
+      "estado": "completada",
+      "depende_de": null,
+      "tokens_estimados": "alto",
+      "complejidad": "alta",
+      "resultado": "Kit 00-09 completo + seeds JSON generados por script (20 secciones/169 asignaturas, 25 plantillas) + stack fijado React+Vite+TS/Express/SQLite + IA OpenRouter modelo gratuito + coherencia (00/01/05/.env/init.sh)"
+    },
+    {
+      "id": "T002",
+      "titulo": "Sprint 1: Fundación y Onboarding",
+      "descripcion": "Inicializar el proyecto, configurar base de datos, implementar onboarding, barra lateral, rutas y tema claro/oscuro",
+      "fase": "desarrollo",
+      "prioridad": "alta",
+      "estado": "completada",
+      "depende_de": "T001",
+      "tokens_estimados": "alto",
+      "complejidad": "media",
+      "resultado": "Monorepo workspaces + backend Express/SQLite con seeds y API de perfil + frontend React/Vite con tokens 06, layout, 14 rutas, tema y onboarding 9 pasos. Verificado: 9/9 tests, tsc, build, init.sh 'Proyecto listo', smoke OK"
+    },
+    {
+      "id": "T003",
+      "titulo": "Sprint 2: Wizard Core",
+      "descripcion": "Implementar el stepper y las etapas 1 a 5 del wizard con autoguardado debounced y checklists",
+      "fase": "desarrollo",
+      "prioridad": "alta",
+      "estado": "completada",
+      "depende_de": "T002",
+      "tokens_estimados": "alto",
+      "complejidad": "media",
+      "resultado": "API vídeos completa (CRUD+merge+checklist+estados+duplicar+soft delete+miniatura upload, 21 tests) + wizard data-driven (config 10 etapas), autosave 800ms con reintentos, checklists auto/manual, etapas 1-5, lista con filtros, creación perezosa. tsc+build verdes"
+    },
+    {
+      "id": "T004",
+      "titulo": "Sprint 3: Wizard Completo + Dashboard",
+      "descripcion": "Implementar etapas 6 a 10 del wizard, dashboard de resumen, lista de videos con filtros y detalle de video",
+      "fase": "desarrollo",
+      "prioridad": "alta",
+      "estado": "completada",
+      "depende_de": "T003",
+      "tokens_estimados": "alto",
+      "complejidad": "media",
+      "resultado": "Etapas 6-10 (publicación acordeón con validaciones+Marcar PUBLICADO+confetti propio; sprint con día N y difusión; evergreen con glosario y banner 30d) + dashboard con KPIs y continuar + detalle con estado manual/duplicar/eliminar+Deshacer. tsc+build verdes"
+    },
+    {
+      "id": "T005",
+      "titulo": "Sprint 4: Curso Embebido + Plantillas",
+      "descripcion": "Cargar el curso desde seed, vistas del curso (progreso, sección, asignatura), biblioteca de plantillas con renderizado de variables y descarga",
+      "fase": "desarrollo",
+      "prioridad": "alta",
+      "estado": "completada",
+      "depende_de": "T004",
+      "tokens_estimados": "alto",
+      "complejidad": "media",
+      "resultado": "API curso (estructura desde seed + progreso upsert) y plantillas (CRUD, aplicar variables, descarga md/txt, duplicado, protección precargadas) + 3 vistas curso con placeholder regla #1 y 2 de plantillas con preview en vivo. 20/169/25 verificado por test"
+    },
+    {
+      "id": "T006",
+      "titulo": "Sprint 5: Módulo de IA + Métricas",
+      "descripcion": "Implementar integración con LLM, test de conexión, generadores contextuales, panel de métricas con snapshots y gráficos",
+      "fase": "desarrollo",
+      "prioridad": "alta",
+      "estado": "completada",
+      "depende_de": "T005",
+      "tokens_estimados": "alto",
+      "complejidad": "media",
+      "resultado": "9 generadores con prompts literales del 04, extracción JSON robusta + reintento + degradación elegante (testado con stub), historial AIInteraction, métricas completas (snapshots con unicidad, resumen, insights heurísticos) + panel con Recharts y modal compartido en etapa sprint"
+    },
+    {
+      "id": "T007",
+      "titulo": "Sprint 6: Pulido, Export/Import y Criterios Finales",
+      "descripcion": "Exportar e importar en JSON, pulir accesibilidad, transiciones, confetti y validación final de todos los criterios de aceptación",
+      "fase": "desarrollo",
+      "prioridad": "alta",
+      "estado": "completada",
+      "depende_de": "T006",
+      "tokens_estimados": "alto",
+      "complejidad": "media",
+      "resultado": "Export/import JSON con replaceAll/fusionar y test de ida y vuelta, UI en Configuración, README de arranque, a11y (skip-link, focus ring, aria-live, reduced-motion), confetti canvas propio. Verificación final: 42/42 tests, tsc, build, init.sh 'Proyecto listo'. Pendiente fase 2: E2E Playwright y PDF de plantillas"
+    }
+  ]
+}

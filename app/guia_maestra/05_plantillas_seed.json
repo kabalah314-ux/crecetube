@@ -1,0 +1,573 @@
+{
+  "version": 1,
+  "generadoDesde": "05_PLANTILLAS.md",
+  "total": 25,
+  "plantillas": [
+    {
+      "id": "tpl_guion_completo",
+      "nombre": "Guion completo CRECETUBE",
+      "tipo": "guion",
+      "contenido": "# GUION — {tituloVideo}\nNicho: {nichoVideo} · Duración estimada: {duracionEstimadaMin} min\n\n## SEOinicio (0:00 – 0:20)\n[Frase de apertura que rompa el patrón y prometa el resultado]\n\n## SEOshock (0:00 – 0:15, parte alta)\n[Gancho fuerte: dato, conflicto, pregunta o demostración]\n\n## SEOloop (en los primeros 30s)\n[Pista de algo que se revelará al final / promesa diferida]\n\n## DESARROLLO\n### Bloque 1 — [Título del bloque] (~ XX seg)\n- Contenido principal\n- [ROTURA DE PATRÓN aquí: cambio de plano, efecto sonoro, b-roll inesperado]\n\n### Bloque 2 — [Título del bloque] (~ XX seg)\n- Contenido principal\n- [SEOreset: resumen breve para reenganchar]\n\n### Bloque 3 — [Título del bloque] (~ XX seg)\n- Contenido principal\n- [SEOzoom: enfatizar dato/concepto clave con zoom]\n\n## SEOresultado (cerca del cierre)\n[Mostrar el desenlace prometido]\n\n## Cliffhanger (opcional, justo antes del PsicoCTA)\n[Anticipar idea del próximo vídeo para enganchar a seguir]\n\n## PsicoCTA (cierre)\n[Llamada a la acción específica, conectada al beneficio del usuario]\n\n---\nNotas de producción:\n- Lugar: ...\n- Vestuario: ...\n- B-roll necesario: ...",
+      "variablesDinamicas": [
+        {
+          "nombre": "tituloVideo",
+          "descripcion": "Título de trabajo",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "nichoVideo",
+          "descripcion": "Nicho/temática",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "duracionEstimadaMin",
+          "descripcion": "Duración estimada en minutos",
+          "valorPorDefecto": "10",
+          "tipo": "numero"
+        }
+      ],
+      "seccionRelacionadaId": "s9",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_descripcion_video",
+      "nombre": "Descripción de vídeo optimizada",
+      "tipo": "descripcion",
+      "contenido": "{seoExtracto}\n\n{resumenVideo}\n\n━━━━━━━━━━━━━━━━━━━━\nCONÉCTATE CONMIGO\n━━━━━━━━━━━━━━━━━━━━\n🔗 Web: {webUrl}\n🔗 Instagram: {instagramUrl}\n🔗 Twitter/X: {twitterUrl}\n\n━━━━━━━━━━━━━━━━━━━━\nPLAYLIST RELACIONADA\n━━━━━━━━━━━━━━━━━━━━\n{listaUrl}\n\n━━━━━━━━━━━━━━━━━━━━\nCAPÍTULOS\n━━━━━━━━━━━━━━━━━━━━\n00:00 Introducción\nXX:XX [Bloque 1]\nXX:XX [Bloque 2]\nXX:XX [Bloque 3]\nXX:XX Conclusión\n\nSi te ha gustado, dale a \"Me gusta\" y suscríbete para no perderte ningún vídeo. Cada like es un empujón al algoritmo y me ayuda muchísimo.\n\nSoy {nombreCanal} y nos vemos en el siguiente vídeo.\n\n{hashtag1} {hashtag2} {hashtag3}",
+      "variablesDinamicas": [
+        {
+          "nombre": "seoExtracto",
+          "descripcion": "Primera línea potente (máx 110 chars)",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "resumenVideo",
+          "descripcion": "2-3 frases que resuman el vídeo",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "nombreCanal",
+          "descripcion": "Nombre del canal",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "instagramUrl",
+          "descripcion": "Tu Instagram",
+          "valorPorDefecto": "",
+          "tipo": "url"
+        },
+        {
+          "nombre": "twitterUrl",
+          "descripcion": "Tu Twitter/X",
+          "valorPorDefecto": "",
+          "tipo": "url"
+        },
+        {
+          "nombre": "webUrl",
+          "descripcion": "Tu web",
+          "valorPorDefecto": "",
+          "tipo": "url"
+        },
+        {
+          "nombre": "listaUrl",
+          "descripcion": "Playlist relacionada",
+          "valorPorDefecto": "",
+          "tipo": "url"
+        },
+        {
+          "nombre": "hashtag1",
+          "descripcion": "Hashtag amplio",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "hashtag2",
+          "descripcion": "Hashtag medio",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "hashtag3",
+          "descripcion": "Hashtag específico",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        }
+      ],
+      "seccionRelacionadaId": "s10",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_comentario_fijado",
+      "nombre": "Comentario fijado",
+      "tipo": "descripcion",
+      "contenido": "🔥 ¿Quieres profundizar en lo que cuento en \"{tituloVideo}\"?\n\n👉 {enlaceExtra}\n\nY dime: {preguntaAudiencia}\n\nTe leo abajo 👇",
+      "variablesDinamicas": [
+        {
+          "nombre": "tituloVideo",
+          "descripcion": "Título del vídeo",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "preguntaAudiencia",
+          "descripcion": "Pregunta abierta a la audiencia",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "enlaceExtra",
+          "descripcion": "Recurso/enlace adicional",
+          "valorPorDefecto": "",
+          "tipo": "url"
+        }
+      ],
+      "seccionRelacionadaId": "s10",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_brief_miniatura_seomarco",
+      "nombre": "Brief de miniatura — SEOmarco",
+      "tipo": "miniatura_brief",
+      "contenido": "BRIEF MINIATURA — Estrategia SEOmarco\nVídeo: {tituloVideo}\n\nElementos:\n- Marco/borde grueso (8-12 px) de color {colorMarco} alrededor de la miniatura completa.\n- 3-5 palabras impactantes centradas o tercio superior izquierdo.\n- Composición principal en regla de tercios.\n\nPaleta sugerida:\n- Fondo: tono oscuro contrastante.\n- Acento marco: {colorMarco}.\n- Texto: blanco o amarillo.\n\nTest visual:\n- ¿Destaca en una grilla pequeña? Sí ___ No ___\n- ¿Es legible a 100px de ancho? Sí ___ No ___",
+      "variablesDinamicas": [
+        {
+          "nombre": "tituloVideo",
+          "descripcion": "Título",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "colorMarco",
+          "descripcion": "Color del marco",
+          "valorPorDefecto": "#FFD60A",
+          "tipo": "texto"
+        }
+      ],
+      "seccionRelacionadaId": "s5",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_brief_miniatura_seocara",
+      "nombre": "Brief de miniatura — SEOcara",
+      "tipo": "miniatura_brief",
+      "contenido": "BRIEF MINIATURA — Estrategia SEOcara\nVídeo: {tituloVideo}\n\nElementos:\n- Rostro humano ocupa 40-60% de la miniatura.\n- Expresión exagerada coherente con el tema (sorpresa, alegría, preocupación).\n- Texto 3 palabras al lado opuesto del rostro.\n\nComposición:\n- Si rostro a la izquierda → texto a la derecha y viceversa.\n- Mirada del rostro hacia el texto (guía la vista).\n\nIluminación:\n- Frontal + contraluz para separar del fondo.",
+      "variablesDinamicas": [
+        {
+          "nombre": "tituloVideo",
+          "descripcion": "",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        }
+      ],
+      "seccionRelacionadaId": "s5",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_brief_miniatura_seoflecha",
+      "nombre": "Brief de miniatura — SEOflecha",
+      "tipo": "miniatura_brief",
+      "contenido": "BRIEF MINIATURA — Estrategia SEOflecha\nVídeo: {tituloVideo}\n\nElementos:\n- Flecha visible (color contrastante, suele rojo o amarillo) apuntando al elemento clave.\n- Círculo/marco rojo opcional para enmarcar lo importante.\n- Texto descriptivo de 2-3 palabras.\n\nComposición:\n- La flecha guía el ojo al PUNTO DE INTERÉS (objeto, parte de la cara, palabra clave).\n- Evitar más de 1 flecha (satura).",
+      "variablesDinamicas": [
+        {
+          "nombre": "tituloVideo",
+          "descripcion": "",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        }
+      ],
+      "seccionRelacionadaId": "s5",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_email_bienvenida",
+      "nombre": "Email de bienvenida",
+      "tipo": "email",
+      "contenido": "Asunto: Te doy la bienvenida (y un regalo)\nPre-header: Empezamos fuerte. Esto es lo que vas a recibir.\n\nHola,\n\nSoy {nombreCreador} de {nombreCanal} y me alegro mucho de que estés aquí.\n\nPara que arranquemos juntos, te dejo los 3 vídeos que más han cambiado la vida de mi audiencia:\n\n1) {top3VideoUrl1}\n2) {top3VideoUrl2}\n3) {top3VideoUrl3}\n\nCada semana te mandaré algo útil. Si en algún momento ya no te aporta, te desuscribes en 1 clic, sin rencores.\n\nNos vemos pronto,\n{nombreCreador}\n\nPD: Responde a este email contándome QUÉ te trajo a mi canal. Lo leo todo.",
+      "variablesDinamicas": [
+        {
+          "nombre": "nombreCanal",
+          "descripcion": "Nombre del canal",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "nombreCreador",
+          "descripcion": "Nombre del creador",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "top3VideoUrl1",
+          "descripcion": "URL vídeo top 1",
+          "valorPorDefecto": "",
+          "tipo": "url"
+        },
+        {
+          "nombre": "top3VideoUrl2",
+          "descripcion": "URL vídeo top 2",
+          "valorPorDefecto": "",
+          "tipo": "url"
+        },
+        {
+          "nombre": "top3VideoUrl3",
+          "descripcion": "URL vídeo top 3",
+          "valorPorDefecto": "",
+          "tipo": "url"
+        }
+      ],
+      "seccionRelacionadaId": "s18",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_email_nuevo_video",
+      "nombre": "Email de nuevo vídeo",
+      "tipo": "email",
+      "contenido": "Asunto: {ganchoCorto}\nPre-header: Acabo de subir uno de los vídeos más importantes que he hecho.\n\nHola,\n\n{ganchoCorto}\n\nLo cuento todo aquí 👉 {urlVideo}\n\nTe aviso de algo: en el minuto 3:20 hay un giro que no te esperas. Que lo veas con tiempo.\n\nNos vemos dentro,\n[Firma]\n\nPD: Si el vídeo te ayuda, déjame un comentario. Cada uno me da ganas de seguir.",
+      "variablesDinamicas": [
+        {
+          "nombre": "tituloVideo",
+          "descripcion": "Título del vídeo",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "urlVideo",
+          "descripcion": "URL del vídeo",
+          "valorPorDefecto": "",
+          "tipo": "url"
+        },
+        {
+          "nombre": "ganchoCorto",
+          "descripcion": "1 frase gancho del vídeo",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        }
+      ],
+      "seccionRelacionadaId": "s18",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_email_sorteo",
+      "nombre": "Email de sorteo",
+      "tipo": "email",
+      "contenido": "Asunto: Sorteo de {premio} (cierra en 48h)\nPre-header: Participación en 1 minuto.\n\nHola,\n\nEsta semana sorteo {premio}.\n\nMecánica (sencilla):\n1) Suscríbete al canal si aún no lo estás.\n2) Comenta en el vídeo nuevo \"QUIERO {premio}\".\n3) Listo. Anuncio ganador el {fechaCierre}.\n\nDetalles aquí 👉 {urlMecanica}\n\n¡Suerte!",
+      "variablesDinamicas": [
+        {
+          "nombre": "premio",
+          "descripcion": "Qué se sortea",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "fechaCierre",
+          "descripcion": "Fecha y hora límite",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "urlMecanica",
+          "descripcion": "URL con la mecánica completa",
+          "valorPorDefecto": "",
+          "tipo": "url"
+        }
+      ],
+      "seccionRelacionadaId": "s18",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_email_lead_magnet",
+      "nombre": "Email de entrega de lead magnet",
+      "tipo": "email",
+      "contenido": "Asunto: Aquí tienes {nombreRecurso}\nPre-header: Tal y como te prometí. Úsalo cuanto antes.\n\nHola,\n\nAquí tienes {nombreRecurso}: {urlDescarga}\n\nTe recomiendo abrirlo HOY, no lo dejes para \"luego\" (sabes cómo va eso 😉).\n\nCómo sacarle el máximo:\n1) Léelo de un tirón sin pararte.\n2) Vuelve al inicio y aplica solo 1 cosa esta semana.\n3) Respóndeme al email contándome qué cambia.\n\nTe leo,\n[Firma]",
+      "variablesDinamicas": [
+        {
+          "nombre": "nombreRecurso",
+          "descripcion": "Nombre del recurso",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "urlDescarga",
+          "descripcion": "URL de descarga",
+          "valorPorDefecto": "",
+          "tipo": "url"
+        }
+      ],
+      "seccionRelacionadaId": "s18",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_comunidad_giftcalipsis",
+      "nombre": "Post comunidad — Giftcalipsis",
+      "tipo": "comunidad",
+      "contenido": "POST GIFTCALIPSIS\n\nGIF/imagen en movimiento + frase ultra-corta.\n\nFrase (máx 80 chars):\n[Algo provocador, divertido o que rompa el patrón]\n\nPregunta cebo (opcional):\n¿Reaccionarías igual?\n\nHora óptima: noche (20:00 - 22:00) o sábado tarde.",
+      "variablesDinamicas": [],
+      "seccionRelacionadaId": "s15",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_comunidad_seoencuesta",
+      "nombre": "Post comunidad — SEOencuesta",
+      "tipo": "comunidad",
+      "contenido": "POST ENCUESTA\n\nContexto previo (1-2 frases):\n[Por qué pregunto esto]\n\nPregunta: {pregunta}\n- {opcion1}\n- {opcion2}\n- {opcion3}\n\nCierre:\nComenta el porqué de tu voto, me ayuda muchísimo.",
+      "variablesDinamicas": [
+        {
+          "nombre": "pregunta",
+          "descripcion": "Pregunta de la encuesta",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "opcion1",
+          "descripcion": "Opción 1",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "opcion2",
+          "descripcion": "Opción 2",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "opcion3",
+          "descripcion": "Opción 3 (opcional)",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        }
+      ],
+      "seccionRelacionadaId": "s15",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_comunidad_seolaunch",
+      "nombre": "Post comunidad — SEOlaunch",
+      "tipo": "comunidad",
+      "contenido": "POST SEOlaunch (pre-estreno)\n\n🚀 ESTRENO {diaEstreno}\n\n\"{tituloVideo}\"\n\n[1 línea creando expectativa]\n\n¿Lo quieres ya? Pon ✋ en comentarios y te aviso en cuanto suba.",
+      "variablesDinamicas": [
+        {
+          "nombre": "tituloVideo",
+          "descripcion": "Título próximo vídeo",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "diaEstreno",
+          "descripcion": "Día de estreno",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        }
+      ],
+      "seccionRelacionadaId": "s15",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_comunidad_seorepesca",
+      "nombre": "Post comunidad — SEOrepesca",
+      "tipo": "comunidad",
+      "contenido": "POST SEOrepesca (24-72h después del lanzamiento)\n\n¿Te perdiste esto?\n\nEn \"{tituloVideo}\" cuento que {datoImpactante}.\n\nSi aún no lo viste: {urlVideo}\n\nAviso: el minuto 3 te va a hacer pensar.",
+      "variablesDinamicas": [
+        {
+          "nombre": "tituloVideo",
+          "descripcion": "Título del vídeo a repescar",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "urlVideo",
+          "descripcion": "URL del vídeo",
+          "valorPorDefecto": "",
+          "tipo": "url"
+        },
+        {
+          "nombre": "datoImpactante",
+          "descripcion": "Dato/momento clave del vídeo",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        }
+      ],
+      "seccionRelacionadaId": "s15",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_comunidad_seorteo",
+      "nombre": "Post comunidad — SEOrteo",
+      "tipo": "comunidad",
+      "contenido": "POST SEOrteo (estrategia de fidelización)\n\n🎁 SORTEO de {premio}\n\nPara participar:\n1) Suscríbete al canal.\n2) Comenta el vídeo \"{tituloVideo}\".\n3) Comparte este post.\n\nCierro el {fechaCierre}.\nGanador anunciado en directo.\n\nBases en la descripción del vídeo.",
+      "variablesDinamicas": [
+        {
+          "nombre": "premio",
+          "descripcion": "Premio",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "tituloVideo",
+          "descripcion": "Vídeo asociado",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "fechaCierre",
+          "descripcion": "Fecha cierre",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        }
+      ],
+      "seccionRelacionadaId": "s7",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_banner_canal",
+      "nombre": "Banner del canal — medidas y zonas seguras",
+      "tipo": "banner",
+      "contenido": "BANNER DEL CANAL — Especificaciones técnicas\n\nMedidas:\n- 2560 x 1440 px (mínimo).\n- \"Área segura\" central: 1546 x 423 px (lo único que se ve en móvil).\n\nElementos a incluir:\n- Logo / nombre del canal (área segura).\n- Frase de posicionamiento (máx 6 palabras).\n- Frecuencia de publicación (\"Lunes y jueves\").\n- CTA suscríbete (opcional).\n- 1-2 logos de redes (área extendida, solo en desktop).\n\nEvitar:\n- Texto pequeño (no se lee en TV).\n- Elementos importantes fuera del área segura.\n- Colores que choquen con la foto de perfil.\n\nPaleta:\n- Máx 3 colores principales.\n- Contraste claro vs fondo.\n\nFoto de perfil:\n- 800x800 px.\n- Coherente con banner.",
+      "variablesDinamicas": [],
+      "seccionRelacionadaId": "s1",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_trailer_canal",
+      "nombre": "Tráiler del canal (SEOTrailer)",
+      "tipo": "trailer",
+      "contenido": "ESTRUCTURA SEOTrailer (60-90 segundos)\n\n0:00 — 0:05 HOOK\n[Frase provocadora o demostración visual]\n\n0:05 — 0:15 QUIÉN ERES Y QUÉ HACES\n\"Soy [nombre] de {nombreCanal} y {propuestaValor}.\"\n\n0:15 — 0:35 QUÉ VAS A ENCONTRAR AQUÍ\n- Lista 3 tipos de contenido / temas que tratas\n- Mostrar fragmentos rápidos (b-roll).\n\n0:35 — 0:50 PARA QUIÉN ES\n[Define a la audiencia ideal en positivo]\n\n0:50 — 1:05 PRUEBA SOCIAL O LOGRO\n- Cita / testimonio breve\n- Cifra de subscriptores o vídeos\n- Reconocimiento si aplica\n\n1:05 — 1:20 FRECUENCIA Y EXPECTATIVA\n\"Publico {frecuencia}. Si te interesa, dale a suscribirte.\"\n\n1:20 — 1:30 CTA + CLIFFHANGER\n[Promesa de algo concreto que va a aparecer pronto]",
+      "variablesDinamicas": [
+        {
+          "nombre": "nombreCanal",
+          "descripcion": "Nombre del canal",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "propuestaValor",
+          "descripcion": "Lo que vas a recibir aquí (1 frase)",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "frecuencia",
+          "descripcion": "Cada cuánto publicas",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        }
+      ],
+      "seccionRelacionadaId": "s8",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_video_destacado",
+      "nombre": "Vídeo destacado (SEOdestacado)",
+      "tipo": "trailer",
+      "contenido": "VÍDEO DESTACADO (SEOdestacado) — Para suscriptores existentes\n\nObjetivo: mostrar el \"mejor\" vídeo o el más representativo.\n\nCriterios para elegirlo:\n- Buena retención (>50%).\n- Cubre tema central del canal.\n- No tiene más de 6 meses (frescura).\n\nSi no tienes ninguno que cumpla → graba uno específico tipo \"Qué vas a encontrar en este canal en 2026\".",
+      "variablesDinamicas": [],
+      "seccionRelacionadaId": "s8",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_pantallas_finales",
+      "nombre": "Configuración pantallas finales",
+      "tipo": "pantalla_final",
+      "contenido": "PLAN DE PANTALLAS FINALES (últimos 20 segundos)\n\nElige una configuración:\n\nUNITARIA (1 elemento):\n- Solo el botón de suscribirse o un vídeo recomendado.\n- Uso: vídeos cortos donde \"menos es más\".\n\nBINARIA (2 elementos): [RECOMENDADA POR DEFECTO]\n- Elemento izquierdo: VÍDEO recomendado (siguiente lógico).\n- Elemento derecho: SUSCRIPCIÓN.\n\nTERCIARIA (3 elementos):\n- Vídeo siguiente + Vídeo recomendado por algoritmo + Suscripción.\n\nCUATERNARIA (4 elementos):\n- Vídeo siguiente + Otro vídeo + Lista + Suscripción.\n\nCON PLANTILLA:\n- Usa la misma disposición visual en todos los vídeos para coherencia de marca.\n\nReglas:\n- Deja el último frame del vídeo con espacio visual reservado.\n- Indica en audio: \"Y si quieres seguir aprendiendo, te dejo este otro vídeo justo aquí ➡\"\n- No coloques en el primer 1/3 (centro).\n\nPlantilla rellenable:\nConfiguración elegida: ___\nElemento 1: tipo: _____ destino: _____ posición: _____\nElemento 2: tipo: _____ destino: _____ posición: _____\nElemento 3: tipo: _____ destino: _____ posición: _____\nElemento 4: tipo: _____ destino: _____ posición: _____",
+      "variablesDinamicas": [],
+      "seccionRelacionadaId": "s13",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_tarjetas",
+      "nombre": "Plan de tarjetas en vídeo",
+      "tipo": "tarjeta",
+      "contenido": "PLAN DE TARJETAS (máx 5 por vídeo)\n\nTipos disponibles:\n- Subjeta — destinada a captar suscriptores (rara, alta conversión).\n- Indujetas — derivar de un evergreen a un vídeo sprint.\n- Psicojetas — colocada en picos de retención positivos.\n- SEOjeta — derivar tráfico a un vídeo ya posicionado.\n- SEOrescate — evitar que el usuario abandone el canal.\n\nPlantilla:\n\nTarjeta 1:\n Tipo: ____ Momento: __:__ Destino: ____ CTA: ____\n\nTarjeta 2:\n Tipo: ____ Momento: __:__ Destino: ____ CTA: ____\n\nTarjeta 3:\n Tipo: ____ Momento: __:__ Destino: ____ CTA: ____\n\nTarjeta 4:\n Tipo: ____ Momento: __:__ Destino: ____ CTA: ____\n\nTarjeta 5:\n Tipo: ____ Momento: __:__ Destino: ____ CTA: ____\n\nReglas:\n- NUNCA poner tarjeta en el primer minuto (interrumpe enganche).\n- NUNCA en los últimos 30s (compiten con pantallas finales).\n- Distancia mínima entre tarjetas: 2 minutos.\n- Apoyar siempre con mención en audio.",
+      "variablesDinamicas": [],
+      "seccionRelacionadaId": "s14",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_checklist_pre_publicacion",
+      "nombre": "Checklist pre-publicación",
+      "tipo": "checklist",
+      "contenido": "CHECKLIST PRE-PUBLICACIÓN\n\nVídeo\n[ ] Render exportado en máxima calidad\n[ ] Audio normalizado (-14 LUFS aprox)\n[ ] Subtítulos manuales subidos si hay términos clave\n[ ] Pantallas finales planeadas (últimos 20s)\n\nMetadata\n[ ] Título final (≤ 60 chars idealmente)\n[ ] Miniatura subida (1280x720, < 2MB, JPG)\n[ ] Descripción optimizada (SEOextracto, enlaces, hashtags)\n[ ] 3 hashtags en descripción\n[ ] 1 hashtag en título\n[ ] Timestamps con primer \"00:00\"\n[ ] Lista de reproducción asignada\n[ ] Etiquetas relevantes\n\nConfiguración YouTube\n[ ] Tarjetas configuradas (máx 5)\n[ ] Pantallas finales configuradas\n[ ] Hora de publicación elegida (SEOhora)\n[ ] No es \"para niños\" marcado correctamente\n[ ] Idioma del vídeo correcto\n\nDifusión preparada\n[ ] Email de nuevo vídeo en borrador\n[ ] Post de comunidad en borrador\n[ ] Posts para redes en borrador\n[ ] Comentario fijado redactado\n\nMarca personal\n[ ] El vídeo refleja la propuesta de valor del canal\n[ ] CTA (PsicoCTA) presente y claro",
+      "variablesDinamicas": [],
+      "seccionRelacionadaId": "s9",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_checklist_post_publicacion",
+      "nombre": "Checklist post-publicación (sprint)",
+      "tipo": "checklist",
+      "contenido": "CHECKLIST POST-PUBLICACIÓN — FASE SPRINT (7 días)\n\nDÍA 1\n[ ] Email a la lista enviado en la primera hora\n[ ] Post de comunidad publicado (Giftcalipsis / SEOlaunch)\n[ ] Compartido en Instagram, X, TikTok\n[ ] Comentario fijado publicado\n[ ] Responder primeros 20 comentarios en < 1h\n[ ] (Opcional) Ads activados\n\nDÍA 2\n[ ] Snapshot métricas (vistas, CTR, retención)\n[ ] Responder comentarios nuevos\n[ ] Re-compartir en stories\n\nDÍA 3\n[ ] Snapshot métricas\n[ ] Post de comunidad SEOrepesca\n\nDÍA 4-5\n[ ] Snapshot métricas\n[ ] Si CTR bajo → considerar cambiar miniatura\n[ ] Compartir clip corto en redes\n\nDÍA 6-7\n[ ] Snapshot final del sprint\n[ ] Comparativa con vídeo anterior\n[ ] Anotar aprendizajes en notas del proyecto",
+      "variablesDinamicas": [],
+      "seccionRelacionadaId": "s3",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_panel_marca",
+      "nombre": "Panel de marca / KPIs personalizables",
+      "tipo": "checklist",
+      "contenido": "PANEL DE MARCA — Métricas clave del canal\n\nColumnas a registrar (semanalmente):\n- Suscriptores totales\n- Vistas última semana\n- CTR medio última semana\n- Retención media última semana\n- Velocidad evergreen media\n- Ingresos estimados (si monetizable)\n- RPM\n- Frecuencia publicación\n\nObjetivos del trimestre:\n- Suscriptores: _____ → _____\n- Vistas mensuales: _____ → _____\n- CTR objetivo: _____ %\n- Retención objetivo: _____ %\n\nVariación respecto al mes anterior:\n- [ ] Mejor / [ ] Igual / [ ] Peor\n\nAcciones a probar este mes:\n1) ________________\n2) ________________\n3) ________________",
+      "variablesDinamicas": [],
+      "seccionRelacionadaId": "s17",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_campana_ads",
+      "nombre": "Plantilla campaña Ads (IG/FB/YT)",
+      "tipo": "comunidad",
+      "contenido": "PLAN DE CAMPAÑA DE ADS\n\nObjetivo:\n[ ] Reconocimiento (mostrar a más gente)\n[ ] Tráfico (que vayan a YT)\n[ ] Interacción (likes/comentarios)\n[ ] Conversión (suscripción / venta)\n\nPlataforma:\n[ ] Instagram Ads\n[ ] Facebook Ads\n[ ] YouTube Ads\n\nAudiencias:\n- Audiencia 1: [intereses / lookalike]\n- Audiencia 2: [intereses / lookalike]\n- Audiencia 3 (retargeting): visitantes / engagement previo\n\nCreatividades:\n- Vídeo principal (formato vertical 9:16 si IG/FB, horizontal o vertical si YT)\n- Variantes A/B: 2-3 miniaturas, 2-3 hooks\n\nPresupuesto:\n- Diario: ___ €\n- Total: ___ €\n- Duración: ___ días\n\nKPIs objetivo:\n- CPV (coste por visualización): < ___ €\n- CPC: < ___ €\n- CTR: > ___ %\n\nPlan de revisión:\n- Día 3: pausar grupos con CPV alto\n- Día 7: duplicar mejores grupos\n- Día 14: refrescar creatividades si la frecuencia > 3",
+      "variablesDinamicas": [],
+      "seccionRelacionadaId": "s17",
+      "esEditable": false,
+      "esPrecargada": true
+    },
+    {
+      "id": "tpl_seolista",
+      "nombre": "SEOlista — lista de reproducción optimizada",
+      "tipo": "descripcion",
+      "contenido": "SEOlista — {nombreLista}\n\nNombre optimizado:\n- Incluye la palabra clave principal \"{palabraClavePrincipal}\"\n- Entre 40 y 60 chars\n- Empieza con la kw si es posible\n\nDescripción de la lista (200-300 chars):\n\"Aprende {palabraClavePrincipal} desde cero hasta nivel avanzado. En esta playlist te llevo paso a paso por los conceptos clave, los errores comunes y las técnicas que funcionan en 2026.\"\n\nOrden de los vídeos:\n1) Vídeo introductorio (el más amplio).\n2) Conceptos básicos.\n3) Casos prácticos.\n4) Técnicas avanzadas.\n5) Mantenimiento / siguiente nivel.\n\nMantenimiento:\n- Revisar orden cada 3 meses.\n- Sustituir vídeos antiguos con bajo CTR.\n- Añadir nuevos al final.\n- Marcar 1-2 como \"destacados\" rotando cada mes.\n\nMiniaturas de la lista:\n- Coherencia visual: misma paleta / mismo tipo de composición.\n- Usar un \"marco\" común a todas las miniaturas de la lista.",
+      "variablesDinamicas": [
+        {
+          "nombre": "nombreLista",
+          "descripcion": "Nombre de la lista",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        },
+        {
+          "nombre": "palabraClavePrincipal",
+          "descripcion": "Palabra clave principal",
+          "valorPorDefecto": "",
+          "tipo": "texto"
+        }
+      ],
+      "seccionRelacionadaId": "s11",
+      "esEditable": false,
+      "esPrecargada": true
+    }
+  ]
+}

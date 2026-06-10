@@ -1,0 +1,1878 @@
+{
+  "version": 1,
+  "generadoDesde": "07_ESQUELETO_CURSO.md",
+  "totalSecciones": 20,
+  "totalAsignaturas": 169,
+  "secciones": [
+    {
+      "id": "s1",
+      "titulo": "Primeros pasos en YouTube",
+      "descripcion": "Para quienes empiezan de cero o quieren rehacer la base de su canal.",
+      "familia": "pasos",
+      "colorToken": "--family-pasos",
+      "asignaturas": [
+        {
+          "id": "s1_a1",
+          "titulo": "Crear tu cuenta de Google y canal de YouTube",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s1_a2",
+          "titulo": "Configuración básica del canal (nombre, descripción, enlaces)",
+          "duracionEstimadaMin": 10,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s1_a3",
+          "titulo": "Foto de perfil profesional: guía práctica",
+          "duracionEstimadaMin": 6,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s1_a4",
+          "titulo": "Banner del canal: medidas, zonas seguras y diseño",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": "tpl_banner_canal",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s1_a5",
+          "titulo": "Enlazando tus redes sociales al canal",
+          "duracionEstimadaMin": 5,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s1_a6",
+          "titulo": "Verificación del canal y funciones avanzadas",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s1_a7",
+          "titulo": "Tu primer vídeo: qué grabar y cómo subirlo",
+          "duracionEstimadaMin": 12,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s1_a8",
+          "titulo": "El error #1 de los canales nuevos (y cómo evitarlo)",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s1_a9",
+          "titulo": "Planificación de tus primeros 10 vídeos",
+          "duracionEstimadaMin": 10,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "titulo": "YouTube Studio y configuración",
+      "descripcion": "Domina el panel de control de tu canal.",
+      "familia": "canal",
+      "colorToken": "--family-canal",
+      "asignaturas": [
+        {
+          "id": "s2_a1",
+          "titulo": "Tour por YouTube Studio: las 7 secciones clave",
+          "duracionEstimadaMin": 10,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s2_a2",
+          "titulo": "Panel de control y métricas rápidas",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s2_a3",
+          "titulo": "Gestión de contenido: editar, programar y borrar",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s2_a4",
+          "titulo": "Subtítulos y traducciones: cómo configurarlos",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s2_a5",
+          "titulo": "Derechos de autor y Content ID: lo que debes saber",
+          "duracionEstimadaMin": 10,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s2_a6",
+          "titulo": "Configuración de monetización desde Studio",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s2_a7",
+          "titulo": "Personalización avanzada del canal (secciones, spotlight)",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s2_a8",
+          "titulo": "Atajos y trucos de Studio que ahorran tiempo",
+          "duracionEstimadaMin": 6,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "titulo": "Estrategia de contenido y temáticas",
+      "descripcion": "Define qué publicar, cuándo y por qué.",
+      "familia": "tematicas",
+      "colorToken": "--family-tematicas",
+      "asignaturas": [
+        {
+          "id": "s3_a1",
+          "titulo": "Tipos de vídeo: sprint vs evergreen vs mixto",
+          "duracionEstimadaMin": 10,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s3_a2",
+          "titulo": "El calendario editorial: frecuencia y consistencia",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s3_a3",
+          "titulo": "Cómo elegir tu próximo tema (método de las 3 fuentes)",
+          "duracionEstimadaMin": 12,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s3_a4",
+          "titulo": "La fase sprint: los 7 días que definen tu vídeo",
+          "duracionEstimadaMin": 10,
+          "plantillaRelacionadaId": "tpl_checklist_post_publicacion",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s3_a5",
+          "titulo": "Optimización evergreen: rescatar vídeos antiguos",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s3_a6",
+          "titulo": "Análisis de la competencia sin copiar",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s3_a7",
+          "titulo": "Pilares de contenido: cómo definir 3-5 temas recurrentes",
+          "duracionEstimadaMin": 10,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s3_a8",
+          "titulo": "Series vs vídeos sueltos: pros, contras y datos",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s3_a9",
+          "titulo": "SEOhora: cuándo publicar según tu audiencia",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s3_a10",
+          "titulo": "Batch content: producir 4 vídeos en un fin de semana",
+          "duracionEstimadaMin": 10,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "titulo": "Nichos y posicionamiento",
+      "descripcion": "Encuentra tu espacio y diferénciate.",
+      "familia": "tematicas",
+      "colorToken": "--family-tematicas",
+      "asignaturas": [
+        {
+          "id": "s4_a1",
+          "titulo": "¿Qué es un nicho en YouTube? Mitos y realidad",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s4_a2",
+          "titulo": "El método del triángulo: pasión × demanda × competencia",
+          "duracionEstimadaMin": 10,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s4_a3",
+          "titulo": "Investigación de demanda con herramientas gratuitas",
+          "duracionEstimadaMin": 12,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s4_a4",
+          "titulo": "Sub-nichos: cómo ser pez grande en estanque pequeño",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s4_a5",
+          "titulo": "Tu propuesta de valor única (PVU)",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s4_a6",
+          "titulo": "Repositioning: pivotar de nicho sin perder audiencia",
+          "duracionEstimadaMin": 10,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s4_a7",
+          "titulo": "Estudio de caso: 3 canales que dominaron su nicho",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s4_a8",
+          "titulo": "Validación rápida: ¿mi nicho tiene futuro?",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        }
+      ]
+    },
+    {
+      "id": "s5",
+      "titulo": "Miniaturas que generan clics",
+      "descripcion": "La miniatura es el 50% del CTR. Domina las estrategias visuales.",
+      "familia": "miniaturas",
+      "colorToken": "--family-miniaturas",
+      "asignaturas": [
+        {
+          "id": "s5_a1",
+          "titulo": "Anatomía de una miniatura que convierte",
+          "duracionEstimadaMin": 10,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s5_a2",
+          "titulo": "Estrategia SEOmarco: el poder del borde visual",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": "tpl_brief_miniatura_seomarco",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s5_a3",
+          "titulo": "Estrategia SEOcara: rostro humano como imán de clics",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": "tpl_brief_miniatura_seocara",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s5_a4",
+          "titulo": "Estrategia SEOflecha: guiar el ojo del espectador",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": "tpl_brief_miniatura_seoflecha",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s5_a5",
+          "titulo": "Tipografía en miniaturas: menos es más",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s5_a6",
+          "titulo": "Paletas de color que destacan en la grilla",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s5_a7",
+          "titulo": "Test A/B de miniaturas: cómo medir y cuándo cambiar",
+          "duracionEstimadaMin": 10,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s5_a8",
+          "titulo": "Herramientas gratuitas para crear miniaturas",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s5_a9",
+          "titulo": "Los 7 errores de miniatura que destruyen tu CTR",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s5_a10",
+          "titulo": "Miniatura + título: la pareja que debe contar una historia",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        }
+      ]
+    },
+    {
+      "id": "s6",
+      "titulo": "Títulos irresistibles",
+      "descripcion": "Escribe títulos que el algoritmo empuje y la gente quiera clicar.",
+      "familia": "titulos",
+      "colorToken": "--family-titulos",
+      "asignaturas": [
+        {
+          "id": "s6_a1",
+          "titulo": "Psicología del clic: por qué hacemos clic en ciertos títulos",
+          "duracionEstimadaMin": 10,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s6_a2",
+          "titulo": "Fórmulas de títulos probadas (con ejemplos reales)",
+          "duracionEstimadaMin": 12,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s6_a3",
+          "titulo": "SEO en títulos: palabras clave sin sonar robótico",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s6_a4",
+          "titulo": "El límite de 60 caracteres: cómo decir más con menos",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s6_a5",
+          "titulo": "Números, paréntesis y símbolos: ¿funcionan?",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s6_a6",
+          "titulo": "Hashtag en título: cuándo usarlo y cuándo no",
+          "duracionEstimadaMin": 6,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s6_a7",
+          "titulo": "Generación de títulos con IA: workflow práctico",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s6_a8",
+          "titulo": "Título provisional vs título final: el proceso CRECETUBE",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s6_a9",
+          "titulo": "Los 5 peores títulos (y cómo arreglarlos)",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        }
+      ]
+    },
+    {
+      "id": "s7",
+      "titulo": "Sorteos y fidelización (SEOrteo)",
+      "descripcion": "Estrategias para premiar a tu comunidad y ganar suscriptores.",
+      "familia": "comunidad",
+      "colorToken": "--family-comunidad",
+      "asignaturas": [
+        {
+          "id": "s7_a1",
+          "titulo": "¿Funcionan los sorteos en YouTube? Datos reales",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s7_a2",
+          "titulo": "La estrategia SEOrteo paso a paso",
+          "duracionEstimadaMin": 10,
+          "plantillaRelacionadaId": "tpl_comunidad_seorteo",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s7_a3",
+          "titulo": "Bases legales: lo mínimo que necesitas",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s7_a4",
+          "titulo": "Elegir el premio perfecto para tu nicho",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s7_a5",
+          "titulo": "Mecánica del sorteo: comentario, like, suscripción",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": "tpl_email_sorteo",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s7_a6",
+          "titulo": "Anuncio del ganador: cómo convertirlo en contenido",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s7_a7",
+          "titulo": "Más allá del sorteo: retos, concursos y gamificación",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        }
+      ]
+    },
+    {
+      "id": "s8",
+      "titulo": "Tráiler, destacado y primera impresión",
+      "descripcion": "Lo primero que ve un visitante nuevo en tu canal.",
+      "familia": "canal",
+      "colorToken": "--family-canal",
+      "asignaturas": [
+        {
+          "id": "s8_a1",
+          "titulo": "Diferencia entre tráiler del canal y vídeo destacado",
+          "duracionEstimadaMin": 6,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s8_a2",
+          "titulo": "SEOTrailer: estructura de 60-90 segundos que convierte",
+          "duracionEstimadaMin": 10,
+          "plantillaRelacionadaId": "tpl_trailer_canal",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s8_a3",
+          "titulo": "SEOdestacado: qué vídeo poner para suscriptores existentes",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": "tpl_video_destacado",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s8_a4",
+          "titulo": "Cuándo actualizar tu tráiler",
+          "duracionEstimadaMin": 6,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s8_a5",
+          "titulo": "Las secciones del canal: organizar tu escaparate",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s8_a6",
+          "titulo": "Auditoría de primera impresión: el test de 5 segundos",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s8_a7",
+          "titulo": "Estudio de caso: canales con páginas de inicio perfectas",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        }
+      ]
+    },
+    {
+      "id": "s9",
+      "titulo": "Guiones y estructura del vídeo",
+      "descripcion": "El guion es el esqueleto de la retención. Domina la estructura CRECETUBE.",
+      "familia": "video",
+      "colorToken": "--family-video",
+      "asignaturas": [
+        {
+          "id": "s9_a1",
+          "titulo": "¿Hay que escribir guion? Sí, y este es el motivo",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s9_a2",
+          "titulo": "La estructura CRECETUBE: SEOinicio → Desarrollo → PsicoCTA",
+          "duracionEstimadaMin": 12,
+          "plantillaRelacionadaId": "tpl_guion_completo",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s9_a3",
+          "titulo": "SEOshock: cómo crear un gancho que retenga en 3 segundos",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s9_a4",
+          "titulo": "SEOloop: la promesa diferida que mantiene al espectador",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s9_a5",
+          "titulo": "Roturas de patrón: qué son y dónde colocarlas",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s9_a6",
+          "titulo": "SEOreset: el mini-resumen que reengancha",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s9_a7",
+          "titulo": "SEOzoom: enfatizar conceptos clave visualmente",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s9_a8",
+          "titulo": "SEOresultado: el desenlace que cumple la promesa",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s9_a9",
+          "titulo": "PsicoCTA: la llamada a la acción psicológica",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s9_a10",
+          "titulo": "Cliffhanger: enganchar al siguiente vídeo",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s9_a11",
+          "titulo": "Checklist pre-publicación: no subas sin revisar esto",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": "tpl_checklist_pre_publicacion",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        }
+      ]
+    },
+    {
+      "id": "s10",
+      "titulo": "Descripciones, hashtags y metadatos",
+      "descripcion": "Lo que YouTube lee para entender y recomendar tu vídeo.",
+      "familia": "descripcion",
+      "colorToken": "--family-descripcion",
+      "asignaturas": [
+        {
+          "id": "s10_a1",
+          "titulo": "SEOextracto: las 2 primeras líneas que lo cambian todo",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": "tpl_descripcion_video",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s10_a2",
+          "titulo": "Estructura de una descripción optimizada",
+          "duracionEstimadaMin": 10,
+          "plantillaRelacionadaId": "tpl_descripcion_video",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s10_a3",
+          "titulo": "Hashtags: la regla del 3 (amplio + medio + específico)",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s10_a4",
+          "titulo": "Hashtag en título vs hashtag en descripción",
+          "duracionEstimadaMin": 6,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s10_a5",
+          "titulo": "Timestamps / Capítulos: el primer \"00:00\" obligatorio",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s10_a6",
+          "titulo": "Comentario fijado estratégico",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": "tpl_comentario_fijado",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s10_a7",
+          "titulo": "Etiquetas (tags): ¿sirven todavía?",
+          "duracionEstimadaMin": 6,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s10_a8",
+          "titulo": "Categoría, idioma y localización",
+          "duracionEstimadaMin": 5,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s10_a9",
+          "titulo": "Generando descripciones con IA: workflow práctico",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        }
+      ]
+    },
+    {
+      "id": "s11",
+      "titulo": "Listas de reproducción (SEOlista)",
+      "descripcion": "Las listas son tu arma secreta de retención y sesión.",
+      "familia": "listas",
+      "colorToken": "--family-listas",
+      "asignaturas": [
+        {
+          "id": "s11_a1",
+          "titulo": "Por qué las listas de reproducción importan más de lo que crees",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s11_a2",
+          "titulo": "SEOlista: nombre optimizado con palabra clave",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": "tpl_seolista",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s11_a3",
+          "titulo": "Descripción de lista: los 200-300 caracteres que posicionan",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": "tpl_seolista",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s11_a4",
+          "titulo": "Orden de los vídeos: de introductorio a avanzado",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s11_a5",
+          "titulo": "Listas como secciones del canal: organización visual",
+          "duracionEstimadaMin": 6,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s11_a6",
+          "titulo": "Mantenimiento trimestral: rotar, añadir, eliminar",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s11_a7",
+          "titulo": "Series oficiales vs listas manuales",
+          "duracionEstimadaMin": 6,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        }
+      ]
+    },
+    {
+      "id": "s12",
+      "titulo": "Shorts y contenido vertical",
+      "descripcion": "El formato corto como puerta de entrada a tu canal largo.",
+      "familia": "video",
+      "colorToken": "--family-video",
+      "asignaturas": [
+        {
+          "id": "s12_a1",
+          "titulo": "Shorts en la estrategia CRECETUBE: complemento, no sustituto",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s12_a2",
+          "titulo": "Anatomía de un Short viral: gancho en 1 segundo",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s12_a3",
+          "titulo": "De Short a vídeo largo: cómo derivar tráfico",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s12_a4",
+          "titulo": "Métricas de Shorts: qué mirar y qué ignorar",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s12_a5",
+          "titulo": "Reutilizar fragmentos de vídeos largos como Shorts",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s12_a6",
+          "titulo": "Herramientas de edición vertical rápida",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s12_a7",
+          "titulo": "Frecuencia de Shorts: ¿cuántos por semana?",
+          "duracionEstimadaMin": 6,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s12_a8",
+          "titulo": "Shorts que convierten suscriptores vs Shorts vanidad",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        }
+      ]
+    },
+    {
+      "id": "s13",
+      "titulo": "Pantallas finales",
+      "descripcion": "Los últimos 20 segundos son tu oportunidad de mantener al espectador en tu canal.",
+      "familia": "tarjetas",
+      "colorToken": "--family-tarjetas",
+      "asignaturas": [
+        {
+          "id": "s13_a1",
+          "titulo": "Qué son las pantallas finales y por qué necesitas usarlas",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": "tpl_pantallas_finales",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s13_a2",
+          "titulo": "Configuraciones: unitaria, binaria, terciaria, cuaternaria",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": "tpl_pantallas_finales",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s13_a3",
+          "titulo": "Diseño visual: reservar espacio en el último frame",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s13_a4",
+          "titulo": "Apoyar con audio: la frase que guía al clic",
+          "duracionEstimadaMin": 6,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s13_a5",
+          "titulo": "Errores frecuentes: tapar contenido, no mencionarlas",
+          "duracionEstimadaMin": 6,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s13_a6",
+          "titulo": "Analizar rendimiento: CTR de pantallas finales en Studio",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        }
+      ]
+    },
+    {
+      "id": "s14",
+      "titulo": "Tarjetas interactivas",
+      "descripcion": "Derivan tráfico interno de forma estratégica.",
+      "familia": "tarjetas",
+      "colorToken": "--family-tarjetas",
+      "asignaturas": [
+        {
+          "id": "s14_a1",
+          "titulo": "Tipos de tarjetas: Subjeta, Indujetas, Psicojetas, SEOjeta, SEOrescate",
+          "duracionEstimadaMin": 10,
+          "plantillaRelacionadaId": "tpl_tarjetas",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s14_a2",
+          "titulo": "Cuándo y dónde colocar cada tipo",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": "tpl_tarjetas",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s14_a3",
+          "titulo": "La regla de los 2 minutos de distancia",
+          "duracionEstimadaMin": 6,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s14_a4",
+          "titulo": "Apoyar tarjetas con mención en audio",
+          "duracionEstimadaMin": 6,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s14_a5",
+          "titulo": "Nunca en el primer minuto ni en los últimos 30 segundos",
+          "duracionEstimadaMin": 5,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s14_a6",
+          "titulo": "Medir el rendimiento de tarjetas en Analytics",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s14_a7",
+          "titulo": "Plan de tarjetas: rellenar la plantilla antes de subir",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": "tpl_tarjetas",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        }
+      ]
+    },
+    {
+      "id": "s15",
+      "titulo": "Comunidad y engagement",
+      "descripcion": "Construye una comunidad activa que impulse el algoritmo.",
+      "familia": "comunidad",
+      "colorToken": "--family-comunidad",
+      "asignaturas": [
+        {
+          "id": "s15_a1",
+          "titulo": "La pestaña Comunidad: qué es y cómo activarla",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s15_a2",
+          "titulo": "Giftcalipsis: GIFs + frases que provocan interacción",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": "tpl_comunidad_giftcalipsis",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s15_a3",
+          "titulo": "SEOencuesta: preguntas que validan ideas de vídeo",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": "tpl_comunidad_seoencuesta",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s15_a4",
+          "titulo": "SEOlaunch: anunciar un vídeo antes de publicar",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": "tpl_comunidad_seolaunch",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s15_a5",
+          "titulo": "SEOrepesca: rescatar un vídeo 48-72h después",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": "tpl_comunidad_seorepesca",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s15_a6",
+          "titulo": "Responder comentarios: las primeras 1-2 horas importan",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s15_a7",
+          "titulo": "Corazones, fijados y respuestas en vídeo",
+          "duracionEstimadaMin": 6,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s15_a8",
+          "titulo": "Gestión de trolls y comentarios negativos",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s15_a9",
+          "titulo": "Calendario de posts de comunidad: frecuencia ideal",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        }
+      ]
+    },
+    {
+      "id": "s16",
+      "titulo": "Crossplatform y difusión",
+      "descripcion": "Lleva tu contenido a donde está tu audiencia.",
+      "familia": "crossplatform",
+      "colorToken": "--family-crossplatform",
+      "asignaturas": [
+        {
+          "id": "s16_a1",
+          "titulo": "La regla crossplatform: adaptar, no repostear",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s16_a2",
+          "titulo": "Instagram para creadores de YouTube",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s16_a3",
+          "titulo": "Twitter/X: cómo usar hilos para derivar tráfico",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s16_a4",
+          "titulo": "TikTok: reutilizar Shorts con estrategia",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s16_a5",
+          "titulo": "LinkedIn y nichos B2B: la oportunidad ignorada",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s16_a6",
+          "titulo": "Pinterest y vídeos evergreen",
+          "duracionEstimadaMin": 6,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s16_a7",
+          "titulo": "Telegram y Discord: canales privados para superfans",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s16_a8",
+          "titulo": "Automatización con herramientas gratuitas",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        }
+      ]
+    },
+    {
+      "id": "s17",
+      "titulo": "Monetización y marca personal",
+      "descripcion": "Convierte tu canal en un negocio sostenible.",
+      "familia": "monetizacion",
+      "colorToken": "--family-monetizacion",
+      "asignaturas": [
+        {
+          "id": "s17_a1",
+          "titulo": "Las 7 vías de monetización en YouTube",
+          "duracionEstimadaMin": 10,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s17_a2",
+          "titulo": "Programa de Partners: requisitos y cómo llegar",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s17_a3",
+          "titulo": "RPM y CPM: las métricas que definen tus ingresos",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": "tpl_panel_marca",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s17_a4",
+          "titulo": "Patrocinios: cómo conseguir tu primera marca",
+          "duracionEstimadaMin": 10,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s17_a5",
+          "titulo": "Productos digitales: cursos, ebooks, plantillas",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s17_a6",
+          "titulo": "Afiliados: integrar recomendaciones sin perder credibilidad",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s17_a7",
+          "titulo": "Super Chat, Membresías y Super Thanks",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s17_a8",
+          "titulo": "YouTube Ads para creadores: promocionar tu propio contenido",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": "tpl_campana_ads",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s17_a9",
+          "titulo": "Construir tu marca personal fuera de YouTube",
+          "duracionEstimadaMin": 10,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s17_a10",
+          "titulo": "Panel de marca: KPIs que debes revisar cada semana",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": "tpl_panel_marca",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        }
+      ]
+    },
+    {
+      "id": "s18",
+      "titulo": "Email marketing para creadores",
+      "descripcion": "Tu lista de email es el único activo que YouTube no controla.",
+      "familia": "emails",
+      "colorToken": "--family-emails",
+      "asignaturas": [
+        {
+          "id": "s18_a1",
+          "titulo": "Por qué necesitas una lista de email (aunque tengas 500 subs)",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s18_a2",
+          "titulo": "Lead magnets para creadores: qué ofrecer",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": "tpl_email_lead_magnet",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s18_a3",
+          "titulo": "Email de bienvenida: la primera impresión",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": "tpl_email_bienvenida",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s18_a4",
+          "titulo": "Email de nuevo vídeo: cuándo y cómo enviarlo",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": "tpl_email_nuevo_video",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s18_a5",
+          "titulo": "Sorteos por email: mecánica y legal",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": "tpl_email_sorteo",
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s18_a6",
+          "titulo": "Secuencias automatizadas básicas",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s18_a7",
+          "titulo": "Métricas de email: open rate, CTR y qué hacer con ellas",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s18_a8",
+          "titulo": "Herramientas de email gratuitas y de pago",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        }
+      ]
+    },
+    {
+      "id": "s19",
+      "titulo": "Analítica y métricas",
+      "descripcion": "Los datos te dicen qué funciona. Aprende a leerlos.",
+      "familia": "analitica",
+      "colorToken": "--family-analitica",
+      "asignaturas": [
+        {
+          "id": "s19_a1",
+          "titulo": "YouTube Analytics: las 4 pestañas que importan",
+          "duracionEstimadaMin": 10,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s19_a2",
+          "titulo": "CTR de impresiones: qué es y cómo mejorarlo",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s19_a3",
+          "titulo": "Retención de audiencia: la gráfica más importante",
+          "duracionEstimadaMin": 10,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s19_a4",
+          "titulo": "Velocidad de visualización: el KPI oculto",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s19_a5",
+          "titulo": "Fuentes de tráfico: de dónde vienen tus vistas",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s19_a6",
+          "titulo": "Audiencia: demografía y \"viewers no suscritos\"",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s19_a7",
+          "titulo": "Análisis comparativo: vídeo actual vs anteriores",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s19_a8",
+          "titulo": "Snapshots manuales: registrar métricas en la app",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s19_a9",
+          "titulo": "Insights con IA: qué puede decirnos un LLM sobre nuestros datos",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s19_a10",
+          "titulo": "Dashboard de métricas: cómo leer tu panel en CRECETUBE",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        }
+      ]
+    },
+    {
+      "id": "s20",
+      "titulo": "Mentalidad y crecimiento sostenible",
+      "descripcion": "YouTube es un maratón. Prepara tu cabeza.",
+      "familia": "mentalidad",
+      "colorToken": "--family-mentalidad",
+      "asignaturas": [
+        {
+          "id": "s20_a1",
+          "titulo": "La meseta de las 100 vistas: por qué es normal y cómo salir",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s20_a2",
+          "titulo": "Síndrome del impostor en creadores",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s20_a3",
+          "titulo": "Burnout: señales de alarma y prevención",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s20_a4",
+          "titulo": "Compararse con otros: el veneno silencioso",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s20_a5",
+          "titulo": "La regla de los 100 vídeos: consistencia mata talento",
+          "duracionEstimadaMin": 8,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s20_a6",
+          "titulo": "Feedback negativo: cómo procesarlo sin paralizarte",
+          "duracionEstimadaMin": 7,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s20_a7",
+          "titulo": "Delegar: cuándo y qué empezar a externalizar",
+          "duracionEstimadaMin": 9,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        },
+        {
+          "id": "s20_a8",
+          "titulo": "Tu plan a 12 meses: objetivos realistas y medibles",
+          "duracionEstimadaMin": 10,
+          "plantillaRelacionadaId": null,
+          "contenido": "",
+          "recursoExtra": null,
+          "videoReferencia": null,
+          "completadoPorDefecto": false
+        }
+      ]
+    }
+  ]
+}

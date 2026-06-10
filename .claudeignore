@@ -1,0 +1,60 @@
+# Dependencias — nunca leer (ahorra MUCHOS tokens)
+node_modules/
+vendor/
+.venv/
+venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+
+# Build — no es código fuente
+dist/
+build/
+.next/
+out/
+.nuxt/
+.svelte-kit/
+coverage/
+
+# Control de versiones
+.git/
+
+# Archivos grandes o binarios
+*.log
+*.lock
+*.map
+*.min.js
+*.min.css
+*.bundle.js
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
+
+# Entorno — sensible
+.env
+.env.local
+.env.production
+.env.development
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Multimedia y assets pesados
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.mp4
+*.mov
+*.pdf
+*.zip
+*.tar.gz

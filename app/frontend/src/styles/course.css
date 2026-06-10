@@ -1,0 +1,100 @@
+/* course.css — curso y plantillas */
+
+.curso-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-4);
+}
+
+.seccion-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: var(--bg-elevated);
+  border: var(--border-thin) solid var(--border-subtle);
+  border-left: 3px solid var(--sec-color, var(--border-strong));
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  color: var(--text-primary);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.seccion-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  color: var(--text-primary);
+}
+
+.seccion-card h3 {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+}
+
+.seccion-card p {
+  color: var(--text-tertiary);
+  font-size: var(--text-sm);
+  flex: 1;
+}
+
+.seccion-id {
+  color: var(--sec-color);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+}
+
+.seccion-card .meta {
+  color: var(--text-tertiary);
+  font-size: var(--text-xs);
+}
+
+.asignatura-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-elevated);
+  border: var(--border-thin) solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.asignatura-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent-mint);
+  flex: none;
+}
+
+.asignatura-row a {
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.asignatura-row a.hecha {
+  color: var(--text-tertiary);
+  text-decoration: line-through;
+  text-decoration-color: var(--border-strong);
+}
+
+.asig-id {
+  color: var(--text-tertiary);
+  font-size: var(--text-xs);
+}
+
+.asignatura-row .meta {
+  color: var(--text-tertiary);
+  font-size: var(--text-xs);
+  flex: none;
+}
+
+.tpl-preview {
+  white-space: pre-wrap;
+  font-family: var(--font-body);
+  background: var(--bg-input);
+  border: var(--border-thin) solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: var(--space-4);
+  margin: 0;
+  max-height: 560px;
+  overflow: auto;
+}

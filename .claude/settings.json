@@ -1,0 +1,67 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(scripts/init.sh)",
+      "Bash(npm install)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(npm test)",
+      "Bash(yarn install)",
+      "Bash(yarn add *)",
+      "Bash(yarn *)",
+      "Bash(pnpm install)",
+      "Bash(pnpm *)",
+      "Bash(pip install *)",
+      "Bash(pip install -r requirements.txt)",
+      "Bash(python3 -m pytest *)",
+      "Bash(python3 *.py)",
+      "Bash(node *)",
+      "Bash(npx tsc *)",
+      "Bash(npx eslint *)",
+      "Bash(npx playwright *)",
+      "Bash(npx playwright install*)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(mkdir *)",
+      "Bash(touch *)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(rm -rf /*)",
+      "Bash(sudo *)",
+      "Bash(curl * | bash*)",
+      "Bash(wget * | sh*)",
+      "Bash(chmod 777 *)",
+      "Bash(git push --force*)",
+      "Bash(git reset --hard*)",
+      "Bash(npm publish*)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '— Sesión iniciada. Leyendo SESSION.md —'"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Archivo modificado: $CLAUDE_FILE_PATH'"
+          }
+        ]
+      }
+    ]
+  }
+}
