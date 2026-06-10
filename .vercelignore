@@ -1,0 +1,9 @@
+node_modules
+**/node_modules
+app/backend/data
+**/dist
+.env
+.git
+.claude
+progress
+improvements
