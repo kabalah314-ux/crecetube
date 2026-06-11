@@ -1,7 +1,7 @@
 // Dashboard — resumen real (08 §8.5): KPIs + continuar donde lo dejaste + accesos.
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Plus, BookOpen, FileText, Video as VideoIcon } from "lucide-react";
+import { Plus, BookOpen, FileText, Video as VideoIcon, Target } from "lucide-react";
 import { useStore } from "../store/useStore";
 import { api } from "../services/api";
 import { es } from "../i18n/es";
@@ -9,6 +9,11 @@ import { COLOR_ESTADO } from "../wizard/estados";
 import { globalProgress, stepDeReanudacion } from "../wizard/config";
 import { OpenRouterTutorial } from "../wizard/OpenRouterTutorial";
 import type { VideoProject } from "../types";
+
+interface ViabilidadData {
+  completado?: boolean;
+  saltado?: boolean;
+}
 
 const TUTORIAL_KEY = "ct.tutorial.openrouter";
 
@@ -18,11 +23,21 @@ export function Dashboard() {
   const profile = useStore((s) => s.profile);
   const [videos, setVideos] = useState<VideoProject[] | null>(null);
   const [showTutorial, setShowTutorial] = useState(false);
+  const [viabilidad, setViabilidad] = useState<ViabilidadData | null | undefined>(undefined);
   const navigate = useNavigate();
 
   useEffect(() => {
     void api.get<VideoProject[]>("/api/videos").then(setVideos).catch(() => setVideos([]));
   }, []);
+
+  useEffect(() => {
+    if (profile?.tieneCanalYa === false) {
+      void api
+        .get<ViabilidadData | null>("/api/viabilidad")
+        .then((d) => setViabilidad(d ?? null))
+        .catch(() => setViabilidad(null));
+    }
+  }, [profile?.tieneCanalYa]);
 
   useEffect(() => {
     if (!profile) return;
@@ -59,6 +74,34 @@ export function Dashboard() {
           <Plus size={18} /> Nuevo vídeo
         </Link>
       </div>
+
+      {profile?.tieneCanalYa === false && viabilidad !== undefined && !viabilidad?.completado && !viabilidad?.saltado && (
+        <div
+          className="card"
+          data-testid="dashboard-card-viabilidad"
+          style={{
+            marginBottom: "var(--space-5)",
+            borderLeft: "4px solid var(--accent)",
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--space-4)",
+            flexWrap: "wrap",
+          }}
+        >
+          <Target size={28} style={{ color: "var(--accent)", flexShrink: 0 }} />
+          <div style={{ flex: 1, minWidth: 200 }}>
+            <p style={{ fontWeight: 700, marginBottom: "var(--space-1)" }}>
+              {es.viabilidad.bannerDashboardTitulo}
+            </p>
+            <p style={{ color: "var(--text-secondary)", fontSize: "var(--text-sm)" }}>
+              {es.viabilidad.bannerDashboardDesc}
+            </p>
+          </div>
+          <Link to="/viabilidad" className="btn btn-primary btn-sm">
+            {es.viabilidad.bannerDashboardCta}
+          </Link>
+        </div>
+      )}
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "var(--space-4)", marginBottom: "var(--space-6)" }}>
         <div className="card kpi">

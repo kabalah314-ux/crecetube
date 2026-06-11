@@ -10,23 +10,27 @@ import {
   Menu,
   Sun,
   Moon,
+  Target,
 } from "lucide-react";
 import { es } from "../i18n/es";
 import { useStore } from "../store/useStore";
-
-const NAV = [
-  { to: "/dashboard", label: es.nav.dashboard, icon: LayoutDashboard, testid: "nav-dashboard" },
-  { to: "/videos", label: es.nav.videos, icon: Video, testid: "nav-videos" },
-  { to: "/curso", label: es.nav.curso, icon: BookOpen, testid: "nav-curso" },
-  { to: "/plantillas", label: es.nav.plantillas, icon: FileText, testid: "nav-plantillas" },
-  { to: "/metricas", label: es.nav.metricas, icon: LineChart, testid: "nav-metricas" },
-];
 
 export function Layout() {
   const [drawer, setDrawer] = useState(false);
   const profile = useStore((s) => s.profile);
   const setTheme = useStore((s) => s.setTheme);
   const tema = profile?.preferenciasUi.tema ?? "dark";
+
+  const NAV = [
+    { to: "/dashboard", label: es.nav.dashboard, icon: LayoutDashboard, testid: "nav-dashboard" },
+    ...(profile?.tieneCanalYa === false
+      ? [{ to: "/viabilidad", label: es.viabilidad.nav, icon: Target, testid: "nav-viabilidad" }]
+      : []),
+    { to: "/videos", label: es.nav.videos, icon: Video, testid: "nav-videos" },
+    { to: "/curso", label: es.nav.curso, icon: BookOpen, testid: "nav-curso" },
+    { to: "/plantillas", label: es.nav.plantillas, icon: FileText, testid: "nav-plantillas" },
+    { to: "/metricas", label: es.nav.metricas, icon: LineChart, testid: "nav-metricas" },
+  ];
 
   const nav = (
     <>

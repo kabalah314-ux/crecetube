@@ -16,6 +16,7 @@ import { CourseLesson } from "./routes/CourseLesson";
 import { TemplatesLibrary } from "./routes/TemplatesLibrary";
 import { TemplateDetail } from "./routes/TemplateDetail";
 import { Metrics } from "./routes/Metrics";
+import { Viabilidad } from "./routes/Viabilidad";
 import { es } from "./i18n/es";
 
 function Splash() {
@@ -67,6 +68,7 @@ export default function App() {
           <Route path="/plantillas" element={<TemplatesLibrary />} />
           <Route path="/plantillas/:id" element={<TemplateDetail />} />
           <Route path="/metricas" element={<Metrics />} />
+          <Route path="/viabilidad" element={<Viabilidad />} />
           <Route path="/configuracion" element={<Settings />} />
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
         </Route>

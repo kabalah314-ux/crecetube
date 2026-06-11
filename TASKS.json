@@ -4,9 +4,9 @@
   "ultima_actualizacion": "2026-06-11",
   "resumen": {
     "total": 20,
-    "pendientes": 5,
-    "en_progreso": 1,
-    "completadas": 14,
+    "pendientes": 3,
+    "en_progreso": 2,
+    "completadas": 15,
     "bloqueadas": 0,
     "tokens_estimados_totales": 0
   },
@@ -193,11 +193,11 @@
     },
     {
       "id": "T016",
-      "titulo": "Inicio de sesión con Google (auth de usuarios)",
-      "descripcion": "Añadir registro/inicio de sesión, incluyendo 'Continuar con Google' (OAuth). Implica modelo multi-usuario en la BD (hoy es single-user) y sesiones en el backend Express/Vercel. REQUIERE ACCIÓN DEL USUARIO: crear credenciales OAuth en Google Cloud Console (client id + secret). Decidir alcance: ¿auth obligatoria o opcional para uso local? Petición del usuario 2026-06-11.",
+      "titulo": "Inicio de sesión: Google + email/contraseña (auth de usuarios)",
+      "descripcion": "Añadir registro/inicio de sesión con 'Continuar con Google' Y con email+contraseña (petición ampliada del usuario 2026-06-11). DECISIÓN (explorer 2026-06-11): auth OPCIONAL — Google Identity Services en frontend + verificación del ID token en backend + sesión JWT stateless en cookie httpOnly; si GOOGLE_CLIENT_ID está vacío, modo local automático (req.user = 'local'), no rompe localhost ni E2E. Email/contraseña: tabla users con passwordHash NULLABLE (los usuarios de Google no tienen), hash con scrypt de node:crypto (CERO dependencias extra), registro + login en la misma pantalla; SIN recuperación de contraseña por ahora (necesitaría servicio de email — anotar como mejora futura). Dependencias AUTORIZADAS: jose + cookie-parser (alternativa: google-auth-library). Env vars nuevas: GOOGLE_CLIENT_ID (opcional), SESSION_SECRET. FASES: Fase 0 (sin credenciales): migraciones versionadas en initDb, userId en tablas, canal por defecto — va junto a T017. Fase 1: pantalla login/registro + tabla users + email/contraseña (NO bloqueada) + botón Google (bloqueado solo el botón por las credenciales OAuth del usuario). Riesgo clave: PK de course_progress colisiona en multi-usuario. Análisis completo: progress/explorer-log-t016.md.",
       "fase": "desarrollo",
       "prioridad": "media",
-      "estado": "pendiente",
+      "estado": "en_progreso",
       "depende_de": null,
       "tokens_estimados": "alto",
       "complejidad": "alta",
@@ -221,11 +221,11 @@
       "descripcion": "Para quien se registra SIN canal: fase saltable de validación de la idea de canal que acompañe al usuario a hacer un estudio de viabilidad del nicho, apoyada en el conocimiento del curso (secciones s3/s4: demanda, sub-nichos, PVU, validación). Nueva sección/asistente paso a paso con checklist y resultado de viabilidad. Petición del usuario 2026-06-11.",
       "fase": "desarrollo",
       "prioridad": "media",
-      "estado": "pendiente",
+      "estado": "completada",
       "depende_de": null,
       "tokens_estimados": "alto",
       "complejidad": "alta",
-      "resultado": null
+      "resultado": "Página /viabilidad con stepper de 5 pasos (idea, demanda, competencia/hueco, sub-nicho/PVU, veredicto con IA evaluacion_nicho), autosave, saltable con persistencia en BD; sidebar y banner de Dashboard condicionales (solo sin canal); tabla viabilidad + GET/PATCH + 6 tests. Ciclo explorer→implementor(fable)→reviewer: APROBADO sin arreglos, 48/48 backend, 7/7 E2E, tsc, build; verificado en vivo"
     },
     {
       "id": "T019",

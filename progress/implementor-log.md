@@ -241,7 +241,7 @@ ok 7  e2e/03-romuald.spec.ts › sprint 11 checkboxes (1.8s)
 
 ## Correcciones aplicadas (3 intentos)
 
-**Intento 1 — 7 fallos**: En el onboarding usé `getByRole("button", { name: /siguiente/ })` pero el botón tiene `data-testid="onboarding-next"`. Corregido leyendo `Onboarding.tsx`.
+**Intento 1 — 7 fallos**: En el onboarding usé `getByRole("button", { name: /siguiente/ })` pero el botón tiene `data-testid="onboarding-next"`. Corregido leyendo `Onboarding.tsx` antes de escribir el spec.
 
 **Intento 2 — 6 fallos**: Todos por UUID en URLs (`\d+` no matchea UUID). Corregidos los tres patrones de URL a `.+`.
 
@@ -275,3 +275,38 @@ Fecha: 2026-06-11
 ## Verificado
 
 - `npx tsc --noEmit` en `app/frontend` -- 0 errores.
+
+---
+
+# Implementor Log — T018: Fase de viabilidad del canal
+
+Fecha: 2026-06-11
+
+## Archivos creados
+
+- `app/backend/src/routes/viabilidad.js` — GET y PATCH singleton (`id='main'`). PATCH fusiona con spread simple (modelo de datos plano). Incluye columna `completado` en el INSERT OR REPLACE para coherencia con el schema.
+- `app/frontend/src/routes/Viabilidad.tsx` — Pagina con stepper de 5 pasos, estado local, autosave con debounce 800ms via PATCH. Sin dependencia de VideoProject. Usa AiBlock con `videoProjectId="viabilidad"` y tipo `evaluacion_nicho`.
+- `app/backend/tests/viabilidad.test.mjs` — Test CRUD: GET vacio → PATCH crea → GET persiste → PATCH fusiona → GET refleja completado. 6/6 passing.
+
+## Archivos modificados
+
+- `app/backend/src/db.js` — Tabla `viabilidad` (id, data, completado, createdAt, updatedAt) añadida al SCHEMA.
+- `app/backend/src/server.js` — Import de `viabilidadRoutes` y `app.use("/api/viabilidad", viabilidadRoutes)`.
+- `app/backend/src/prompts.js` — Generador `evaluacion_nicho` con normalizar robusto (veredicto valido, puntuacion 1-10, fortalezas/riesgos arrays, siguientePaso string).
+- `app/frontend/src/App.tsx` — Import de `Viabilidad` y ruta `/viabilidad` dentro del grupo RequireProfile.
+- `app/frontend/src/components/Layout.tsx` — Array NAV movido dentro del componente; item `/viabilidad` con icono `Target` condicionalmente si `profile?.tieneCanalYa === false`. Import de `Target` añadido.
+- `app/frontend/src/i18n/es.ts` — Bloque `viabilidad` con todos los strings de UI. `pasoDe` es funcion tipada.
+- `app/frontend/src/routes/Dashboard.tsx` — Estado `viabilidad` cargado solo si `tieneCanalYa === false`; banner `data-testid="dashboard-card-viabilidad"` visible si no completado ni saltado.
+
+## Decisiones menores
+
+- PATCH de viabilidad usa spread simple en lugar de `mergeDeep` porque el modelo es plano.
+- `videoProjectId="viabilidad"` (string fijo) en AiBlock: el backend lo acepta como cualquier string.
+- El banner del Dashboard no muestra flash: estado empieza en `undefined` y solo muestra cuando se resuelve la carga.
+- La pagina no usa `TipBanner` con `StepId` para no ampliar el tipo union en `types.ts`; usa componente local `TipViabilidad` con el mismo estilo visual.
+- El item de nav se inserta entre dashboard y videos para maxima visibilidad.
+
+## Verificaciones
+
+- `node --test tests/viabilidad.test.mjs` → 6/6 passing
+- `npx tsc --noEmit` → sin errores

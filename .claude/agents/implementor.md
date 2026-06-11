@@ -1,7 +1,7 @@
 ---
 name: implementor
 description: Escribe e implementa el código de una tarea ya analizada. Úsalo después del explorer (o directamente si la tarea es pequeña y clara) para materializar los cambios delegados. Solo implementa lo delegado; no audita ni decide arquitectura.
-model: sonnet
+model: fable
 tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 

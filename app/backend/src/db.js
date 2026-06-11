@@ -44,6 +44,13 @@ CREATE TABLE IF NOT EXISTS metric_snapshots (
   fecha TEXT NOT NULL,
   UNIQUE(videoProjectId, fecha)
 );
+CREATE TABLE IF NOT EXISTS viabilidad (
+  id TEXT PRIMARY KEY,
+  data TEXT NOT NULL,
+  completado INTEGER DEFAULT 0,
+  createdAt TEXT NOT NULL,
+  updatedAt TEXT NOT NULL
+);
 `;
 
 export const jparse = (row) => (row ? JSON.parse(row.data) : null);

@@ -219,6 +219,42 @@ Formato de salida:
         : null,
   },
 
+  evaluacion_nicho: {
+    maxTokens: 1000,
+    temperatura: 0.6,
+    user: (op) => `IDEA DE CANAL
+Nicho declarado: ${op.nicho ?? "(sin especificar)"}
+Idea de canal: ${op.ideaCanal ?? "(sin especificar)"}
+Nivel del creador: ${op.nivel ?? "principiante"}
+Canales de referencia: ${op.canalesReferencia ?? "(ninguno)"}
+Sub-nicho elegido: ${op.subNicho ?? "(sin especificar)"}
+PVU propuesta: ${op.pvu ?? "(sin especificar)"}
+
+Analiza la viabilidad de esta idea usando el metodo del triangulo (pasion x demanda x competencia) del metodo CRECETUBE.
+Da un veredicto claro, sin evasivas. Si la idea tiene hueco real, dilo. Si hay riesgo serio, advierte con datos concretos.
+Formato de salida EXCLUSIVAMENTE JSON, sin texto adicional, sin markdown:
+{"veredicto":"viable|ajustar|pivotar","puntuacion":1,"fortalezas":["fortaleza 1","fortaleza 2"],"riesgos":["riesgo 1","riesgo 2"],"siguientePaso":"accion concreta en 1 frase"}`,
+    normalizar: (p) => {
+      if (!p || typeof p !== "object") return null;
+      const veredictos = ["viable", "ajustar", "pivotar"];
+      const veredicto = veredictos.includes(p.veredicto) ? p.veredicto : "ajustar";
+      const puntuacion = typeof p.puntuacion === "number" && p.puntuacion >= 1 && p.puntuacion <= 10
+        ? Math.round(p.puntuacion)
+        : 5;
+      const fortalezas = Array.isArray(p.fortalezas)
+        ? p.fortalezas.filter((x) => typeof x === "string" && x.trim()).slice(0, 5)
+        : [];
+      const riesgos = Array.isArray(p.riesgos)
+        ? p.riesgos.filter((x) => typeof x === "string" && x.trim()).slice(0, 5)
+        : [];
+      const siguientePaso = typeof p.siguientePaso === "string" && p.siguientePaso.trim()
+        ? p.siguientePaso.trim()
+        : null;
+      if (!veredicto && !fortalezas.length && !riesgos.length) return null;
+      return [{ veredicto, puntuacion, fortalezas, riesgos, siguientePaso }];
+    },
+  },
+
   analisis_retencion: {
     maxTokens: 1200,
     temperatura: 0.4,

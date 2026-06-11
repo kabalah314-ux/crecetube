@@ -11,6 +11,7 @@ import videosRoutes from "./routes/videos.js";
 import cursoRoutes from "./routes/curso.js";
 import plantillasRoutes from "./routes/plantillas.js";
 import metricasRoutes from "./routes/metricas.js";
+import viabilidadRoutes from "./routes/viabilidad.js";
 
 export async function createApp({ dbUrl, dbAuthToken } = {}) {
   const db = makeDb(dbUrl || cfg.DB_URL, dbAuthToken ?? cfg.DB_AUTH_TOKEN);
@@ -28,6 +29,7 @@ export async function createApp({ dbUrl, dbAuthToken } = {}) {
   app.use("/api/curso", cursoRoutes);
   app.use("/api/plantillas", plantillasRoutes);
   app.use("/api/metricas", metricasRoutes);
+  app.use("/api/viabilidad", viabilidadRoutes);
 
   app.use("/api", (req, res) =>
     res.status(404).json({ error: `Ruta no encontrada: ${req.method} ${req.originalUrl}`, code: "NOT_FOUND" })
