@@ -1,66 +1,61 @@
-# Reviewer Log — T012: Auditoría del contenido del curso (07_curso_seed.json)
+# Reviewer Log — T015: Mini-tutorial visual de OpenRouter
 
 Fecha: 2026-06-11
-Rol: director de calidad (auditar SOLO el contenido del seed y arreglar lo que falle).
 
-## Método
+## Veredicto
 
-- Script QA temporal en `app/guia_maestra/contenido_fragmentos/_qa.mjs` que recorre el seed y
-  verifica reglas 1 (markdown), 2 (longitud por duración ±20%), 3 (videoReferencia URL válida),
-  4 (asignaturas sin contenido intactas), 5 (JSON parsea + invariantes version=2 / 20 secciones / 169 asignaturas).
-- Regla 6 (tono): lectura directa de una muestra de 12 asignaturas variadas (s1_a7, s3_a1, s4_a2,
-  s5_a1, s5_a7, s6_a7, s9_a3, s9_a10, s13_a2, s14_a1, s17_a3, s19_a2) + barrido por regex de restos
-  de lenguaje hablado de transcripción sobre las 56 asignaturas con contenido.
+APROBADO — sin arreglos necesarios. La implementación pasó todas las verificaciones a la primera.
 
-## Estado inicial encontrado
+## Verificaciones ejecutadas
 
-- Reglas 1, 3, 4, 5: SIN violaciones desde el principio.
-  - Sin markdown (##, **, __, triple backtick, enlaces [..](..)).
-  - 56/56 con videoReferencia https://www.youtube.com/watch?v=... válida.
-  - 113/113 asignaturas sin contenido intactas (contenido:"" y videoReferencia:null).
-  - JSON parsea. version=2, 20 secciones, 169 asignaturas.
-- Regla 2: 1 asignatura corta (s6_a2).
+| Verificación | Comando | Resultado |
+|---|---|---|
+| Typecheck frontend | `npm run typecheck --workspace app/frontend` (tsc --noEmit) | ✓ 0 errores |
+| Build frontend | `npm run build --workspace app/frontend` (vite build) | ✓ built in 19.56s |
+| Tests backend (humo) | `npm test --workspace app/backend` | ✓ 42/42 pass |
+| Suite E2E | `npm run test:e2e` (playwright, puertos 8002/5174, BD temporal) | ✓ 7/7 pass en 35.3s |
 
-## Arreglos aplicados (regla 6 — tono / coherencia)
+Detalle E2E:
+- ok 01-onboarding — 9 pasos hasta el dashboard (modificado, cierra el tutorial condicionalmente)
+- ok 02-wizard — creación perezosa + autosave/persistencia título
+- ok 02-wizard — ítem manual del checklist persiste tras recarga
+- ok 03-romuald — TipBanner descartar/reabrir
+- ok 03-romuald — ContextPanel consejo + glosario 9 dt
+- ok 03-romuald — grabacion 8 checkboxes
+- ok 03-romuald — sprint 11 checkboxes
 
-1. **s13_a2** — error tipográfico: "Configuraci unitaria" -> "Configuración unitaria".
-2. **s6_a7** — jerga de directo: encabezado "EL GPT BIG BEAST: CÓMO USARLO" -> "EL GPT DE CRECETUBE: CÓMO USARLO".
-   ("Big Beast" era apodo del directo, no terminología del método.)
-3. **s6_a7** — incoherencia numérica interna: la intro prometía "Genera 9 opciones" pero todo el cuerpo
-   trabaja con 3 títulos ("genera tres títulos optimizados", "Lee los tres títulos", "Los tres títulos
-   van al AB testing" — coherente con que el AB testing de YouTube admite 3). Alineé la intro a
-   "Genera tres opciones" para coherencia interna. No inventé contenido nuevo: solo armonicé un número.
+El build emite 2 advertencias (chunk dinámico/estático de `config.ts` y chunk > 500 kB). Ambas son PREEXISTENTES y ajenas a T015 (no las introdujo este cambio); no son errores.
 
-## Falsos positivos revisados y descartados (no se tocaron)
+## Revisión de coherencia con patrones del repo
 
-- "dale like" / "Hola a todos, bienvenidos" (s1_a7, s9_a3): aparecen ENTRECOMILLADOS como ejemplos
-  pedagógicos de lo que NO hacer. Uso correcto.
-- "bueno" (s1_a8, s3_a4, s9_a10): adjetivo ("muy bueno"), no la muletilla "bueno,".
-- "vale" (s3_a8, s9_a10, s17_a9, s18_a1): verbo valer ("vale miles de euros"), no coletilla.
-- "este tío" (s5_a10): dentro de un ejemplo entrecomillado; coherente con el tono cercano del método.
-- Menciones a "Romuald" (16 asignaturas): apropiadas — el curso ES explícitamente el método Romuald
-  Fons; la guía pide alinearse con su metodología. Citarlo como autor del método es correcto.
-- Sin menciones a comprar el curso, ni al chat/directo, ni herramientas IA de terceros fuera de contexto, ni HTML.
+- **Modal**: `OpenRouterTutorial` reutiliza `components/ui/Modal` con `wide` + `actions`. Soporte Escape (efecto en Modal) y clic en overlay; ambos disparan `onClose` → `closeTutorial`. Correcto.
+- **Tokens CSS**: `.tutorial-step`, `.tutorial-step-num`, `.tutorial-step-body strong/p` en `components.css` (líneas ~236-266) usan `var(--space-*)`, `var(--accent-primary)`, `var(--text-*)`. Sin colores hardcodeados.
+- **i18n**: bloque `tutorial.openrouter` en `es.ts` (líneas 128-144) con título, bajada, 3 pasos, 2 CTAs y link. Sin literales en JSX.
+- **localStorage (patrón TipBanner)**: clave `ct.tutorial.openrouter`, valor `"1"`. Escrita en `closeTutorial` (Dashboard.tsx línea 35) antes de cerrar — consistente para X, Escape y overlay.
+- **data-testid solicitados**: presentes y correctos — `openrouter-tutorial` (contenedor, línea 64), `openrouter-tutorial-close` (botón ghost, línea 47), `openrouter-tutorial-cta` (botón primario, línea 53).
+- **CTA**: `handleCta` llama `onClose()` y luego `navigate("/configuracion")`. Navega a la ruta correcta y el cierre persiste en localStorage. Correcto.
 
-## Asignatura corta NO arreglada (regla 2 — no inventar)
+## Condición de visibilidad (verificada por inspección)
 
-- **s6_a2** "Fórmulas de títulos probadas" (12 min, rango 440-900 palabras con tolerancia): 344 palabras.
-  Contenido legítimo y bien estructurado (5 fórmulas con ejemplo + loop como título + cómo elegir).
-  Según la regla, NO se inventa contenido nuevo cuando una clase queda corta: se deja y se anota.
-  Candidata a ampliación futura por el implementor (más ejemplos por fórmula o fórmulas adicionales del glosario).
+`Dashboard.tsx` líneas 27-32:
+```ts
+useEffect(() => {
+  if (!profile) return;
+  if (profile.iaConfig.apiKey === "" && localStorage.getItem(TUTORIAL_KEY) !== "1") {
+    setShowTutorial(true);
+  }
+}, [profile]);
+```
+- El `if (!profile) return` y la dependencia `[profile]` garantizan que la condición se evalúa SOLO cuando el perfil ya está cargado. No hay parpadeo para usuarios con clave: si `apiKey === "***"` el modal nunca se activa.
+- `showTutorial` arranca en `false`, así que entre el primer render y la carga del perfil el modal permanece oculto. Correcto por diseño.
 
-## Verificación final (tras arreglos)
+## Interferencia en otros specs
 
-- JSON parsea. version=2, 20 secciones, 169 asignaturas.
-- 56 con contenido, las 56 con videoReferencia válida.
-- 113 sin contenido intactas (contenido:"" y videoReferencia:null).
-- Reglas 1, 3, 4, 5: sin violaciones.
-- Longitud: solo s6_a2 fuera de rango (corta, no arreglada por regla de no inventar).
-- Estadística de palabras (56 con contenido): min 277 / mediana 364 / max 470 — ningún techo superado.
+- Specs 02 y 03 navegan al wizard, no al dashboard de primera carga; no se ven afectados por el modal. Confirmado: ambos pasan sin tocar el tutorial.
+- Spec 01 (que sí aterriza en `/dashboard`) descarta el tutorial con una comprobación condicional `isVisible()` antes de la aserción del heading. Robusto: no rompe si en otro contexto ya hubiera clave.
 
-## Nota operativa
+## Patrones recurrentes / candidatos a improvements
 
-- El script temporal `_qa.mjs` no pudo borrarse: el entorno denegó `del`/`Remove-Item` por permisos.
-  Quedó sobrescrito con una nota indicando que es temporal y puede borrarse con seguridad.
+Ninguno. No hubo fallos ni correcciones, por tanto no hay patrón de error que registrar.
 
-## RESULTADO: APROBADO CON ARREGLOS
+## RESULTADO: APROBADO

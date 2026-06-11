@@ -232,6 +232,39 @@
   margin-top: var(--space-6);
 }
 
+/* ---------- Tutorial steps ---------- */
+.tutorial-step {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  margin-bottom: var(--space-4);
+}
+
+.tutorial-step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--weight-medium);
+  font-size: var(--text-sm);
+  flex-shrink: 0;
+}
+
+.tutorial-step-body strong {
+  display: block;
+  margin-bottom: var(--space-1);
+}
+
+.tutorial-step-body p {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  margin: 0;
+}
+
 /* ---------- Toasts ---------- */
 .toast-stack {
   position: fixed;

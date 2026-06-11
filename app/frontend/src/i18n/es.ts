@@ -125,4 +125,21 @@ export const es = {
     iaLimites: "Tier gratuito: ~20 peticiones/minuto y ~200/día.",
     exportImport: "Copia de seguridad",
   },
+  tutorial: {
+    openrouter: {
+      titulo: "Activa la IA gratuita en 2 minutos",
+      bajada:
+        "OpenRouter da acceso a modelos potentes (Llama, Gemini, GPT-4o…) con un tier gratuito de ~200 peticiones/día. No hace falta tarjeta.",
+      paso1Titulo: "Crea tu cuenta gratis",
+      paso1Desc: "Ve a openrouter.ai y regístrate. Es gratis y no pide tarjeta.",
+      paso2Titulo: "Genera una API key",
+      paso2Desc: "En el menú lateral → “Keys” → “Create key”. Cópiala.",
+      paso3Titulo: "Pégala en Configuración",
+      paso3Desc:
+        "Ve a Configuración → sección “Inteligencia artificial” → campo API key → guarda.",
+      ctaIrConfiguracion: "Ir a Configuración ahora",
+      ctaSaltar: "Lo haré después",
+      linkOpenRouter: "Abrir openrouter.ai",
+    },
+  },
 };

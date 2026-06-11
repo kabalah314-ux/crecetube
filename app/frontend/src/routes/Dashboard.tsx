@@ -7,18 +7,34 @@ import { api } from "../services/api";
 import { es } from "../i18n/es";
 import { COLOR_ESTADO } from "../wizard/estados";
 import { globalProgress, stepDeReanudacion } from "../wizard/config";
+import { OpenRouterTutorial } from "../wizard/OpenRouterTutorial";
 import type { VideoProject } from "../types";
+
+const TUTORIAL_KEY = "ct.tutorial.openrouter";
 
 const DIAS_30 = 30 * 24 * 60 * 60 * 1000;
 
 export function Dashboard() {
   const profile = useStore((s) => s.profile);
   const [videos, setVideos] = useState<VideoProject[] | null>(null);
+  const [showTutorial, setShowTutorial] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     void api.get<VideoProject[]>("/api/videos").then(setVideos).catch(() => setVideos([]));
   }, []);
+
+  useEffect(() => {
+    if (!profile) return;
+    if (profile.iaConfig.apiKey === "" && localStorage.getItem(TUTORIAL_KEY) !== "1") {
+      setShowTutorial(true);
+    }
+  }, [profile]);
+
+  function closeTutorial() {
+    localStorage.setItem(TUTORIAL_KEY, "1");
+    setShowTutorial(false);
+  }
 
   const activos = videos?.filter((v) => v.estado !== "archivado") ?? [];
   const enMarcha = activos.filter((v) => v.estado !== "publicado" && v.estado !== "optimizacion");
@@ -130,6 +146,8 @@ export function Dashboard() {
           </Link>
         </div>
       </div>
+
+      <OpenRouterTutorial open={showTutorial} onClose={closeTutorial} />
     </div>
   );
 }

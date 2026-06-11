@@ -57,6 +57,12 @@ test.describe("Onboarding — 9 pasos hasta el dashboard", () => {
     // Debe aterrizar en el dashboard
     await expect(page).toHaveURL(/\/dashboard/, { timeout: 15_000 });
 
+    // Si aparece el tutorial de OpenRouter (perfil sin clave IA), cerrarlo antes de continuar
+    const tutorialClose = page.getByTestId("openrouter-tutorial-close");
+    if (await tutorialClose.isVisible()) {
+      await tutorialClose.click();
+    }
+
     // El dashboard debe mostrar el nombre del canal en el saludo
     await expect(page.getByRole("heading", { name: /Canal de Pruebas E2E/ })).toBeVisible();
   });

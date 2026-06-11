@@ -1,16 +1,17 @@
 // T012 — Extrae metadatos y transcripciones de los videos de YouTube aportados por el usuario
 // y los guarda en app/guia_maestra/transcripciones/ (carpeta fuera de git, material de trabajo).
-// Uso: node scripts/extraer-transcripciones.mjs
+// Uso: node scripts/extraer-transcripciones.mjs [videoId ...]  (sin args usa la tanda 1)
 
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-const IDS = [
+const TANDA_1 = [
   "j9egqbiinNg", "T96etud4TIA", "okgJEBSt8Uw", "1IjW1pZMbHg", "3otpxces3JM",
   "_vEvd3dTR2o", "4BTwZXyMPuY", "oPgQjZB79vI", "YsNWjMXcSPE", "vcAcobgcxLw",
   "NhP-CpYL2YU", "-F9ImCYPt54", "lQZinh2eZ1E", "l3X96Jz3-jQ", "WqjPo9pl7wU",
   "X9aiT7a_AUI", "ZWTY9wh5Zfg", "5Lel-0zbskw", "pchYeK591DM"
 ];
+const IDS = process.argv.length > 2 ? process.argv.slice(2) : TANDA_1;
 
 const DEST = path.resolve("app/guia_maestra/transcripciones");
 const UA_WEB =
@@ -67,7 +68,20 @@ function elegirPista(tracks) {
 }
 
 async function transcripcion(track) {
-  const xml = await (await fetch(track.baseUrl)).text();
+  // Reintentos con espera creciente: YouTube limita el endpoint de subtitulos si hay muchas peticiones
+  const esperas = [0, 30_000, 60_000, 120_000, 240_000];
+  let xml = "";
+  for (const espera of esperas) {
+    if (espera) {
+      process.stdout.write(`[limite de peticiones, reintento en ${espera / 1000}s] `);
+      await new Promise((res) => setTimeout(res, espera));
+    }
+    xml = await (
+      await fetch(track.baseUrl, { headers: { "user-agent": UA_WEB, "accept-language": "es-ES,es;q=0.9" } })
+    ).text();
+    if (!/automated queries|unusual traffic/i.test(xml)) break;
+  }
+  if (/automated queries|unusual traffic/i.test(xml)) throw new Error("rate limit persistente en subtitulos");
   const parts = [...xml.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/g)]
     .map((m) => decode(m[1].replace(/<[^>]+>/g, "")).replace(/\s+/g, " ").trim())
     .filter(Boolean);

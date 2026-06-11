@@ -246,3 +246,32 @@ ok 7  e2e/03-romuald.spec.ts › sprint 11 checkboxes (1.8s)
 **Intento 2 — 6 fallos**: Todos por UUID en URLs (`\d+` no matchea UUID). Corregidos los tres patrones de URL a `.+`.
 
 **Intento 3 — 7/7 pasan**.
+
+---
+
+# Implementor Log — T015: Mini-tutorial visual de OpenRouter
+
+Fecha: 2026-06-11
+
+## Archivos creados
+
+- `app/frontend/src/wizard/OpenRouterTutorial.tsx` — componente nuevo; reutiliza `Modal` (wide), muestra 3 pasos numerados con circulos de acento, link externo a openrouter.ai/keys, botones CTA primario ("Ir a Configuracion") y ghost ("Lo hare despues"). `data-testid` en contenedor, CTA y cierre.
+
+## Archivos modificados
+
+- `app/frontend/src/i18n/es.ts` — anadido bloque `tutorial.openrouter` con todos los strings (titulo, bajada, 3 pasos, CTAs, link).
+- `app/frontend/src/routes/Dashboard.tsx` — importado `OpenRouterTutorial`; anadido estado `showTutorial`, `useEffect` que activa el modal si `profile.iaConfig.apiKey === ""` y `localStorage "ct.tutorial.openrouter" !== "1"`, funcion `closeTutorial` que guarda en localStorage y cierra; modal montado antes del cierre del div raiz.
+- `app/frontend/src/styles/components.css` — anadidas clases `.tutorial-step`, `.tutorial-step-num`, `.tutorial-step-body strong/p` antes del bloque de Toasts.
+- `e2e/01-onboarding.spec.ts` — anadido bloque condicional que descarta el tutorial (`openrouter-tutorial-close`) antes de la asercion del heading, ya que el onboarding salta el paso IA y el modal apareceria bloqueando `getByRole("heading")` por `aria-modal="true"`.
+
+## Decisiones menores
+
+- `PASOS` declarado como `const` array fuera del componente para evitar recreacion en cada render.
+- Alias `const t = es.tutorial.openrouter` para brevedad sin romper la referencia tipada.
+- `closeTutorial` guarda la clave localStorage antes de cerrar (comportamiento consistente si el usuario usa X, Escape o clic en overlay -- todos llaman `onClose` que es `closeTutorial`).
+- `ExternalLink` (lucide) usado para el link externo; `Sparkles`, `Key`, `Settings` para los pasos.
+- La comprobacion en el spec es condicional (`isVisible`) en vez de asertiva, para que el test no falle si en otro contexto ya hay clave configurada.
+
+## Verificado
+
+- `npx tsc --noEmit` en `app/frontend` -- 0 errores.

@@ -3,10 +3,10 @@
   "version": "1.0",
   "ultima_actualizacion": "2026-06-11",
   "resumen": {
-    "total": 14,
-    "pendientes": 0,
+    "total": 20,
+    "pendientes": 5,
     "en_progreso": 1,
-    "completadas": 13,
+    "completadas": 14,
     "bloqueadas": 0,
     "tokens_estimados_totales": 0
   },
@@ -178,6 +178,78 @@
       "tokens_estimados": "alto",
       "complejidad": "alta",
       "resultado": "playwright.config.ts (webServer 8002/5174, BD temporal, workers 1) + 3 specs (onboarding 9 pasos, wizard perezoso+autosave+checklist, capa Romuald) + proxy vite parametrizado. Reviewer: APROBADO, 7/7 E2E estables x2, 42/42 backend, tsc, build OK"
+    },
+    {
+      "id": "T015",
+      "titulo": "Mini-tutorial visual de OpenRouter en el onboarding",
+      "descripcion": "Añadir al onboarding (o a la primera visita al Dashboard) un mini-tutorial visualmente cuidado que explique qué es OpenRouter, que tiene capa gratuita, cómo crear la clave en openrouter.ai y dónde pegarla en Configuración. Con enlace directo, pasos numerados con capturas/ilustraciones ligeras y opción de saltarlo. Petición del usuario 2026-06-11.",
+      "fase": "desarrollo",
+      "prioridad": "alta",
+      "estado": "completada",
+      "depende_de": null,
+      "tokens_estimados": "medio",
+      "complejidad": "media",
+      "resultado": "OpenRouterTutorial.tsx (Modal wide, 3 pasos numerados con iconos, CTA a /configuracion, descartable con localStorage ct.tutorial.openrouter) montado en Dashboard si no hay clave IA. Ciclo explorer→implementor→reviewer: APROBADO sin arreglos, 7/7 E2E (01-onboarding adaptado), 42/42 backend, tsc, build; verificado en vivo"
+    },
+    {
+      "id": "T016",
+      "titulo": "Inicio de sesión con Google (auth de usuarios)",
+      "descripcion": "Añadir registro/inicio de sesión, incluyendo 'Continuar con Google' (OAuth). Implica modelo multi-usuario en la BD (hoy es single-user) y sesiones en el backend Express/Vercel. REQUIERE ACCIÓN DEL USUARIO: crear credenciales OAuth en Google Cloud Console (client id + secret). Decidir alcance: ¿auth obligatoria o opcional para uso local? Petición del usuario 2026-06-11.",
+      "fase": "desarrollo",
+      "prioridad": "media",
+      "estado": "pendiente",
+      "depende_de": null,
+      "tokens_estimados": "alto",
+      "complejidad": "alta",
+      "resultado": null
+    },
+    {
+      "id": "T017",
+      "titulo": "Multi-canal: sección Proyectos (canales → vídeos)",
+      "descripcion": "En el onboarding preguntar si gestiona un canal o varios. Si varios: la sección 'Vídeos' pasa a llamarse 'Proyectos' con los canales dentro, y dentro de cada canal sus vídeos + añadir nuevo. Implica añadir entidad Canal a la BD, asociar vídeos a canal, selector de canal y migración del modo single-canal. Petición del usuario 2026-06-11.",
+      "fase": "desarrollo",
+      "prioridad": "media",
+      "estado": "pendiente",
+      "depende_de": "T016",
+      "tokens_estimados": "alto",
+      "complejidad": "alta",
+      "resultado": null
+    },
+    {
+      "id": "T018",
+      "titulo": "Fase de viabilidad del canal (validación de idea/nicho)",
+      "descripcion": "Para quien se registra SIN canal: fase saltable de validación de la idea de canal que acompañe al usuario a hacer un estudio de viabilidad del nicho, apoyada en el conocimiento del curso (secciones s3/s4: demanda, sub-nichos, PVU, validación). Nueva sección/asistente paso a paso con checklist y resultado de viabilidad. Petición del usuario 2026-06-11.",
+      "fase": "desarrollo",
+      "prioridad": "media",
+      "estado": "pendiente",
+      "depende_de": null,
+      "tokens_estimados": "alto",
+      "complejidad": "alta",
+      "resultado": null
+    },
+    {
+      "id": "T019",
+      "titulo": "Recomendador IA de temas con el conocimiento recopilado",
+      "descripcion": "Generador IA que recomiende los mejores temas de vídeo usando como contexto el conocimiento recopilado (contenido del curso redactado desde los vídeos de Romuald + datos del canal del usuario). Diseñar cómo inyectar ese corpus en los prompts (resumen del método por secciones) para mejorar la calidad de las sugerencias de forma continua. Petición del usuario 2026-06-11.",
+      "fase": "desarrollo",
+      "prioridad": "media",
+      "estado": "pendiente",
+      "depende_de": null,
+      "tokens_estimados": "alto",
+      "complejidad": "alta",
+      "resultado": null
+    },
+    {
+      "id": "T020",
+      "titulo": "Sello 'Romu aprueba': evaluación IA por etapa del wizard",
+      "descripcion": "Evaluación según el criterio de Romuald al completar cada etapa del wizard: la IA revisa lo introducido (título, miniatura, guion…) contra las reglas del método (consejos.ts + contenido del curso) y devuelve un veredicto visual tipo 'Romu approves' con puntos a corregir si no pasa. Petición del usuario 2026-06-11.",
+      "fase": "desarrollo",
+      "prioridad": "media",
+      "estado": "pendiente",
+      "depende_de": "T019",
+      "tokens_estimados": "alto",
+      "complejidad": "alta",
+      "resultado": null
     }
   ]
 }
