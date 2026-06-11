@@ -1,7 +1,7 @@
 // /curso/:seccionId/:asignaturaId — clase con placeholder (regla de oro #1), nota y vínculos.
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, ArrowRight, BookOpen, Check, FileText } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, Check, ExternalLink, FileText, Youtube } from "lucide-react";
 import { api } from "../services/api";
 import type { CourseAsignatura, CourseProgress, CourseSeccion, CourseStructure } from "../types";
 
@@ -92,10 +92,36 @@ export function CourseLesson() {
         )}
       </div>
 
-      {asig.plantillaRelacionadaId && (
-        <Link to={`/plantillas/${asig.plantillaRelacionadaId}`} className="btn btn-secondary btn-sm" style={{ marginBottom: "var(--space-5)" }}>
-          <FileText size={14} /> Plantilla relacionada
-        </Link>
+      {(asig.plantillaRelacionadaId || asig.videoReferencia || asig.recursoExtra) && (
+        <div style={{ display: "flex", gap: "var(--space-3)", flexWrap: "wrap", marginBottom: "var(--space-5)" }}>
+          {asig.plantillaRelacionadaId && (
+            <Link to={`/plantillas/${asig.plantillaRelacionadaId}`} className="btn btn-secondary btn-sm">
+              <FileText size={14} /> Plantilla relacionada
+            </Link>
+          )}
+          {asig.videoReferencia && (
+            <a
+              href={asig.videoReferencia}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-secondary btn-sm"
+              data-testid="lesson-video-referencia"
+            >
+              <Youtube size={14} /> Ver vídeo de referencia
+            </a>
+          )}
+          {asig.recursoExtra && (
+            <a
+              href={asig.recursoExtra}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-secondary btn-sm"
+              data-testid="lesson-recurso-extra"
+            >
+              <ExternalLink size={14} /> Recurso extra
+            </a>
+          )}
+        </div>
       )}
 
       <div className="field">

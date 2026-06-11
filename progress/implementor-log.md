@@ -1,3 +1,187 @@
+# Implementor Log — T012-G1: Contenido del curso CRECETUBE, lote G1
+
+Fecha: 2026-06-11
+
+## Resultado
+
+Archivo creado: `app/guia_maestra/contenido_fragmentos/G1.json`
+JSON validado: estructura correcta (150 líneas, cierre correcto de llaves verificado manualmente).
+
+## Archivos creados
+
+- `app/guia_maestra/contenido_fragmentos/G1.json` — 15 asignaturas redactadas
+
+## Asignaturas redactadas
+
+- s1_a7 — Tu primer vídeo: qué grabar y cómo empezar (l3X96Jz3-jQ)
+- s1_a8 — El error #1 de los canales nuevos (l3X96Jz3-jQ)
+- s1_a9 — Planificación de tus primeros 10 vídeos (l3X96Jz3-jQ)
+- s3_a1 — Sprint vs Evergreen vs Mixto (l3X96Jz3-jQ)
+- s3_a8 — Series vs vídeos sueltos (l3X96Jz3-jQ)
+- s3_a9 — SEOhora: cuándo publicar (l3X96Jz3-jQ)
+- s4_a1 — Qué es un nicho en YouTube (l3X96Jz3-jQ)
+- s4_a2 — El método del triángulo (j9egqbiinNg — único vídeo del lote que cubre este tema)
+- s5_a1 — Anatomía de una miniatura que convierte (l3X96Jz3-jQ + WqjPo9pl7wU)
+- s5_a7 — Test A/B de miniaturas (WqjPo9pl7wU)
+- s5_a8 — Herramientas gratuitas para crear miniaturas (WqjPo9pl7wU)
+- s6_a7 — Generación de títulos con IA: workflow práctico (WqjPo9pl7wU)
+- s6_a8 — Título provisional vs título final (l3X96Jz3-jQ)
+- s9_a3 — SEOshock: gancho en los primeros 10 segundos (l3X96Jz3-jQ)
+- s9_a10 — Cliffhanger: enganchar al siguiente vídeo (l3X96Jz3-jQ)
+- s13_a2 — Configuraciones de pantallas finales (l3X96Jz3-jQ)
+- s18_a1 — Por qué necesitas una lista de email (l3X96Jz3-jQ)
+
+## Decisiones tomadas
+
+1. s4_a2 (triángulo pasión × demanda × competencia) usa j9egqbiinNg (2021) porque l3X96Jz3-jQ (2026) solo menciona nichos en general; el triángulo metodológico solo aparece en el vídeo 2021. No hay conflicto de datos entre vídeos en este tema.
+2. s5_a8 y s6_a7 solapan con G5 (que también redactó esas asignaturas usando pchYeK591DM). El material de G1 proviene de WqjPo9pl7wU (2026-05-21), que es diferente al video de G5. El orquestador debe decidir cuál prevalece o si fusionar.
+3. s13_a2 aparece también en G4. G1 se basa en l3X96Jz3-jQ (pantallas finales desde la perspectiva de series + configuración terciaria); G4 en 1IjW1pZMbHg (más técnico). Son complementarios.
+4. s3_a1 aparece también en G2 y G3. El contenido de G1 se basa en l3X96Jz3-jQ (2026), el más reciente, con la perspectiva del evergreen como patrimonio. Prevalece según regla del más nuevo.
+5. La asignatura s17_a1 (7 vías de monetización) tiene material suficiente en l3X96Jz3-jQ (4 niveles detallados con cifras reales), pero se decidió integrar el RPM/nicho en s4_a1 donde encajaba mejor. El material está disponible si el orquestador quiere una clase s17_a1 separada.
+
+---
+
+# Implementor Log — T012-G3: Contenido del curso CRECETUBE, lote G3
+
+Fecha: 2026-06-11
+
+## Resultado
+
+Archivo creado: `app/guia_maestra/contenido_fragmentos/G3.json`
+JSON validado: `node -e "JSON.parse(...)" → OK`
+
+## Archivos creados
+
+- `app/guia_maestra/contenido_fragmentos/G3.json` — 13 asignaturas redactadas
+
+## Asignaturas redactadas
+
+- s3_a1 — Tipos de vídeo: sprint vs evergreen vs mixto (okgJEBSt8Uw)
+- s5_a1 — Anatomía de una miniatura que convierte (okgJEBSt8Uw)
+- s5_a2 — Estrategia SEOmarco: el poder del borde visual (okgJEBSt8Uw)
+- s5_a7 — Test A/B de miniaturas: cómo medir y cuándo cambiar / SEO Swap (NhP-CpYL2YU)
+- s5_a10 — Miniatura + título: la pareja que debe contar una historia (okgJEBSt8Uw)
+- s6_a1 — Psicología del clic: por qué hacemos clic en ciertos títulos (okgJEBSt8Uw)
+- s6_a2 — Fórmulas de títulos probadas (okgJEBSt8Uw)
+- s6_a3 — SEO en títulos: palabras clave sin sonar robótico (okgJEBSt8Uw)
+- s6_a8 — Título provisional vs título final: el proceso CRECETUBE (okgJEBSt8Uw)
+- s9_a3 — SEOshock: cómo crear un gancho que retenga en 3 segundos (ZWTY9wh5Zfg — el más nuevo, 2023)
+- s9_a4 — SEOloop: la promesa diferida que mantiene al espectador (ZWTY9wh5Zfg + okgJEBSt8Uw)
+- s9_a5 — Roturas de patrón: qué son y dónde colocarlas (okgJEBSt8Uw)
+- s10_a1 — SEOextracto: las 2 primeras líneas que lo cambian todo (oPgQjZB79vI)
+- s19_a2 — CTR de impresiones: qué es y cómo mejorarlo (okgJEBSt8Uw)
+
+## Decisiones tomadas
+
+1. s3_a1 y s19_a2 se redactaron aunque no estaban en las secciones señaladas como prioritarias para G3, porque okgJEBSt8Uw las enseña con sustancia real y ejemplos concretos.
+2. s5_a7 (Test A/B / SEO Swap) se nutre principalmente de NhP-CpYL2YU, que es el vídeo dedicado exclusivamente a ese proceso. ZWTY9wh5Zfg (2023, el más nuevo) no contradice nada.
+3. s9_a3 y s9_a4 usan ZWTY9wh5Zfg como referencia principal por ser el más reciente y el que enseña el SEOshock con el ejemplo de Mr. Beast.
+4. s6_a3 aparece también en G4. El contenido de G3 en s6_a3 se nutre de okgJEBSt8Uw (masterclass de 109 min), que enseña la lógica del CTR con datos. El orquestador debe decidir cuál prevalece o fusionar.
+
+---
+
+# Implementor Log — T012-G4: Contenido del curso CRECETUBE, lote G4
+
+Fecha: 2026-06-11
+
+## Resultado
+
+Archivo creado: `app/guia_maestra/contenido_fragmentos/G4.json`
+JSON validado: `node -e "JSON.parse(...)" → OK`
+
+## Archivos creados
+
+- `app/guia_maestra/contenido_fragmentos/G4.json` — 11 asignaturas redactadas
+
+## Asignaturas redactadas
+
+- s6_a3 — SEO en títulos: palabras clave sin sonar robótico (video 3otpxces3JM)
+- s10_a7 — Etiquetas (tags): sirven todavía? (video 3otpxces3JM)
+- s11_a1 — Por qué las listas de reproducción importan más de lo que crees (video 3otpxces3JM)
+- s11_a2 — SEOlista: nombre optimizado con palabra clave (video 3otpxces3JM)
+- s11_a3 — Descripción de lista: los 200-300 caracteres que posicionan (video 3otpxces3JM)
+- s13_a1 — Qué son las pantallas finales y por qué necesitas usarlas (video 1IjW1pZMbHg)
+- s13_a2 — Configuraciones: unitaria, binaria, terciaria, cuaternaria (video 1IjW1pZMbHg)
+- s13_a4 — Apoyar con audio: la frase que guía al clic (video 1IjW1pZMbHg)
+- s13_a5 — Errores frecuentes en pantallas finales (video 1IjW1pZMbHg)
+- s14_a1 — Tipos de tarjetas: Subjeta, Indujeta, Psicojeta, SEOjeta, SEOrescate (video 1IjW1pZMbHg)
+- s14_a2 — Cuándo y dónde colocar cada tipo (video 1IjW1pZMbHg)
+- s14_a5 — Nunca en el primer minuto ni en los últimos 30 segundos (video 1IjW1pZMbHg)
+
+## Decisiones tomadas
+
+1. 1IjW1pZMbHg cubre pantallas finales y tarjetas con detalle práctico alto; se redactaron todas las asignaturas con sustancia real de s13 y s14 excepto s13_a3, s13_a6, s14_a3, s14_a4, s14_a6, s14_a7 que no aparecen en los vídeos.
+2. 3otpxces3JM cubre SEOlistas, palabras clave evergreen vs. placebo, importancia del título y rol actual de etiquetas. La segunda mitad del directo son preguntas del chat sin densidad didáctica.
+3. s10_a1, s10_a2, s10_a3 excluidos: el tema de descripción y hashtags se menciona de pasada sin pasos ni reglas concretas.
+4. La terminología del glosario (cadenas de reproducción, SEOlista, SEOrescate, cliffhanger, evergreen, palabras clave placebo) se usa con definición en la primera aparición de cada clase.
+
+---
+
+# Implementor Log — T012-G2: Contenido del curso CRECETUBE, lote G2
+
+Fecha: 2026-06-11
+
+## Resultado
+
+Archivo creado: `app/guia_maestra/contenido_fragmentos/G2.json`
+JSON validado: `node -e "JSON.parse(...)" → OK`
+
+## Archivos creados
+
+- `app/guia_maestra/contenido_fragmentos/G2.json` — 8 asignaturas redactadas
+
+## Asignaturas redactadas
+
+- s3_a1 — Sprint vs Evergreen vs Mixto (T96etud4TIA)
+- s3_a4 — Fase de sprint: los 7 días (T96etud4TIA)
+- s17_a3 — RPM y CPM (5Lel-0zbskw + X9aiT7a_AUI combinados; ref. principal la más reciente)
+- s19_a1 — YouTube Analytics: las 4 pestañas (T96etud4TIA)
+- s19_a2 — CTR de impresiones (T96etud4TIA)
+- s19_a3 — Retención de audiencia (T96etud4TIA)
+- s19_a4 — Velocidad de visualización (T96etud4TIA)
+- s19_a5 — Fuentes de tráfico (T96etud4TIA)
+
+## Decisiones tomadas
+
+1. s17_a3 combina dos vídeos. videoReferencia apunta a 5Lel-0zbskw (2023, el más reciente). La estrategia de Google Keyword Planner para aumentar RPM proviene de X9aiT7a_AUI (2020) y se documenta en avisos del JSON.
+2. s3_a1 y s3_a4 se incluyeron porque T96etud4TIA las cubre con sustancia real (casos con datos, ejemplos de canal propio), aunque el nicho sugerido para G2 era s19/s17.
+3. s17_a2 (YPP requisitos) no se redactó: la mención de "1.000 suscriptores" en 5Lel es una frase suelta sin proceso ni estrategia accionable.
+4. s17_a3 también aparece en el log de G5 (lote paralelo). DUDA: posible solapamiento con G5 que también redactó s17_a3. El orquestador debe decidir cuál prevalece o fusionarlos.
+
+---
+
+# Implementor Log — T012-G5: Contenido del curso CRECETUBE, lote G5
+
+Fecha: 2026-06-11
+
+## Resultado
+
+Archivo creado: `app/guia_maestra/contenido_fragmentos/G5.json`
+JSON validado: `node -e "JSON.parse(...)" → OK`
+
+## Archivos creados
+
+- `app/guia_maestra/contenido_fragmentos/G5.json` — 7 asignaturas redactadas
+
+## Asignaturas redactadas
+
+- s6_a7 — Generación de títulos con IA (video pchYeK591DM, 2026)
+- s5_a8 — Herramientas gratuitas para crear miniaturas (video pchYeK591DM, 2026)
+- s17_a1 — Las 7 vías de monetización en YouTube (video 4BTwZXyMPuY)
+- s17_a3 — RPM y CPM (video _vEvd3dTR2o — clase central del lote)
+- s17_a4 — Patrocinios (video 4BTwZXyMPuY, caso Shopify)
+- s17_a6 — Afiliados (video 4BTwZXyMPuY)
+- s17_a9 — Marca personal fuera de YouTube (video 4BTwZXyMPuY)
+
+## Decisiones tomadas
+
+1. Video pchYeK591DM (2026, canal Miguel Fernández) aplica como fuente de conflicto para s6_a7 y s5_a8; su workflow de IA (Claude skills, ChatGPT para imágenes, Canva, Descript) se integró directamente como técnica actualizada.
+2. Los dos videos largos (83 y 130 min) son directos de formación; se usó el contenido sustancial sin copiar el tono de directo. Longitud de contenido ajustada a tabla 4.2 (550-750 palabras para clases de 11-15 min) como techo razonable.
+3. s7 y s18 no tienen cobertura en ninguno de los tres videos: se documentaron en `tocadas_sin_redactar`.
+4. s17_a2 (requisitos YPP) se descartó: solo se mencionan los números de pasada sin proceso ni estrategia accionable.
+
+---
+
 # Implementor Log — T014: Tests E2E con Playwright
 
 Fecha: 2026-06-11

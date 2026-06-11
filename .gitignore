@@ -11,3 +11,7 @@ app/backend/data/
 playwright-report/
 test-results/
 node_modules/.cache/e2e/
+
+# T012 — material de trabajo (transcripciones de YouTube y fragmentos intermedios)
+app/guia_maestra/transcripciones/
+app/guia_maestra/contenido_fragmentos/

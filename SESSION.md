@@ -7,7 +7,7 @@ Estado general: **v1 + capa Romuald + Fase 2 COMPLETAS** — 13/14 tareas; solo 
 ---
 
 ## Tarea actual
-Ninguna en curso. T012 (rellenar contenido de las 169 asignaturas) está `pendiente` y APLAZADA por decisión del usuario ("en privado"): la redacta él externamente (NotebookLM + IA ejecutora) usando `app/guia_maestra/GUIA_CONTENIDO_CURSO.md`. Cuando entregue el seed relleno: validar IDs/estructura (20/169), recargar seeds y verificar render.
+T012 `en_progreso` — CAMBIO DE PLAN: el usuario aporta vídeos de YouTube y el agente redacta. **Tanda 1 completada: 56/169 asignaturas rellenadas** desde 19 vídeos (curso CRECETUBE Lite #1-#7 de Romuald 2021 + vídeos 2023-2026). Regla acordada: en conflicto gana el vídeo MÁS NUEVO. Pipeline: `scripts/extraer-transcripciones.mjs` → 6 redactores en paralelo (fragmentos G*.json) → `scripts/fusionar-contenido-curso.mjs` (sube version del seed; BD local y Turso recargan solas) → reviewer de calidad. Quedan 113 pendientes: lista en `app/guia_maestra/contenido_fragmentos/_pendientes.md`; el usuario busca vídeos que las cubran y se repite el pipeline (añadir IDs a extraer-transcripciones.mjs, nuevos lotes, fusionar).
 
 ## Últimas decisiones tomadas
 - Capa de consejos Romuald (T008–T011) completada, verificada con QA visual en navegador y commiteada (d449e71, f7a22c3).
@@ -18,11 +18,11 @@ Ninguna en curso. T012 (rellenar contenido de las 169 asignaturas) está `pendie
 
 ## Próximo paso
 Acciones SOLO del usuario (bloqueantes de lo que indican):
-1. **Turso** (bloquea la API en producción): crear BD en turso.tech o instalar la integración Turso del marketplace de Vercel y configurar `TURSO_DATABASE_URL` + `TURSO_AUTH_TOKEN` en el proyecto Vercel (hoy NO hay ninguna env var → `FUNCTION_INVOCATION_FAILED`). Después: `npx vercel deploy --prod` (o pedirlo al agente).
+1. ~~**Turso**~~ ✅ HECHO (2026-06-11) — integración Vercel+Turso conectada, credenciales en env vars, redeploy OK, API operativa.
 2. **OpenRouter** (bloquea probar los 9 generadores IA): clave gratis en openrouter.ai → pegarla en Configuración de la app.
-3. **T012**: redactar el contenido de las 169 asignaturas con la guía y entregar el JSON.
+3. **T012 tanda 2**: buscar vídeos de YouTube que cubran las 113 asignaturas pendientes (lista con títulos y secciones en `app/guia_maestra/contenido_fragmentos/_pendientes.md`) y pasar los links al agente. Secciones enteras sin cubrir: s7 (sorteos), s8 (tráiler), s15 (comunidad), s16 (crossplatform), s18 (email marketing).
 
-Estado del deploy: frontend en producción OK (crecetube.vercel.app, commit f7a22c3); API rota SOLO por falta de credenciales Turso (diagnóstico completo en progress/2026-06-11.md).
+Estado del deploy: **100% operativa** (crecetube.vercel.app, 2026-06-11). Backend con Turso conectado — `/api/plantillas` sirve las 25 plantillas con seeds, `/api/videos` operativo. BD fresh (sin usuarios aún, se crean en onboarding).
 
 ## Bloqueadores activos
 Ninguno en el código. La API de producción espera credenciales Turso (acción del usuario, no bloquea el trabajo local).

@@ -4,8 +4,8 @@
   "ultima_actualizacion": "2026-06-11",
   "resumen": {
     "total": 14,
-    "pendientes": 1,
-    "en_progreso": 0,
+    "pendientes": 0,
+    "en_progreso": 1,
     "completadas": 13,
     "bloqueadas": 0,
     "tokens_estimados_totales": 0
@@ -146,10 +146,10 @@
     {
       "id": "T012",
       "titulo": "Contenido didáctico del curso (169 asignaturas)",
-      "descripcion": "Rellenar el campo 'contenido' de las 169 asignaturas en app/guia_maestra/07_curso_seed.json siguiendo app/guia_maestra/GUIA_CONTENIDO_CURSO.md. APLAZADA por decisión del usuario (2026-06-11): la redacción la hace él externamente (NotebookLM + IA ejecutora con la guía). Cuando entregue el JSON relleno: validar estructura (IDs intactos, 20/169), recargar seeds y verificar render en la app. Sin cambios de UI mientras tanto (el placeholder de la regla de oro #1 cubre el estado vacío).",
+      "descripcion": "Rellenar el campo 'contenido' de las 169 asignaturas en app/guia_maestra/07_curso_seed.json siguiendo app/guia_maestra/GUIA_CONTENIDO_CURSO.md. CAMBIO DE PLAN (2026-06-11): el usuario aporta vídeos de YouTube (19 links, tanda 1) y el agente extrae transcripciones, redacta las clases cubiertas (regla: en conflicto entre vídeos gana el más nuevo), rellena videoReferencia con el vídeo origen, añade enlace de vídeo en CourseLesson.tsx, actualiza BD local y producción, y entrega lista de asignaturas no cubiertas para que el usuario busque más vídeos.",
       "fase": "contenido",
       "prioridad": "media",
-      "estado": "pendiente",
+      "estado": "en_progreso",
       "depende_de": null,
       "tokens_estimados": "bajo",
       "complejidad": "baja",
