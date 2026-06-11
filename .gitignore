@@ -6,3 +6,8 @@ app/backend/data/
 .DS_Store
 
 .vercel
+
+# Playwright
+playwright-report/
+test-results/
+node_modules/.cache/e2e/

@@ -12,9 +12,11 @@
     "dev:frontend": "npm run dev -w app/frontend",
     "build": "npm run build -w app/frontend",
     "seeds": "node scripts/build_seeds.mjs",
-    "test": "npm run test -w app/backend && npm run typecheck -w app/frontend && npm run build -w app/frontend"
+    "test": "npm run test -w app/backend && npm run typecheck -w app/frontend && npm run build -w app/frontend",
+    "test:e2e": "playwright test"
   },
   "devDependencies": {
+    "@playwright/test": "^1.60.0",
     "concurrently": "^9.1.0"
   }
 }

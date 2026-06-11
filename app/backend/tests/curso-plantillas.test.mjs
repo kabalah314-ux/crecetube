@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { boot } from "./helpers.mjs";
 
 test("curso y plantillas", async (t) => {
-  const { call, close } = await boot();
+  const { base, call, close } = await boot();
   t.after(close);
 
   await t.test("estructura completa desde seed: 20/169", async () => {
@@ -63,10 +63,17 @@ test("curso y plantillas", async (t) => {
     assert.equal(del.body.ok, true);
   });
 
-  await t.test("descarga md/txt; pdf → 422 documentado", async () => {
+  await t.test("descarga md/txt/pdf; formato desconocido → 422", async () => {
     const md = await call("GET", "/api/plantillas/tpl_banner_canal/descargar?formato=md");
     assert.equal(md.status, 200);
-    const pdf = await call("GET", "/api/plantillas/tpl_banner_canal/descargar?formato=pdf");
-    assert.equal(pdf.status, 422);
+    const res = await fetch(base + "/api/plantillas/tpl_banner_canal/descargar?formato=pdf");
+    assert.equal(res.status, 200);
+    assert.equal(res.headers.get("content-type"), "application/pdf");
+    assert.match(res.headers.get("content-disposition") ?? "", /\.pdf"/);
+    const bytes = new Uint8Array(await res.arrayBuffer());
+    assert.equal(new TextDecoder().decode(bytes.slice(0, 5)), "%PDF-");
+    assert.ok(bytes.length > 500, "el PDF debe tener contenido real");
+    const malo = await call("GET", "/api/plantillas/tpl_banner_canal/descargar?formato=docx");
+    assert.equal(malo.status, 422);
   });
 });

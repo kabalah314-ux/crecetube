@@ -79,7 +79,7 @@ export function TemplateDetail() {
     navigate("/plantillas");
   };
 
-  const urlDescarga = (formato: "md" | "txt") =>
+  const urlDescarga = (formato: "md" | "txt" | "pdf") =>
     `/api/plantillas/${tpl.id}/descargar?formato=${formato}&variables=${encodeURIComponent(JSON.stringify(vars))}`;
 
   return (
@@ -114,6 +114,9 @@ export function TemplateDetail() {
           </a>
           <a className="btn btn-secondary btn-sm" href={urlDescarga("txt")} data-testid="tpl-descargar-txt">
             <Download size={14} /> .txt
+          </a>
+          <a className="btn btn-secondary btn-sm" href={urlDescarga("pdf")} data-testid="tpl-descargar-pdf">
+            <Download size={14} /> .pdf
           </a>
           <button className="btn btn-secondary btn-sm" onClick={duplicar} data-testid={`template-use-${tpl.id}`}>
             <Files size={14} /> Duplicar

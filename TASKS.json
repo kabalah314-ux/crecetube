@@ -3,10 +3,10 @@
   "version": "1.0",
   "ultima_actualizacion": "2026-06-11",
   "resumen": {
-    "total": 12,
+    "total": 14,
     "pendientes": 1,
     "en_progreso": 0,
-    "completadas": 11,
+    "completadas": 13,
     "bloqueadas": 0,
     "tokens_estimados_totales": 0
   },
@@ -154,6 +154,30 @@
       "tokens_estimados": "bajo",
       "complejidad": "baja",
       "resultado": null
+    },
+    {
+      "id": "T013",
+      "titulo": "Fase 2: descarga PDF de plantillas",
+      "descripcion": "Implementar formato=pdf en GET /api/plantillas/:id/descargar (hoy devuelve 422 'disponible en fase 2'). Dependencia nueva autorizada: pdfkit en app/backend. Generar PDF del contenido resuelto (mismas variables que md/txt). Habilitar la opción PDF en TemplateDetail.tsx. Test backend: content-type application/pdf + magic bytes %PDF.",
+      "fase": "desarrollo",
+      "prioridad": "media",
+      "estado": "completada",
+      "depende_de": null,
+      "tokens_estimados": "medio",
+      "complejidad": "media",
+      "resultado": "Endpoint pdf con pdfkit (A4, Helvetica, sanitizado WinAnsi con transcripción de flechas/símbolos y omisión de emojis) + botón .pdf en TemplateDetail + test con magic bytes. 42/42, tsc, build OK; verificado en vivo: 200 application/pdf 2.6KB válido"
+    },
+    {
+      "id": "T014",
+      "titulo": "Fase 2: tests E2E con Playwright",
+      "descripcion": "Instalar @playwright/test (dependencia autorizada, raíz del monorepo) + navegador chromium. Specs sobre los data-testid de 02 §2.7: (1) onboarding completo 9 pasos → dashboard, (2) crear vídeo → wizard idea → autosave → checklist, (3) capa Romuald: tip-banner descartar/reabrir + glosario en ContextPanel. webServer con BD temporal (DB_URL file:) en puertos propios (backend 8002, frontend 5174) para no chocar con dev ni tocar la BD real. Script npm run test:e2e.",
+      "fase": "desarrollo",
+      "prioridad": "media",
+      "estado": "completada",
+      "depende_de": "T013",
+      "tokens_estimados": "alto",
+      "complejidad": "alta",
+      "resultado": "playwright.config.ts (webServer 8002/5174, BD temporal, workers 1) + 3 specs (onboarding 9 pasos, wizard perezoso+autosave+checklist, capa Romuald) + proxy vite parametrizado. Reviewer: APROBADO, 7/7 E2E estables x2, 42/42 backend, tsc, build OK"
     }
   ]
 }

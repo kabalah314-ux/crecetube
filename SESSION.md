@@ -1,31 +1,31 @@
 # Estado de Sesión
 
 Proyecto: CRECETUBE Assistant
-Última sesión: 2026-06-10
-Estado general: **v1 COMPLETA** — guía maestra (T001) + app entera (T002–T007) construidas y verificadas
+Última sesión: 2026-06-11
+Estado general: **v1 + capa Romuald + Fase 2 COMPLETAS** — 13/14 tareas; solo queda T012 (contenido del curso, en manos del usuario)
 
 ---
 
 ## Tarea actual
-Ninguna en curso. Las 7 tareas de TASKS.json están completadas.
+Ninguna en curso. T012 (rellenar contenido de las 169 asignaturas) está `pendiente` y APLAZADA por decisión del usuario ("en privado"): la redacta él externamente (NotebookLM + IA ejecutora) usando `app/guia_maestra/GUIA_CONTENIDO_CURSO.md`. Cuando entregue el seed relleno: validar IDs/estructura (20/169), recargar seeds y verificar render.
 
 ## Últimas decisiones tomadas
-- Stack FIJADO: React 18 + Vite + TypeScript / Express / better-sqlite3 (documental), workspaces npm en raíz, app en `app/frontend` + `app/backend`.
-- IA por OpenRouter con modelo gratuito por defecto (`openrouter/free`); la app funciona 100% sin clave.
-- Seeds (`05_plantillas_seed.json`, `07_curso_seed.json`) se generan con `node scripts/build_seeds.mjs` y el backend los lee directamente de `app/guia_maestra/`.
-- Recortes conscientes de v1 (documentados en 08): descarga PDF de plantillas → fase 2; E2E Playwright → fase 2 (los data-testid ya están puestos según 02 §2.7); editor TipTap → fase 2 (textareas en v1).
-- Verificación final: 42/42 tests backend, tsc limpio, build OK, init.sh "Proyecto listo", smoke OK.
+- Capa de consejos Romuald (T008–T011) completada, verificada con QA visual en navegador y commiteada (d449e71, f7a22c3).
+- T013 PDF de plantillas: pdfkit, sanitizado WinAnsi (transcribe → ≤ ✓, omite emojis), botón .pdf en TemplateDetail.
+- T014 E2E Playwright: 3 specs (onboarding, wizard, capa Romuald) en puertos propios 8002/5174 con BD temporal; `npm run test:e2e` (NO incluido en `npm test`). Proxy de vite parametrizado con BACKEND_PORT (defecto 8001).
+- Vercel NO se despliega solo con el push a GitHub: hay que lanzar `npx vercel deploy --prod`.
+- `improvements/002`: patrón recurrente de comillas tipográficas alteradas al escribir código (2 apariciones: T009 y T013).
 
 ## Próximo paso
-HECHO ADEMÁS: QA visual en navegador (onboarding→dashboard→wizard→curso→plantillas→tema), 2 bugs encontrados y arreglados (stepper móvil bajo topbar; future flags React Router). Detalle en progress/2026-06-10.md. La BD real tiene datos de prueba del QA (borrar `app/backend/data/crecetube.db` con la app parada para estrenar de cero).
+Acciones SOLO del usuario (bloqueantes de lo que indican):
+1. **Turso** (bloquea la API en producción): crear BD en turso.tech o instalar la integración Turso del marketplace de Vercel y configurar `TURSO_DATABASE_URL` + `TURSO_AUTH_TOKEN` en el proyecto Vercel (hoy NO hay ninguna env var → `FUNCTION_INVOCATION_FAILED`). Después: `npx vercel deploy --prod` (o pedirlo al agente).
+2. **OpenRouter** (bloquea probar los 9 generadores IA): clave gratis en openrouter.ai → pegarla en Configuración de la app.
+3. **T012**: redactar el contenido de las 169 asignaturas con la guía y entregar el JSON.
 
-Sugeridos (a elegir por el usuario):
-1. Rellenar el contenido didáctico de las 169 asignaturas (la app ya lo renderiza; IDs en 07).
-2. Probar los generadores IA con una clave real de OpenRouter (gratis en openrouter.ai).
-3. Fase 2: Playwright sobre los data-testid + PDF de plantillas.
+Estado del deploy: frontend en producción OK (crecetube.vercel.app, commit f7a22c3); API rota SOLO por falta de credenciales Turso (diagnóstico completo en progress/2026-06-11.md).
 
 ## Bloqueadores activos
-Ninguno.
+Ninguno en el código. La API de producción espera credenciales Turso (acción del usuario, no bloquea el trabajo local).
 
 ---
 

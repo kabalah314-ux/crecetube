@@ -1,8 +1,19 @@
-// routes/plantillas.js — 03 §3.2.4. Aplicar variables, descarga md/txt, protección precargadas.
+// routes/plantillas.js — 03 §3.2.4. Aplicar variables, descarga md/txt/pdf, protección precargadas.
 import { Router } from "express";
+import PDFDocument from "pdfkit";
 import { ApiError, h, notFound } from "../errors.js";
 import { jparse } from "../db.js";
 import { nowIso, uuid } from "../util.js";
+
+// Las fuentes estándar del PDF (Helvetica) solo cubren WinAnsi: estos caracteres
+// extra sí están (CP1252 0x80-0x9F, en escapes para evitar problemas de comillas);
+// el resto se transcribe a ASCII o se omite (emojis).
+const WINANSI_EXTRA = new Set(
+  "€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ"
+);
+const TRANSCRIPCION_PDF = { "→": "->", "➡": "->", "←": "<-", "≤": "<=", "≥": ">=", "━": "-", "─": "-", "✓": "[x]", "✗": "[ ]" };
+const textoPdf = (s) =>
+  String(s).replace(/[^\x00-\xFF]/gu, (c) => (WINANSI_EXTRA.has(c) ? c : (TRANSCRIPCION_PDF[c] ?? "")));
 
 const TIPOS = [
   "descripcion", "titulo", "miniatura_brief", "guion", "email", "comunidad",
@@ -113,10 +124,8 @@ router.post("/:id/aplicar", h(async (req, res) => {
 router.get("/:id/descargar", h(async (req, res) => {
   const t = await get(req.app.locals.db, req.params.id);
   const formato = req.query.formato ?? "md";
-  if (formato === "pdf")
-    throw new ApiError("VALIDATION_ERROR", 422, "PDF disponible en fase 2; usa md o txt (08 §8.6)");
-  if (formato !== "md" && formato !== "txt")
-    throw new ApiError("VALIDATION_ERROR", 422, "Formato no soportado: usa md o txt");
+  if (formato !== "md" && formato !== "txt" && formato !== "pdf")
+    throw new ApiError("VALIDATION_ERROR", 422, "Formato no soportado: usa md, txt o pdf");
   let variables = {};
   try {
     if (req.query.variables) variables = JSON.parse(String(req.query.variables));
@@ -125,6 +134,26 @@ router.get("/:id/descargar", h(async (req, res) => {
   }
   const texto = aplicarVariables(t.contenido, variables);
   const slug = t.nombre.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-");
+
+  if (formato === "pdf") {
+    res
+      .set("Content-Type", "application/pdf")
+      .set("Content-Disposition", `attachment; filename="${slug}.pdf"`);
+    const doc = new PDFDocument({
+      size: "A4",
+      margins: { top: 56, bottom: 56, left: 56, right: 56 },
+      info: { Title: t.nombre, Author: "CRECETUBE Assistant" },
+    });
+    doc.pipe(res);
+    doc.font("Helvetica-Bold").fontSize(16).fillColor("#1a1a1a").text(textoPdf(t.nombre));
+    doc.moveDown(0.3);
+    doc.font("Helvetica").fontSize(9).fillColor("#777777").text(`Plantilla CRECETUBE · tipo: ${t.tipo}`);
+    doc.moveDown(1);
+    doc.font("Helvetica").fontSize(11).fillColor("#1a1a1a").text(textoPdf(texto), { lineGap: 3 });
+    doc.end();
+    return;
+  }
+
   res
     .set("Content-Type", formato === "md" ? "text/markdown; charset=utf-8" : "text/plain; charset=utf-8")
     .set("Content-Disposition", `attachment; filename="${slug}.${formato}"`)
