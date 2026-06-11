@@ -1,3 +1,28 @@
+# Implementor Log — Corrección ortográfica G7.json
+
+Fecha: 2026-06-12
+
+## Resultado
+
+Restaurada la ortografía española (tildes, eñes, ¿ ¡) en los 7 campos `contenido` de `app/guia_maestra/contenido_fragmentos/G7.json` sin cambiar redacción, estructura ni longitud. JSON validado con `node -e JSON.parse`.
+
+## Archivos modificados
+
+- `app/guia_maestra/contenido_fragmentos/G7.json` — solo campos `contenido` de s4_a4, s4_a5, s4_a8, s17_a5, s20_a1, s20_a2, s20_a5. No se tocaron `videoReferencia`, `video_id`, `fecha_video`, `lote`, `tocadas_sin_redactar` ni `avisos` (instrucción explícita del orquestador).
+
+## Verificación
+
+Conteo de [áéíóúñÁÉÍÓÚÑ¿¡] antes → después: s4_a4 4→37, s4_a5 2→43, s4_a8 7→33, s17_a5 2→53, s20_a1 0→41, s20_a2 8→47, s20_a5 0→38. Todas dentro del rango esperado (30-60). Sin palabras sospechosas sin tilde restantes (verificado con regex).
+
+## Decisiones menores
+
+- "video/videos" en los `contenido` → "vídeo/vídeos": es la convención de los lotes hermanos G1-G6 y del resto de la guía maestra (437 ocurrencias de "vídeo" vs 20 de "video", estas últimas en metadatos/identificadores).
+- "guion" se mantiene sin tilde (norma RAE vigente y convención del proyecto: StepGuion).
+- "Hacete" (s4_a8) se mantiene tal cual: cambiarlo a "Hazte" alteraría la palabra, no la ortografía. Anotado por si el reviewer quiere valorarlo.
+- "periodo" se mantiene sin tilde (ambas formas son válidas; no había evidencia de tilde eliminada).
+
+---
+
 # Implementor Log — T012-G1: Contenido del curso CRECETUBE, lote G1
 
 Fecha: 2026-06-11

@@ -12,6 +12,7 @@ Antes de empezar:
 - Lee SIEMPRE la guía `app/guia_maestra/GUIA_CONTENIDO_CURSO.md`: glosario del método (sección 2), formato técnico (3.2), tono (4.1), longitud por duración (4.2), estructura (4.3) y la lista de asignaturas con notas (sección 6).
 
 Reglas de oro:
+- ESPAÑOL CORRECTO SIEMPRE: con tildes, eñes y signos de apertura (á é í ó ú ñ ¿ ¡). El JSON va en UTF-8 y los acentos NO dan problemas; escribir "monetizacion" o "PEQUENO" es un error de calidad. Referencia: las clases existentes del seed promedian ~45 caracteres acentuados por clase.
 - Redacta CON TUS PALABRAS lo que el vídeo ENSEÑA. Nunca copies párrafos literales de la transcripción (es lenguaje hablado). Nunca inventes contenido para asignaturas que tus vídeos no cubren con sustancia.
 - Texto plano (la app renderiza pre-wrap): MAYÚSCULAS para encabezados, "- " para listas, "---" como separador. PROHIBIDO markdown.
 - Longitud según duración de la clase: 5-7 min → 200-350 palabras; 8-10 → 350-550; 11-15 → 550-750.

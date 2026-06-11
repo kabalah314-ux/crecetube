@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 4,
   "generadoDesde": "07_ESQUELETO_CURSO.md",
   "totalSecciones": 20,
   "totalAsignaturas": 169,
@@ -343,9 +343,9 @@
           "titulo": "Sub-nichos: cómo ser pez grande en estanque pequeño",
           "duracionEstimadaMin": 9,
           "plantillaRelacionadaId": null,
-          "contenido": "",
+          "contenido": "SUB-NICHOS: SER PEZ GRANDE EN ESTANQUE PEQUEÑO\n\nTodo el mundo quiere competir en el mercado grande. Ese es exactamente el error. Cuando entras en un nicho ya consolidado, te enfrentas a canales con años de ventaja, comunidades formadas y autoridad construida. El sub-nicho es lo contrario: un espacio tan específico que casi no hay competencia directa.\n\nRomuald lo explica con un ejemplo que parece imposible: Devon Larrat tiene más de un millón de seguidores hablando exclusivamente de lucha de pulsos. Nadie antes había hecho eso. Y cuando lo consiguió, salió gente copiándole. Ese es el patrón: primero parece una locura, luego todos quieren entrar.\n\n---\n\nCÓMO DEFINIR TU SUB-NICHO\n\nNo es \"cocina\", es \"cocina vegana para corredores de ultrafondo\".\nNo es \"finanzas personales\", es \"finanzas para autónomos creativos\".\nNo es \"yoga\", es \"yoga para personas con dolor lumbar crónico\".\n\nCuanto más específico, menos competencia y más fidelidad de audiencia. La gente que busca exactamente lo que tú ofreces se queda. No son turistas que pasan por tu canal: son lectores fieles que esperan tu siguiente vídeo.\n\nEl recorrido recomendado es este: empieza en el sub-nicho, construye autoridad ahí, y cuando tengas una comunidad real, amplía hacia el nicho más grande. Al revés no funciona: si entras en el nicho grande sin autoridad, eres uno más entre cientos.\n\n---\n\nCÓMO VALIDAR QUE TU SUB-NICHO TIENE MASA CRÍTICA\n\nAntes de comprometerte, haz esta comprobación rápida:\n\n- Busca tu sub-nicho en YouTube. ¿Hay aunque sea dos o tres canales que hablen específicamente de eso? Si hay mercado para ellos, hay mercado para ti.\n- Revisa Google Trends. ¿La búsqueda existe? ¿Tiene consistencia en el tiempo o es puntual?\n- Pregúntate: ¿puedo hacer 50 vídeos distintos sobre este tema? Si la respuesta es no, el sub-nicho es demasiado pequeño.\n\nEl riesgo real no es entrar en un sub-nicho pequeño. El riesgo real es entrar en un nicho grande donde eres invisible.",
           "recursoExtra": null,
-          "videoReferencia": null,
+          "videoReferencia": "https://www.youtube.com/watch?v=iPcjht2VrJ4",
           "completadoPorDefecto": false
         },
         {
@@ -353,9 +353,9 @@
           "titulo": "Tu propuesta de valor única (PVU)",
           "duracionEstimadaMin": 8,
           "plantillaRelacionadaId": null,
-          "contenido": "",
+          "contenido": "TU PROPUESTA DE VALOR ÚNICA: POR QUÉ SEGUIRTE A TI\n\nHay miles de canales de YouTube sobre cualquier tema que se te ocurra. La pregunta que tienes que ser capaz de responder en diez segundos es esta: ¿por qué alguien debería seguirte a ti y no al canal de al lado?\n\nNo es el tema lo que te diferencia. Es la combinación de perspectiva, tono, experiencia real y promesa implícita que solo tú puedes ofrecer.\n\n---\n\nEL EJERCICIO QUE LO DEJA CLARO\n\nCompleta esta frase: \"Soy el único canal de YouTube que [___] para [audiencia específica].\"\n\nRomuald lo hizo con SEO cuando nadie lo explicaba en español de forma directa y sin academicismos. No decía lo mismo que los demás: daba ejemplos propios, mostraba datos reales de sus webs y hablaba con la autoridad de alguien que había construido una agencia de 20 personas haciendo lo que enseñaba. Esa era su PVU. No el tema SEO, sino la combinación de autenticidad + resultados propios + explicación sin filtros.\n\nEn el Show de Romu, cuando un agente inmobiliario explicaba que hacía contenido enseñando pisos como todos los demás, Romuald le dijo algo fundamental: \"Cuando eres lo mismo que todos los demás, la gente va a precio. Cuando eres distinto, si te quieren a ti, pagan más.\" Eso es la PVU en acción.\n\n---\n\nDÓNDE COMUNICAR TU PVU\n\n- En la descripción del canal: primera frase, sin rodeos. Quién eres, para quién es el canal y qué obtendrá el espectador.\n- En el tráiler: los primeros 10 segundos tienen que dejar claro a quién le hablas y qué vas a darle.\n- En cada vídeo: tu intro, tu forma de tratar el tema y los ejemplos que eliges tienen que ser coherentes con tu PVU.\n\nSi alguien entra en tu canal y en cinco segundos no sabe de qué va ni para quién es, tu PVU no está funcionando. No es un problema de contenido: es un problema de comunicación.\n\n---\n\nEL ERROR MÁS COMÚN\n\nIntentar llegar a todos. Un canal que habla de 50 cosas distintas no tiene PVU: tiene dispersión. El algoritmo no sabe a quién recomendarte, y los espectadores no saben qué esperar. Ennicharse, es decir especializarte en un tema concreto hasta ser el referente, es lo que construye una PVU sólida.",
           "recursoExtra": null,
-          "videoReferencia": null,
+          "videoReferencia": "https://www.youtube.com/watch?v=iPcjht2VrJ4",
           "completadoPorDefecto": false
         },
         {
@@ -383,9 +383,9 @@
           "titulo": "Validación rápida: ¿mi nicho tiene futuro?",
           "duracionEstimadaMin": 7,
           "plantillaRelacionadaId": null,
-          "contenido": "",
+          "contenido": "VALIDACIÓN RÁPIDA: ¿MI NICHO TIENE FUTURO?\n\nAntes de invertir meses grabando vídeos sobre un tema, necesitas saber si ese tema tiene mercado real. No intuición, no esperanza: datos. Este proceso tarda menos de una hora y te puede ahorrar años de trabajo en la dirección equivocada.\n\n---\n\nEL TEST DE LOS 3 CRITERIOS\n\nHazte estas tres preguntas:\n\n1. ¿Hay canales con más de 50.000 suscriptores en este nicho?\nSi existen, el mercado ya ha demostrado que hay audiencia. Alguien ya probó que la gente paga atención por ese tema. Eso es una señal verde.\n\n2. ¿Hay búsquedas activas en YouTube sobre este tema?\nBusca tu nicho en YouTube y mira el autocompletado. Si el buscador te sugiere variaciones, es que la gente lo busca. Si tienes que inventarte todas las palabras clave sin que YouTube te ayude, hay un problema de demanda.\n\n3. ¿Puedo producir 50 vídeos distintos sobre este tema?\nEsta es la pregunta que más gente falla. Si te quedas sin ideas antes de llegar a 20, el nicho es demasiado estrecho para construir un canal sostenible.\n\nRegla: si los tres son sí, adelante. Si dos de tres, piénsalo bien. Si uno de tres, busca otro nicho.\n\n---\n\nUN DATO QUE CAMBIA LA PERSPECTIVA\n\nRomuald empezó hablando de SEO cuando nadie lo hacía en español. Le pareció un nicho pequeño y aburrido. Resultado: un millón y medio de seguidores y una agencia de más de 80 personas. La clave es que había demanda real de gente que quería posicionar webs y ganar dinero con ello, aunque todavía no había canal en español que lo explicara bien.\n\nNo necesitas ser el primero en un nicho, pero sí que el nicho tenga profundidad y demanda activa. Un nicho sin demanda no se resuelve con mejor contenido.\n\n---\n\nLA TRAMPA DEL NICHO PERFECTO\n\nNo existe. Si esperas encontrar el nicho con demanda alta, competencia baja y tema que te apasiona al 100%, esperarás para siempre. Elige el mejor nicho que pase el test de los tres criterios y que puedas defender con autoridad. La autoridad se construye con el tiempo. La demanda o existe o no existe desde el principio.",
           "recursoExtra": null,
-          "videoReferencia": null,
+          "videoReferencia": "https://www.youtube.com/watch?v=iPcjht2VrJ4",
           "completadoPorDefecto": false
         }
       ]
@@ -1530,9 +1530,9 @@
           "titulo": "Productos digitales: cursos, ebooks, plantillas",
           "duracionEstimadaMin": 9,
           "plantillaRelacionadaId": null,
-          "contenido": "",
+          "contenido": "PRODUCTOS DIGITALES: CURSOS, EBOOKS, PLANTILLAS\n\nEl producto digital es la vía de monetización con mayor margen de todas las disponibles para un creador. No hay inventario, no hay logística, no hay límite de unidades. Lo creas una vez y lo puedes vender mil veces.\n\nPero hay algo más importante que el margen: la audiencia de YouTube ya te conoce. Ya confían en ti. Ya han visto cómo trabajas. Eso significa que la conversión a producto digital desde YouTube es mucho más alta que desde tráfico frío.\n\n---\n\nQUÉ VENDER\n\nVende exactamente lo que ya enseñas en el canal, pero con más profundidad o más estructura.\n\nRomuald lo explicó con claridad en el Show de Romu: la formación que él ofreció en CRECETUBE enseñaba a la gente a crecer su canal de YouTube. Era lo mismo que enseñaba gratis, pero más organizado, más completo y con acompañamiento. El canal es el escaparate. El producto es la versión premium.\n\nEjemplos prácticos:\n- Si tu canal enseña edición de vídeo, tu producto podría ser un pack de presets y plantillas listo para usar.\n- Si enseñas productividad, tu producto podría ser un sistema de planificación semanal en Notion.\n- Si enseñas marketing digital, tu producto podría ser un curso con el proceso paso a paso que describes en tus vídeos.\n\n---\n\nPOR DÓNDE EMPEZAR\n\nNo empieces por el producto más complejo que se te ocurra. Empieza por el producto mínimo viable: algo que resuelva un problema concreto y que puedas tener listo en dos semanas.\n\nUna plantilla descargable puede ser un primer producto. Un ebook de 30 páginas puede ser un primer producto. Un minicurso de tres módulos puede ser un primer producto. La idea es validar que tu audiencia paga antes de invertir meses en algo más grande.\n\nPlataformas para empezar sin coste inicial: Gumroad es la opción más rápida de configurar. Para cursos con más estructura, Hotmart o Teachable.\n\n---\n\nAVISO IMPORTANTE\n\nLa información pura está perdiendo valor rápido. Lo que vale es tu experiencia real, tu perspectiva única y el sistema que has probado tú mismo. Un curso que dice lo que dice todo el mundo no tiene ventaja competitiva. Tu producto tiene que reflejar lo que solo tú puedes enseñar.",
           "recursoExtra": null,
-          "videoReferencia": null,
+          "videoReferencia": "https://www.youtube.com/watch?v=bNFaIfjK8-o",
           "completadoPorDefecto": false
         },
         {
@@ -1797,9 +1797,9 @@
           "titulo": "La meseta de las 100 vistas: por qué es normal y cómo salir",
           "duracionEstimadaMin": 9,
           "plantillaRelacionadaId": null,
-          "contenido": "",
+          "contenido": "LA MESETA DE LAS 100 VISTAS: POR QUÉ ES NORMAL Y CÓMO SALIR\n\nAbres YouTube Studio y ves que tus vídeos no llegan a las 100 vistas. Llevas meses publicando. El algoritmo parece ignorarte. Sientes que algo va mal.\n\nNo va mal. Esto es exactamente normal y le pasa a todos los canales al principio, incluidos los que ahora tienen millones de suscriptores.\n\n---\n\nPOR QUÉ PASA\n\nYouTube no sabe todavía de qué va tu canal. Los primeros 20 o 30 vídeos son el periodo de aprendizaje del algoritmo: está midiendo quién ve tus vídeos, cuánto tiempo se quedan, si vuelven, si hacen clic. Hasta que no tiene suficientes datos, no puede recomendar tu contenido a nadie nuevo.\n\nAdemás, si tus primeros vídeos son de temas variados, el algoritmo tiene aún más dificultad para clasificarte. Ennicharse, es decir publicar de forma consistente sobre un mismo tema, acelera este proceso de clasificación.\n\n---\n\nCÓMO SALIR\n\nRomuald es directo: la salida no es un truco. Es consistencia.\n\nSigue publicando aunque los números sean bajos. Optimiza el Pescaseo, que es la pareja miniatura más título, porque es lo que determina si la gente hace clic cuando YouTube te muestra. Y no tomes decisiones sobre el rendimiento de tu canal basándote en los primeros 10 o 15 vídeos: el patrón real empieza a aparecer a partir del vídeo 30 o 40.\n\nHay algo más importante que los números en esta fase: la práctica. Cada vídeo que publicas en la meseta te está enseñando a grabar, a editar, a estructurar el guion y a entender qué funciona. Cuando el algoritmo empiece a empujarte, ya sabrás lo que haces.\n\n---\n\nLO QUE NO DEBES HACER\n\nCambiar de nicho porque \"esto no funciona\" es el error más frecuente en la meseta. No es el nicho. Es que el algoritmo todavía no tiene datos suficientes de tu canal. Cambiando de nicho, el contador vuelve a cero.\n\nTampoco compares tus primeros vídeos con los de canales grandes. Mira los primeros vídeos de cualquier canal con un millón de suscriptores y verás exactamente lo mismo que el tuyo ahora: pocos views, producción básica, mucho margen de mejora. Eso no los paró.",
           "recursoExtra": null,
-          "videoReferencia": null,
+          "videoReferencia": "https://www.youtube.com/watch?v=iPcjht2VrJ4",
           "completadoPorDefecto": false
         },
         {
@@ -1807,9 +1807,9 @@
           "titulo": "Síndrome del impostor en creadores",
           "duracionEstimadaMin": 8,
           "plantillaRelacionadaId": null,
-          "contenido": "",
+          "contenido": "SÍNDROME DEL IMPOSTOR EN CREADORES\n\n\"¿Quién soy yo para enseñar esto?\" Es la pregunta que paraliza a más creadores antes incluso de grabar su primer vídeo. Y la que hace abandonar a muchos otros que ya llevan meses publicando.\n\nLa respuesta de Romuald es simple y directa: no necesitas saber más que todos. Necesitas saber más que tu audiencia específica en este momento.\n\n---\n\nEL REENCUADRE QUE LO CAMBIA TODO\n\nLa persona que empieza hoy a aprender algo que tú llevas dos años dominando te necesita a ti, no al experto de 20 años. El experto de 20 años habla para otros expertos. Tú hablas para el que empieza.\n\nRomuald lo explicó en una charla en México: él empezó hablando de SEO porque lo sabía. No porque fuera el mayor experto del mundo, sino porque tenía resultados propios que podía mostrar. Una agencia funcionando, webs posicionadas, datos reales. Eso es suficiente autoridad para empezar.\n\nNo eres un profesor universitario. Eres alguien que ha recorrido el camino un poco antes que tu audiencia y que les está contando lo que funciona y lo que no.\n\n---\n\nCUÁNDO EL IMPOSTOR APARECE CON MÁS FUERZA\n\nNormalmente en dos momentos: al principio, antes de publicar el primer vídeo, y después de publicar y recibir críticas o pocos views.\n\nEn el primer caso: no hay remedio que no sea publicar. El primer vídeo malo que sacas es mejor que el vídeo perfecto que tienes en la cabeza pero nunca grabas. Romuald fue claro: sus primeros vídeos daban pena. Los tuyos también darán pena. Así empieza todo el mundo.\n\nEn el segundo caso: separa el rendimiento del vídeo de tu valor como creador. Un vídeo con pocos views no significa que no tengas nada que aportar. Significa que el Pescaseo, la miniatura más título, no funcionó, o que el algoritmo todavía no tiene datos de tu canal.\n\n---\n\nLO QUE DEBES RECORDAR\n\n- Saber más que todos no es el requisito. Saber lo suficiente para tu audiencia, sí.\n- Ser auténtico compensa la falta de experiencia mejor que cualquier producción perfecta.\n- Todo el mundo que ahora parece un experto sólido tuvo un primer vídeo horrible. Tú también puedes tenerlo.",
           "recursoExtra": null,
-          "videoReferencia": null,
+          "videoReferencia": "https://www.youtube.com/watch?v=iPcjht2VrJ4",
           "completadoPorDefecto": false
         },
         {
@@ -1837,9 +1837,9 @@
           "titulo": "La regla de los 100 vídeos: consistencia mata talento",
           "duracionEstimadaMin": 8,
           "plantillaRelacionadaId": null,
-          "contenido": "",
+          "contenido": "LA REGLA DE LOS 100 VÍDEOS: CONSISTENCIA MATA TALENTO\n\nMr. Beast tiene una respuesta para cualquier persona que le pregunta cómo crecer en las redes sociales: habla de algo en particular y haz 100 vídeos. Y dice algo más importante: a toda la gente que le viene con esa pregunta y que luego hace los 100 vídeos, nunca nadie vuelve a preguntarle. Porque ya lo han conseguido.\n\nEsa es la regla. Simple, directa y brutal.\n\n---\n\nPOR QUÉ 100\n\nNo es un número arbitrario. Es el número donde ocurren tres cosas a la vez:\n\nPrimero, tu canal tiene suficientes datos para que el algoritmo entienda de qué va y a quién recomendártelo. Los primeros 20 vídeos son el periodo de aprendizaje. Los siguientes 30 son donde mejoras la técnica. A los 50 empiezas a encontrar tu voz. A los 100 tienes datos reales de qué funciona y qué no.\n\nSegundo, tú como creador has mejorado. Grabas mejor, editas mejor, estructuras mejor el guion. El vídeo 100 no se parece en nada al vídeo 1. Esa diferencia es tu ventaja competitiva real.\n\nTercero, si has publicado 100 vídeos de forma consistente sobre el mismo tema, has demostrado algo que la mayoría no puede demostrar: que no te rendiste.\n\n---\n\nPOR QUÉ LA MAYORÍA NO LLEGA\n\nMucha gente hace 2, 3 o 4 vídeos y cambia de rumbo. O dice que el algoritmo no le ayuda. O que el nicho es muy competido. O que no tiene tiempo.\n\nRomuald lo dice sin rodeos: la culpa es tuya. El algoritmo enseña a la gente lo que quiere ver. Si nadie te ve, es porque todavía no has dado suficientes razones al algoritmo para que te muestre. La solución no es culpar al sistema. La solución es publicar más y mejor.\n\n---\n\nCÓMO APLICARLO\n\nAntes de evaluar si YouTube funciona para ti, comprométete a publicar 100 vídeos. No 10, no 20: 100. Con consistencia de formato y de nicho. Sin cambiar de tema cada vez que un vídeo va mal.\n\nSi llegas al vídeo 100 y el canal no ha crecido, entonces tienes datos reales para evaluar y cambiar estrategia. Antes del vídeo 100, cualquier conclusión que saques es prematura.\n\nEl batch content, grabar varios vídeos en un mismo bloque de tiempo, es la herramienta más práctica para mantener la consistencia sin quemarte semana a semana.",
           "recursoExtra": null,
-          "videoReferencia": null,
+          "videoReferencia": "https://www.youtube.com/watch?v=iPcjht2VrJ4",
           "completadoPorDefecto": false
         },
         {
