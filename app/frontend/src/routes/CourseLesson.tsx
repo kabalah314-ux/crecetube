@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, BookOpen, Check, ExternalLink, FileText, Youtube } from "lucide-react";
 import { api } from "../services/api";
+import { filtrarCursoVisible } from "../lib/cursoVisible";
 import type { CourseAsignatura, CourseProgress, CourseSeccion, CourseStructure } from "../types";
 
 export function CourseLesson() {
@@ -19,7 +20,7 @@ export function CourseLesson() {
       api.get<CourseStructure>("/api/curso/estructura"),
       api.get<CourseProgress[]>("/api/curso/progreso"),
     ]).then(([c, p]) => {
-      const s = c.secciones.find((x) => x.id === seccionId);
+      const s = filtrarCursoVisible(c).secciones.find((x) => x.id === seccionId);
       const a = s?.asignaturas.find((x) => x.id === asignaturaId);
       if (!s || !a) {
         navigate("/curso", { replace: true });

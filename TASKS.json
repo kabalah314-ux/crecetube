@@ -4,8 +4,8 @@
   "ultima_actualizacion": "2026-06-11",
   "resumen": {
     "total": 20,
-    "pendientes": 3,
-    "en_progreso": 2,
+    "pendientes": 1,
+    "en_progreso": 4,
     "completadas": 15,
     "bloqueadas": 0,
     "tokens_estimados_totales": 0
@@ -146,7 +146,7 @@
     {
       "id": "T012",
       "titulo": "Contenido didáctico del curso (169 asignaturas)",
-      "descripcion": "Rellenar el campo 'contenido' de las 169 asignaturas en app/guia_maestra/07_curso_seed.json siguiendo app/guia_maestra/GUIA_CONTENIDO_CURSO.md. CAMBIO DE PLAN (2026-06-11): el usuario aporta vídeos de YouTube (19 links, tanda 1) y el agente extrae transcripciones, redacta las clases cubiertas (regla: en conflicto entre vídeos gana el más nuevo), rellena videoReferencia con el vídeo origen, añade enlace de vídeo en CourseLesson.tsx, actualiza BD local y producción, y entrega lista de asignaturas no cubiertas para que el usuario busque más vídeos.",
+      "descripcion": "Rellenar el campo 'contenido' de las 169 asignaturas en app/guia_maestra/07_curso_seed.json siguiendo app/guia_maestra/GUIA_CONTENIDO_CURSO.md. CAMBIO DE PLAN (2026-06-11): el usuario aporta vídeos de YouTube y el agente extrae transcripciones y redacta (regla: en conflicto gana el vídeo más nuevo). Tandas 1+2: 63/169. DECISIÓN (2026-06-12): el usuario no encuentra vídeos para muchas pendientes → el curso OCULTA las asignaturas sin contenido (filtro en frontend, las 106 siguen en el seed y reaparecen solas al rellenarse); se retomará la redacción cuando él aporte más vídeos.",
       "fase": "contenido",
       "prioridad": "media",
       "estado": "en_progreso",
@@ -209,7 +209,7 @@
       "descripcion": "En el onboarding preguntar si gestiona un canal o varios. Si varios: la sección 'Vídeos' pasa a llamarse 'Proyectos' con los canales dentro, y dentro de cada canal sus vídeos + añadir nuevo. Implica añadir entidad Canal a la BD, asociar vídeos a canal, selector de canal y migración del modo single-canal. Petición del usuario 2026-06-11.",
       "fase": "desarrollo",
       "prioridad": "media",
-      "estado": "pendiente",
+      "estado": "en_progreso",
       "depende_de": "T016",
       "tokens_estimados": "alto",
       "complejidad": "alta",
@@ -233,7 +233,7 @@
       "descripcion": "Generador IA que recomiende los mejores temas de vídeo usando como contexto el conocimiento recopilado (contenido del curso redactado desde los vídeos de Romuald + datos del canal del usuario). Diseñar cómo inyectar ese corpus en los prompts (resumen del método por secciones) para mejorar la calidad de las sugerencias de forma continua. Petición del usuario 2026-06-11.",
       "fase": "desarrollo",
       "prioridad": "media",
-      "estado": "pendiente",
+      "estado": "en_progreso",
       "depende_de": null,
       "tokens_estimados": "alto",
       "complejidad": "alta",

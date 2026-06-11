@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Clock, FileText } from "lucide-react";
 import { api } from "../services/api";
+import { filtrarCursoVisible } from "../lib/cursoVisible";
 import type { CourseProgress, CourseSeccion, CourseStructure } from "../types";
 
 export function CourseSection() {
@@ -16,7 +17,7 @@ export function CourseSection() {
       api.get<CourseStructure>("/api/curso/estructura"),
       api.get<CourseProgress[]>("/api/curso/progreso"),
     ]).then(([c, p]) => {
-      const s = c.secciones.find((x) => x.id === seccionId);
+      const s = filtrarCursoVisible(c).secciones.find((x) => x.id === seccionId);
       if (!s) {
         navigate("/curso", { replace: true });
         return;

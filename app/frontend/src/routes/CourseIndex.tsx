@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { es } from "../i18n/es";
 import { api } from "../services/api";
+import { filtrarCursoVisible } from "../lib/cursoVisible";
 import type { CourseProgress, CourseStructure } from "../types";
 
 export function CourseIndex() {
@@ -14,7 +15,7 @@ export function CourseIndex() {
       api.get<CourseStructure>("/api/curso/estructura"),
       api.get<CourseProgress[]>("/api/curso/progreso"),
     ]).then(([c, p]) => {
-      setCurso(c);
+      setCurso(filtrarCursoVisible(c));
       setProgreso(p);
     });
   }, []);
@@ -28,8 +29,11 @@ export function CourseIndex() {
   }
 
   const completadas = new Set(progreso.filter((p) => p.completado).map((p) => p.asignaturaId));
-  const totalHechas = completadas.size;
-  const pctGlobal = Math.round((totalHechas / curso.totalAsignaturas) * 100);
+  const totalHechas = curso.secciones.reduce(
+    (n, s) => n + s.asignaturas.filter((a) => completadas.has(a.id)).length,
+    0
+  );
+  const pctGlobal = curso.totalAsignaturas ? Math.round((totalHechas / curso.totalAsignaturas) * 100) : 0;
 
   return (
     <div className="page">

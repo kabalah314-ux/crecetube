@@ -171,7 +171,7 @@ export function Dashboard() {
             <BookOpen size={20} /> El curso
           </h3>
           <p style={{ color: "var(--text-secondary)", margin: "var(--space-3) 0 var(--space-4)" }}>
-            20 secciones y 169 clases del método, integradas en cada etapa del wizard.
+            Las clases del método CRECETUBE, integradas en cada etapa del wizard. El temario crece con cada actualización.
           </p>
           <Link to="/curso" className="btn btn-secondary btn-sm">
             Ir al curso
