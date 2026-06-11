@@ -61,7 +61,6 @@ export function TipBanner({ slug }: { slug: StepId }) {
         tabIndex={0}
         onClick={reabrir}
         onKeyDown={(e) => e.key === "Enter" && reabrir()}
-        data-testid-reopen={`tip-banner-reopen-${slug}`}
       >
         <Zap size={14} />
         <span data-testid={`tip-banner-reopen-${slug}`}>Consejo Romuald — mostrar</span>
