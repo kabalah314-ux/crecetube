@@ -7,7 +7,7 @@ Estado general: **v1 + capa Romuald + Fase 2 COMPLETAS** — 13/14 tareas; solo 
 ---
 
 ## Tarea actual
-T012 `en_progreso` — CAMBIO DE PLAN: el usuario aporta vídeos de YouTube y el agente redacta. **Tanda 1 completada: 56/169 asignaturas rellenadas** desde 19 vídeos (curso CRECETUBE Lite #1-#7 de Romuald 2021 + vídeos 2023-2026). Regla acordada: en conflicto gana el vídeo MÁS NUEVO. Pipeline: `scripts/extraer-transcripciones.mjs` → 6 redactores en paralelo (fragmentos G*.json) → `scripts/fusionar-contenido-curso.mjs` (sube version del seed; BD local y Turso recargan solas) → reviewer de calidad. Quedan 113 pendientes: lista en `app/guia_maestra/contenido_fragmentos/_pendientes.md`; el usuario busca vídeos que las cubran y se repite el pipeline (añadir IDs a extraer-transcripciones.mjs, nuevos lotes, fusionar).
+T012 `en_progreso` — el usuario aporta vídeos de YouTube y el agente redacta. **Tandas 1+2 completadas: 63/169 asignaturas** (seed v4 en producción). Regla: en conflicto gana el vídeo MÁS NUEVO. Pipeline: `node scripts/extraer-transcripciones.mjs <ids>` → agente `redactor` por lote (fragmentos G*.json) → `scripts/fusionar-contenido-curso.mjs` (sube version; BD local y Turso recargan solas) → control de calidad (¡vigilar ortografía: G7 llegó sin tildes y hubo que corregirlo!). Quedan 106 pendientes (`_pendientes.md`); secciones enteras sin material: s7 sorteos, s8 tráiler, s15 comunidad, s16 crossplatform, s18 email. OJO: el endpoint de subtítulos de YouTube aplica rate limit tras ~20 vídeos seguidos — el extractor reintenta con backoff y si persiste hay que esperar ~35 min.
 
 ## Últimas decisiones tomadas
 - Capa de consejos Romuald (T008–T011) completada, verificada con QA visual en navegador y commiteada (d449e71, f7a22c3).
