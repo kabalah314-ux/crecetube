@@ -2,6 +2,7 @@
 // temporal para 8-10 hasta el Sprint 3.
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Printer } from "lucide-react";
+import { CONSEJOS } from "../consejos";
 import type { StepProps } from "./types";
 
 export function StepGenerico({
@@ -36,6 +37,7 @@ export function StepGenerico({
               <li key={i}>{p}</li>
             ))}
           </ul>
+          <p className="field-hint">{CONSEJOS.edicion.campos.tuGuionPide}</p>
         </div>
       )}
 

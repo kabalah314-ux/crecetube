@@ -1,5 +1,6 @@
 // Etapa 1 · idea (02 §2.4.1)
-import { CharCount } from "../fields";
+import { CharCount, LabelConTip } from "../fields";
+import { CONSEJOS } from "../consejos";
 import type { StepProps } from "./types";
 
 const TIPOS = [
@@ -19,9 +20,9 @@ export function StepIdea({ video, patch }: StepProps) {
   return (
     <>
       <div className="field">
-        <label className="label" htmlFor="f-idea">
+        <LabelConTip htmlFor="f-idea" tip={CONSEJOS.idea.campos.tituloIdea}>
           ¿Sobre qué va tu próximo vídeo?
-        </label>
+        </LabelConTip>
         <input
           id="f-idea"
           className="input"
@@ -35,9 +36,9 @@ export function StepIdea({ video, patch }: StepProps) {
       </div>
 
       <div className="field">
-        <label className="label" htmlFor="f-brief">
+        <LabelConTip htmlFor="f-brief" tip={CONSEJOS.idea.campos.descripcionCorta}>
           Cuéntalo en 2–3 frases
-        </label>
+        </LabelConTip>
         <textarea
           id="f-brief"
           className="textarea"
@@ -50,22 +51,24 @@ export function StepIdea({ video, patch }: StepProps) {
       </div>
 
       <div className="field">
-        <span className="label" data-tip="Sprint vive de los 7 primeros días; evergreen acumula durante meses (s3_a1)">
-          Tipo de vídeo
-        </span>
+        <span className="label">Tipo de vídeo</span>
         <div className="radio-cards" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" }}>
-          {TIPOS.map(({ v, t, d }) => (
-            <button
-              key={v}
-              type="button"
-              className={`radio-card${video.tipo === v ? " selected" : ""}`}
-              data-testid={`field-tipo-${v}`}
-              onClick={() => patch({ tipo: v })}
-            >
-              <strong>{t}</strong>
-              <span>{d}</span>
-            </button>
-          ))}
+          {TIPOS.map(({ v, t, d }) => {
+            const tipKey = `tipo${v.charAt(0).toUpperCase()}${v.slice(1)}` as keyof typeof CONSEJOS.idea.campos;
+            return (
+              <button
+                key={v}
+                type="button"
+                className={`radio-card${video.tipo === v ? " selected" : ""}`}
+                data-testid={`field-tipo-${v}`}
+                data-tip={CONSEJOS.idea.campos[tipKey]}
+                onClick={() => patch({ tipo: v })}
+              >
+                <strong>{t}</strong>
+                <span>{d}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -87,9 +90,9 @@ export function StepIdea({ video, patch }: StepProps) {
       </div>
 
       <div className="field">
-        <label className="label" htmlFor="f-nicho">
+        <LabelConTip htmlFor="f-nicho" tip={CONSEJOS.idea.campos.nicho}>
           Nicho
-        </label>
+        </LabelConTip>
         <input
           id="f-nicho"
           className="input"

@@ -5,6 +5,7 @@ import { Sparkles, Archive, Info } from "lucide-react";
 import { AiBlock } from "../AiBlock";
 import { Modal } from "../../components/ui/Modal";
 import { ESTRATEGIAS_CATALOGO, colorFamilia } from "../estrategias";
+import { CONSEJOS } from "../consejos";
 import { useStore } from "../../store/useStore";
 import type { StepProps } from "./types";
 import type { VideoState } from "../../types";
@@ -34,7 +35,7 @@ export function StepEvergreen({
     <>
       {dia !== null && dia < 30 && (
         <p className="banner-aviso" data-testid="evergreen-banner">
-          <Info size={14} /> Este módulo brilla a partir del día 30. Hoy: día {dia}.
+          <Info size={14} /> Este módulo brilla a partir del día 30. Hoy: día {dia}. {CONSEJOS.evergreen.bannerDetalle}
         </p>
       )}
 
@@ -136,7 +137,7 @@ export function StepEvergreen({
       </div>
 
       {video.estado !== "archivado" && (
-        <button type="button" className="btn btn-secondary" data-testid="btn-archivar" onClick={() => setModalArchivar(true)}>
+        <button type="button" className="btn btn-secondary" data-testid="btn-archivar" data-tip={CONSEJOS.evergreen.campos.archivar} onClick={() => setModalArchivar(true)}>
           <Archive size={16} /> Archivar proyecto
         </button>
       )}
@@ -166,6 +167,7 @@ export function StepEvergreen({
         }
       >
         <p>El vídeo pasa a estado “Archivado”. Podrás recuperarlo cambiando su estado en el detalle.</p>
+        <p className="field-hint">{CONSEJOS.evergreen.campos.archivar}</p>
       </Modal>
     </>
   );

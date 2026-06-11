@@ -2,11 +2,18 @@
 import { useRef, useState } from "react";
 import { Upload, Eye } from "lucide-react";
 import { AiBlock } from "../AiBlock";
+import { LabelConTip } from "../fields";
+import { CONSEJOS } from "../consejos";
 import { useStore } from "../../store/useStore";
 import { fileToThumbnailDataUrl } from "../../services/image";
 import type { StepProps } from "./types";
 
 const ESTRATEGIAS = ["SEOmarco", "SEOcara", "SEOflecha", "otra"] as const;
+const TIP_ESTRATEGIA: Partial<Record<(typeof ESTRATEGIAS)[number], string>> = {
+  SEOmarco: CONSEJOS.miniatura.campos.estrategiaSeomarco,
+  SEOcara: CONSEJOS.miniatura.campos.estrategiaSeocara,
+  SEOflecha: CONSEJOS.miniatura.campos.estrategiaSeoflecha,
+};
 const TIPOS_OK = ["image/jpeg", "image/png", "image/webp"];
 
 export function StepMiniatura({ video, patch }: StepProps) {
@@ -50,6 +57,7 @@ export function StepMiniatura({ video, patch }: StepProps) {
               type="button"
               className={`chip${video.miniatura.estrategia === e ? " active" : ""}`}
               data-testid={`field-miniatura-estrategia-${e.toLowerCase()}`}
+              {...(TIP_ESTRATEGIA[e] ? { "data-tip": TIP_ESTRATEGIA[e] } : {})}
               onClick={() => patch({ miniatura: { ...video.miniatura, estrategia: e } })}
             >
               {e}
@@ -60,9 +68,9 @@ export function StepMiniatura({ video, patch }: StepProps) {
       </div>
 
       <div className="field">
-        <label className="label" htmlFor="f-palabras-mini">
+        <LabelConTip htmlFor="f-palabras-mini" tip={CONSEJOS.miniatura.campos.palabrasMiniatura}>
           Palabras impresas (3–5)
-        </label>
+        </LabelConTip>
         <input
           id="f-palabras-mini"
           className="input"
@@ -172,6 +180,7 @@ export function StepMiniatura({ video, patch }: StepProps) {
               type="button"
               className="btn btn-ghost btn-sm"
               data-testid="btn-simular-grilla"
+              data-tip={CONSEJOS.miniatura.checks["test-grilla-superado"]}
               onClick={() => setSimulaGrilla(!simulaGrilla)}
             >
               <Eye size={14} /> {simulaGrilla ? "Vista normal" : "Ver a tamaño búsqueda"}

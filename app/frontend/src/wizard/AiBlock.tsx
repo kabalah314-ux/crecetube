@@ -15,9 +15,11 @@ interface Props {
   /** recibe la respuesta parseada del backend y la pinta como cards */
   render: (resultados: unknown[], parseFallido: boolean) => ReactNode;
   disabledExtra?: string | null;
+  /** Tooltip Romuald anclado en la cabecera del bloque IA */
+  tip?: string;
 }
 
-export function AiBlock({ tipo, videoProjectId, etiqueta, opciones, render, disabledExtra }: Props) {
+export function AiBlock({ tipo, videoProjectId, etiqueta, opciones, render, disabledExtra, tip }: Props) {
   const profile = useStore((s) => s.profile);
   const toast = useStore((s) => s.toast);
   const configurada = profile?.iaConfig.apiKey === "***";
@@ -48,7 +50,7 @@ export function AiBlock({ tipo, videoProjectId, etiqueta, opciones, render, disa
 
   return (
     <section className="ai-block" aria-label={`Generador IA: ${etiqueta}`}>
-      <div className="ai-head">
+      <div className="ai-head" {...(tip ? { "data-tip": tip } : {})}>
         <Sparkles size={18} />
         <strong>{etiqueta}</strong>
       </div>

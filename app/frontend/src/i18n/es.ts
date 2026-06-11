@@ -105,6 +105,8 @@ export const es = {
       evergreen: "Evergreen",
     } as Record<string, string>,
     ayudaContextual: "Ayuda contextual",
+    consejoRomuald: "El consejo de Romuald",
+    glosarioRomuald: "Glosario Romuald",
     delCurso: "Del curso",
     plantillas: "Plantillas",
     progresoGlobal: "Progreso del proyecto",

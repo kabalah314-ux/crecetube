@@ -108,6 +108,7 @@ if [ -f ".env" ]; then
   if [ -f ".env.example" ]; then
     MISSING=0
     while IFS= read -r line; do
+      line="${line%$'\r'}"  # strip Windows CRLF
       [[ "$line" =~ ^#.*$ || -z "$line" ]] && continue
       KEY=$(echo "$line" | cut -d'=' -f1 | tr -d ' ')
       if ! grep -q "^${KEY}=" .env 2>/dev/null; then

@@ -3,7 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CheckCircle2, Plus, Trash2, AlertTriangle } from "lucide-react";
 import { AiBlock } from "../AiBlock";
-import { ChipsEditor, CharCount } from "../fields";
+import { ChipsEditor, CharCount, LabelConTip } from "../fields";
+import { CONSEJOS } from "../consejos";
 import { Modal } from "../../components/ui/Modal";
 import { Confetti } from "../../components/Confetti";
 import { useStore } from "../../store/useStore";
@@ -110,12 +111,12 @@ export function StepPublicacion({
         <summary>A · Descripción y comentario fijado</summary>
         <div className="acordeon-body">
           <div className="field">
-            <label className="label" htmlFor="f-desc">
+            <LabelConTip htmlFor="f-desc" tip={CONSEJOS.publicacion.campos.descripcion}>
               Descripción publicada{" "}
               <span style={{ fontWeight: 400, color: "var(--text-tertiary)" }}>
                 (las 2 primeras líneas son el SEOextracto: lo único visible antes del “ver más”)
               </span>
-            </label>
+            </LabelConTip>
             <textarea
               id="f-desc"
               className="textarea"
@@ -153,9 +154,9 @@ export function StepPublicacion({
             }}
           />
           <div className="field" style={{ marginTop: "var(--space-4)" }}>
-            <label className="label" htmlFor="f-fijado">
+            <LabelConTip htmlFor="f-fijado" tip={CONSEJOS.publicacion.campos.comentarioFijado}>
               Comentario fijado
-            </label>
+            </LabelConTip>
             <textarea
               id="f-fijado"
               className="textarea"
@@ -173,7 +174,7 @@ export function StepPublicacion({
         <summary>B · Hashtags</summary>
         <div className="acordeon-body">
           <div className="field">
-            <span className="label">En descripción (regla del 3: amplio + medio + específico, máx 15)</span>
+            <LabelConTip as="span" tip={CONSEJOS.publicacion.campos.hashtagsDescripcion}>En descripción (regla del 3: amplio + medio + específico, máx 15)</LabelConTip>
             <ChipsEditor
               valores={video.hashtags.descripcion}
               max={15}
@@ -250,6 +251,7 @@ export function StepPublicacion({
               <AlertTriangle size={14} /> {tsError}
             </p>
           )}
+          <LabelConTip as="span" tip={CONSEJOS.publicacion.campos.timestamps}>Capítulos (timestamps)</LabelConTip>
           <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)" }}>
             {tsRows.map((r, i) => (
               <div key={i} className="ref-row">
@@ -314,7 +316,7 @@ export function StepPublicacion({
         <summary>D · Pantallas finales y tarjetas</summary>
         <div className="acordeon-body">
           <div className="field">
-            <span className="label">Configuración de pantallas finales (últimos 20s)</span>
+            <LabelConTip as="span" tip={CONSEJOS.publicacion.campos.pantallasYTarjetas}>Configuración de pantallas finales (últimos 20s)</LabelConTip>
             <div className="chips">
               {CONFIGS.map((c) => (
                 <button
@@ -426,7 +428,7 @@ export function StepPublicacion({
 
           <hr style={{ border: "none", borderTop: "1px solid var(--border-subtle)", margin: "var(--space-5) 0" }} />
 
-          <span className="label">Tarjetas (máx 5 · nunca en el primer minuto · 2 min de distancia)</span>
+          <LabelConTip as="span" tip={CONSEJOS.publicacion.campos.pantallasYTarjetas}>Tarjetas (máx 5 · nunca en el primer minuto · 2 min de distancia)</LabelConTip>
           {tarjetasError && (
             <p className="banner-error" role="alert" data-testid="tarjetas-error">
               <AlertTriangle size={14} /> {tarjetasError} — no se guarda hasta corregirlo
@@ -513,9 +515,9 @@ export function StepPublicacion({
         <summary>E · SEOhora — cuándo publicar</summary>
         <div className="acordeon-body" style={{ display: "flex", gap: "var(--space-4)", flexWrap: "wrap" }}>
           <div className="field" style={{ minWidth: 200 }}>
-            <label className="label" htmlFor="f-dia">
+            <LabelConTip htmlFor="f-dia" tip={CONSEJOS.publicacion.campos.seoHora}>
               Día de la semana
-            </label>
+            </LabelConTip>
             <select
               id="f-dia"
               className="select"
@@ -532,9 +534,9 @@ export function StepPublicacion({
             </select>
           </div>
           <div className="field" style={{ minWidth: 160 }}>
-            <label className="label" htmlFor="f-hora">
+            <LabelConTip htmlFor="f-hora" tip={CONSEJOS.publicacion.campos.seoHora}>
               Hora
-            </label>
+            </LabelConTip>
             <input
               id="f-hora"
               type="time"

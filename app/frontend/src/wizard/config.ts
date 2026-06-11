@@ -135,6 +135,7 @@ export const STEPS: StepDef[] = [
       { key: "broll-listado", texto: "Lista de b-roll necesaria escrita" },
       { key: "audio-verificado", texto: "Prueba de audio hecha (niveles OK)" },
       { key: "iluminacion-verificada", texto: "Iluminación montada y probada" },
+      { key: "energia-camara", texto: "Roturas de energía planificadas (cambios de intensidad)" },
       { key: "material-grabado", texto: "Contenido principal grabado" },
       { key: "broll-grabado", texto: "B-roll grabado" },
     ],
@@ -212,6 +213,7 @@ export const STEPS: StepDef[] = [
     ],
     ia: "comunidad",
     checklist: [
+      { key: "sin-cambios-24h", texto: "Día 1 · Sin tocar miniatura, título ni descripción durante 24h" },
       { key: "email-enviado", texto: "Día 1 · Email a la lista enviado", auto: (v) => v.difusion.emailEnviado },
       { key: "post-comunidad-publicado", texto: "Día 1 · Post de comunidad publicado", auto: (v) => v.difusion.postComunidad.enviado },
       {

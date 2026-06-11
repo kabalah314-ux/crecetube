@@ -1,12 +1,12 @@
 {
   "proyecto": "CRECETUBE Assistant",
   "version": "1.0",
-  "ultima_actualizacion": "2026-06-10",
+  "ultima_actualizacion": "2026-06-11",
   "resumen": {
-    "total": 7,
-    "pendientes": 0,
+    "total": 12,
+    "pendientes": 1,
     "en_progreso": 0,
-    "completadas": 7,
+    "completadas": 11,
     "bloqueadas": 0,
     "tokens_estimados_totales": 0
   },
@@ -94,6 +94,66 @@
       "tokens_estimados": "alto",
       "complejidad": "media",
       "resultado": "Export/import JSON con replaceAll/fusionar y test de ida y vuelta, UI en Configuración, README de arranque, a11y (skip-link, focus ring, aria-live, reduced-motion), confetti canvas propio. Verificación final: 42/42 tests, tsc, build, init.sh 'Proyecto listo'. Pendiente fase 2: E2E Playwright y PDF de plantillas"
+    },
+    {
+      "id": "T008",
+      "titulo": "Capa Consejos Romuald — Fase 1: núcleo (consejos.ts + TipBanner)",
+      "descripcion": "Crear app/frontend/src/wizard/consejos.ts (catálogo completo, Apéndice A de GUIA_MAESTRA_IMPLEMENTACION.md) y TipBanner.tsx (banner descartable con localStorage). Integrar en VideoWizard.tsx bajo la titlebar. CSS: max-width de [data-tip] a 360px + variante data-tip-pos=left + estilos .tip-banner con --accent-gold.",
+      "fase": "desarrollo",
+      "prioridad": "alta",
+      "estado": "completada",
+      "depende_de": null,
+      "tokens_estimados": "medio",
+      "complejidad": "media",
+      "resultado": "consejos.ts (catálogo 10 etapas + glosario 9 términos) + TipBanner descartable/reabrible con localStorage integrado en VideoWizard + tooltip 360px y variante left. Reviewer: APROBADO, 42/42 tests, tsc, build OK"
+    },
+    {
+      "id": "T009",
+      "titulo": "Capa Consejos Romuald — Fase 2: tooltips de campos y checklist",
+      "descripcion": "LabelConTip en fields.tsx; Checklist.tsx con lookup CONSEJOS[slug].checks[key]; config.ts +2 checks (energia-camara en grabacion, sin-cambios-24h en sprint); prop tip opcional en AiBlock; aplicar mapeo §3.1-§3.10 de la guía en los 9 Step*.tsx (StepGuion: refactor CAMPOS_SEO para importar textos de consejos.ts). Revisar conteos de checklist en tests.",
+      "fase": "desarrollo",
+      "prioridad": "alta",
+      "estado": "completada",
+      "depende_de": "T008",
+      "tokens_estimados": "alto",
+      "complejidad": "alta",
+      "resultado": "LabelConTip + Checklist con tips Romuald por ítem + 2 checks nuevos (grabacion 8, sprint 11) + AiBlock.tip + tooltips en los 9 steps desde consejos.ts sin hardcodeo. Reviewer: APROBADO CON ARREGLOS (restauró 4 comillas tipográficas), 42/42, tsc, build OK"
+    },
+    {
+      "id": "T010",
+      "titulo": "Capa Consejos Romuald — Fase 3: ContextPanel (consejo permanente + glosario)",
+      "descripcion": "ContextPanel.tsx: bloque 'El consejo de Romuald' (primero, banner+detalle de la etapa actual) y bloque <details> 'Glosario Romuald' (GLOSARIO_ROMUALD, 9 términos). data-testid: context-consejo-romuald, context-glosario-romuald.",
+      "fase": "desarrollo",
+      "prioridad": "media",
+      "estado": "completada",
+      "depende_de": "T009",
+      "tokens_estimados": "bajo",
+      "complejidad": "baja",
+      "resultado": "ContextPanel con bloque 'El consejo de Romuald' (primero, banner+detalle por etapa) y <details> 'Glosario Romuald' (9 términos en dl) + strings en es.ts + estilos. npm test verde, testids y textos verificados en bundle"
+    },
+    {
+      "id": "T011",
+      "titulo": "Capa Consejos Romuald — Fase 4 (opcional): tono en generadores IA",
+      "descripcion": "app/backend/src/prompts.js: preámbulo de tono Romuald (frases cortas, imperativo, loops, términos propios) + reglas por generador según §6.1 de la guía. Verificar ia-metricas.test.mjs.",
+      "fase": "desarrollo",
+      "prioridad": "baja",
+      "estado": "completada",
+      "depende_de": "T010",
+      "tokens_estimados": "medio",
+      "complejidad": "media",
+      "resultado": "Preámbulo de tono Romuald en SYSTEM_BASE + reglas específicas en titulo, hook, descripcion, comunidad y analisis_retencion. Sin cambios de formato JSON ni firmas. ia-metricas 10/10, suite 42/42, tsc, build OK"
+    },
+    {
+      "id": "T012",
+      "titulo": "Contenido didáctico del curso (169 asignaturas)",
+      "descripcion": "Rellenar el campo 'contenido' de las 169 asignaturas en app/guia_maestra/07_curso_seed.json siguiendo app/guia_maestra/GUIA_CONTENIDO_CURSO.md. APLAZADA por decisión del usuario (2026-06-11): la redacción la hace él externamente (NotebookLM + IA ejecutora con la guía). Cuando entregue el JSON relleno: validar estructura (IDs intactos, 20/169), recargar seeds y verificar render en la app. Sin cambios de UI mientras tanto (el placeholder de la regla de oro #1 cubre el estado vacío).",
+      "fase": "contenido",
+      "prioridad": "media",
+      "estado": "pendiente",
+      "depende_de": null,
+      "tokens_estimados": "bajo",
+      "complejidad": "baja",
+      "resultado": null
     }
   ]
 }

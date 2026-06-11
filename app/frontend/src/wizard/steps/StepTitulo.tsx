@@ -1,7 +1,8 @@
 // Etapa 3 · titulo (02 §2.4.3)
 import { ArrowUp, Trash2, Check } from "lucide-react";
 import { AiBlock } from "../AiBlock";
-import { CharCount } from "../fields";
+import { CharCount, LabelConTip } from "../fields";
+import { CONSEJOS } from "../consejos";
 import type { StepProps } from "./types";
 
 export function StepTitulo({ video, patch }: StepProps) {
@@ -19,9 +20,9 @@ export function StepTitulo({ video, patch }: StepProps) {
   return (
     <>
       <div className="field">
-        <label className="label" htmlFor="f-titulo-final">
+        <LabelConTip htmlFor="f-titulo-final" tip={CONSEJOS.titulo.campos.tituloFinal}>
           Título final
-        </label>
+        </LabelConTip>
         <input
           id="f-titulo-final"
           className="input"
@@ -39,7 +40,7 @@ export function StepTitulo({ video, patch }: StepProps) {
             </span>
           )}
           {kwIncluida && (
-            <span className="field-hint" style={{ margin: 0, color: "var(--accent-mint)" }}>
+            <span className="field-hint" style={{ margin: 0, color: "var(--accent-mint)" }} data-tip={CONSEJOS.titulo.campos.palabraClave}>
               <Check size={12} style={{ display: "inline" }} /> kw “{kwIncluida}”
             </span>
           )}
@@ -80,6 +81,7 @@ export function StepTitulo({ video, patch }: StepProps) {
         tipo="titulo"
         videoProjectId={video.id}
         etiqueta="Generar 9 títulos con IA"
+        tip={CONSEJOS.titulo.campos.generarIA}
         render={(resultados, parseFallido) =>
           parseFallido ? (
             <pre className="ai-raw">{(resultados[0] as { texto: string })?.texto}</pre>
@@ -114,9 +116,9 @@ export function StepTitulo({ video, patch }: StepProps) {
       />
 
       <div className="field" style={{ marginTop: "var(--space-5)" }}>
-        <label className="label" htmlFor="f-hashtag-titulo">
+        <LabelConTip htmlFor="f-hashtag-titulo" tip={CONSEJOS.titulo.campos.hashtagTitulo}>
           Hashtag en el título (máx 1, opcional)
-        </label>
+        </LabelConTip>
         <input
           id="f-hashtag-titulo"
           className="input"

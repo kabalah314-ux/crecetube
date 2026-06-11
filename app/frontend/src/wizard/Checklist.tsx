@@ -1,5 +1,6 @@
-import { Lock } from "lucide-react";
+import { Lock, Info } from "lucide-react";
 import { isItemDone, stepProgress, type StepDef } from "./config";
+import { CONSEJOS } from "./consejos";
 import type { VideoProject } from "../types";
 
 interface Props {
@@ -25,11 +26,13 @@ export function Checklist({ video, step, onToggle }: Props) {
         {step.checklist.map((item) => {
           const hecho = isItemDone(video, step, item);
           const esAuto = Boolean(item.auto);
+          const tipRomuald = CONSEJOS[step.slug]?.checks[item.key];
           return (
             <li key={item.key} className={hecho ? "done" : ""}>
               <label
                 className={esAuto ? "auto" : ""}
-                data-tip={esAuto ? "Se marca solo cuando el dato correspondiente está completo" : undefined}
+                data-tip={tipRomuald ?? (esAuto ? "Se marca solo cuando el dato correspondiente está completo" : undefined)}
+                data-tip-pos="left"
               >
                 <input
                   type="checkbox"
@@ -38,7 +41,10 @@ export function Checklist({ video, step, onToggle }: Props) {
                   data-testid={`checklist-${step.slug}-${item.key}`}
                   onChange={(e) => onToggle(item.key, e.target.checked)}
                 />
-                <span className="check-text">{item.texto}</span>
+                <span className="check-text">
+                  {item.texto}
+                  {tipRomuald && <Info size={12} style={{ marginLeft: 4, color: "var(--text-tertiary)", verticalAlign: "-1px" }} />}
+                </span>
                 {esAuto && <Lock size={12} className="check-lock" aria-label="Item automático" />}
               </label>
             </li>

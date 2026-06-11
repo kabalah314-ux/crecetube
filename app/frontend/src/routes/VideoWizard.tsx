@@ -22,6 +22,7 @@ import { useStore } from "../store/useStore";
 import { es } from "../i18n/es";
 import { ESTADOS_ORDEN } from "../wizard/estados";
 import type { StepProps } from "../wizard/steps/types";
+import { TipBanner } from "../wizard/TipBanner";
 
 function CuerpoEtapa({
   slug,
@@ -144,6 +145,8 @@ export function VideoWizard() {
             )}
           </span>
         </div>
+
+        <TipBanner slug={step.slug} />
 
         <CuerpoEtapa slug={step.slug} props={{ video, patch }} cambiarEstado={cambiarEstado} />
 

@@ -1,6 +1,6 @@
 // fields.tsx — controles reutilizables del wizard.
-import { useState, type KeyboardEvent } from "react";
-import { Plus, Trash2, Video as VideoIcon } from "lucide-react";
+import { useState, type KeyboardEvent, type ReactNode } from "react";
+import { Plus, Trash2, Video as VideoIcon, Info } from "lucide-react";
 
 export function CharCount({ len, ideal, max }: { len: number; ideal: number; max: number }) {
   const cls = len > max ? "over" : len > ideal ? "warn" : "";
@@ -200,5 +200,37 @@ export function RefsEditor({
         <Plus size={14} /> Añadir referencia
       </button>
     </div>
+  );
+}
+
+/** Label con icono ⓘ y data-tip integrado. Admite as="span" para campos sin htmlFor. */
+export function LabelConTip({
+  htmlFor,
+  tip,
+  as = "label",
+  children,
+}: {
+  htmlFor?: string;
+  tip: string;
+  as?: "label" | "span";
+  children: ReactNode;
+}) {
+  const content = (
+    <>
+      {children}{" "}
+      <Info size={12} style={{ color: "var(--text-tertiary)", verticalAlign: "-1px" }} />
+    </>
+  );
+  if (as === "span") {
+    return (
+      <span className="label" data-tip={tip}>
+        {content}
+      </span>
+    );
+  }
+  return (
+    <label className="label" htmlFor={htmlFor} data-tip={tip}>
+      {content}
+    </label>
   );
 }

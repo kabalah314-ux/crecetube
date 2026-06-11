@@ -1,13 +1,14 @@
 // Etapa 2 · investigacion (02 §2.4.2)
 import { AiBlock } from "../AiBlock";
-import { ChipsEditor, ListEditor, RefsEditor } from "../fields";
+import { ChipsEditor, ListEditor, RefsEditor, LabelConTip } from "../fields";
+import { CONSEJOS } from "../consejos";
 import type { StepProps } from "./types";
 
 export function StepInvestigacion({ video, patch }: StepProps) {
   return (
     <>
       <div className="field">
-        <span className="label">Palabras clave (máx 15)</span>
+        <LabelConTip as="span" tip={CONSEJOS.investigacion.campos.palabrasClave}>Palabras clave (máx 15)</LabelConTip>
         <ChipsEditor
           valores={video.palabrasClave}
           max={15}
@@ -18,7 +19,7 @@ export function StepInvestigacion({ video, patch }: StepProps) {
       </div>
 
       <div className="field">
-        <span className="label">Preguntas que responde el vídeo (máx 10)</span>
+        <LabelConTip as="span" tip={CONSEJOS.investigacion.campos.seoPreguntas}>Preguntas que responde el vídeo (máx 10)</LabelConTip>
         <ListEditor
           valores={video.seoPreguntas}
           max={10}
@@ -52,7 +53,7 @@ export function StepInvestigacion({ video, patch }: StepProps) {
       />
 
       <div className="field" style={{ marginTop: "var(--space-5)" }}>
-        <span className="label">Vídeos de la competencia</span>
+        <LabelConTip as="span" tip={CONSEJOS.investigacion.campos.competenciaRefs}>Vídeos de la competencia</LabelConTip>
         <RefsEditor valores={video.competenciaRefs} onChange={(competenciaRefs) => patch({ competenciaRefs })} />
       </div>
     </>

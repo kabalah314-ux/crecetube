@@ -487,10 +487,16 @@
   padding: 6px 10px;
   border-radius: var(--radius-sm);
   white-space: nowrap;
-  max-width: 280px;
+  max-width: 360px; /* los consejos Romuald tienen 2–4 frases */
   white-space: normal;
   width: max-content;
   z-index: 60;
   box-shadow: var(--shadow-md);
   pointer-events: none;
+}
+
+[data-tip][data-tip-pos="left"]:hover::after,
+[data-tip][data-tip-pos="left"]:focus-visible::after {
+  left: 0;
+  transform: none;
 }

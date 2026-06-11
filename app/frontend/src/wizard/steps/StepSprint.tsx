@@ -5,6 +5,7 @@ import { Rocket, LineChart, Plus } from "lucide-react";
 import { AiBlock } from "../AiBlock";
 import { EmptyState } from "../../components/ui/EmptyState";
 import { SnapshotModal } from "../../components/SnapshotModal";
+import { CONSEJOS } from "../consejos";
 import type { StepProps } from "./types";
 
 const REDES = [
@@ -25,7 +26,7 @@ export function StepSprint({ video, patch }: StepProps) {
         <EmptyState
           icon={Rocket}
           title="Publica el vídeo para arrancar el sprint"
-          desc="Los 7 días posteriores a la publicación deciden el alcance inicial. Esta etapa se activa al marcar el vídeo como publicado."
+          desc={`Los 7 días posteriores a la publicación deciden el alcance inicial. Esta etapa se activa al marcar el vídeo como publicado. ${CONSEJOS.sprint.bannerDetalle ?? ""}`}
           cta={
             <Link to={`/videos/${video.id}/wizard/publicacion`} className="btn btn-primary" data-testid="ir-a-publicacion">
               Ir a Publicación
@@ -46,7 +47,7 @@ export function StepSprint({ video, patch }: StepProps) {
         <span style={{ color: "var(--text-tertiary)", flex: 1 }}>
           Publicado el {new Date(video.publishedAt).toLocaleDateString("es-ES", { day: "numeric", month: "long" })}
         </span>
-        <button className="btn btn-secondary btn-sm" onClick={() => setModalSnap(true)} data-testid="sprint-add-snapshot">
+        <button className="btn btn-secondary btn-sm" onClick={() => setModalSnap(true)} data-testid="sprint-add-snapshot" data-tip={CONSEJOS.sprint.campos.metricasSprint}>
           <Plus size={14} /> Snapshot de métricas
         </button>
         <Link to="/metricas" className="btn btn-ghost btn-sm">
@@ -64,7 +65,7 @@ export function StepSprint({ video, patch }: StepProps) {
       <div className="field">
         <span className="label">Difusión del día 1</span>
         <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
-          <label className="check-row">
+          <label className="check-row" data-tip={CONSEJOS.sprint.campos.emailMarketing}>
             <input
               type="checkbox"
               checked={video.difusion.emailEnviado}
@@ -73,7 +74,7 @@ export function StepSprint({ video, patch }: StepProps) {
             />
             Email a la lista enviado
           </label>
-          <label className="check-row">
+          <label className="check-row" data-tip={CONSEJOS.sprint.campos.postComunidad}>
             <input
               type="checkbox"
               checked={video.difusion.postComunidad.enviado}
