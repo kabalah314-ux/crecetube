@@ -1,8 +1,8 @@
 # Estado de Sesión
 
 Proyecto: CRECETUBE Assistant
-Última sesión: 2026-06-11
-Estado general: **v1 + capa Romuald + Fase 2 COMPLETAS** — 13/14 tareas; solo queda T012 (contenido del curso, en manos del usuario)
+Última sesión: 2026-06-12
+Estado general: **19/20 tareas completadas** — v1 + capa Romuald + Fase 2 + curso 63/169 (oculta vacías) + tutorial OpenRouter + viabilidad + multi-usuario con login (Google/email) + multi-canal Proyectos + recomendador IA de temas + sello Romu aprueba. TODO EN PRODUCCIÓN (crecetube.vercel.app). Solo queda T012 en curso (más tandas de vídeos del usuario).
 
 ---
 
@@ -17,10 +17,12 @@ T012 `en_progreso` — el usuario aporta vídeos de YouTube y el agente redacta.
 - `improvements/002`: patrón recurrente de comillas tipográficas alteradas al escribir código (2 apariciones: T009 y T013).
 
 ## Próximo paso
-Acciones SOLO del usuario (bloqueantes de lo que indican):
-1. ~~**Turso**~~ ✅ HECHO (2026-06-11) — integración Vercel+Turso conectada, credenciales en env vars, redeploy OK, API operativa.
-2. **OpenRouter** (bloquea probar los 9 generadores IA): clave gratis en openrouter.ai → pegarla en Configuración de la app.
-3. **T012 tanda 2**: buscar vídeos de YouTube que cubran las 113 asignaturas pendientes (lista con títulos y secciones en `app/guia_maestra/contenido_fragmentos/_pendientes.md`) y pasar los links al agente. Secciones enteras sin cubrir: s7 (sorteos), s8 (tráiler), s15 (comunidad), s16 (crossplatform), s18 (email marketing).
+Acciones SOLO del usuario:
+1. **Crear su cuenta en crecetube.vercel.app/acceso y pegar su clave OpenRouter en Configuración** (el agente no introduce claves) → estrenar los 11 generadores IA (9 del wizard + Ideas + sello Romu) en vivo con el agente.
+2. **T012 tandas siguientes**: más vídeos de YouTube para las 106 asignaturas pendientes (lista en `app/guia_maestra/contenido_fragmentos/_pendientes.md`; el curso las oculta hasta que se rellenen). Secciones enteras sin cubrir: s2 (Studio), s7 (sorteos), s8 (tráiler), s15 (comunidad), s16 (crossplatform), s18 (email).
+3. Opcional: borrar el usuario QA de producción (qa.smoke@crecetube.test) y "Publicar app" en Google Auth Platform cuando quiera abrir el login con Google a todo el mundo (hoy: usuarios de prueba).
+
+Credenciales/config ya en producción: Turso, SESSION_SECRET, GOOGLE_CLIENT_ID (orígenes localhost:5173 y crecetube.vercel.app).
 
 Estado del deploy: **100% operativa** (crecetube.vercel.app, 2026-06-11). Backend con Turso conectado — `/api/plantillas` sirve las 25 plantillas con seeds, `/api/videos` operativo. BD fresh (sin usuarios aún, se crean en onboarding).
 

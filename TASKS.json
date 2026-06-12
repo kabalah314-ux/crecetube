@@ -4,9 +4,9 @@
   "ultima_actualizacion": "2026-06-11",
   "resumen": {
     "total": 20,
-    "pendientes": 1,
-    "en_progreso": 2,
-    "completadas": 17,
+    "pendientes": 0,
+    "en_progreso": 1,
+    "completadas": 19,
     "bloqueadas": 0,
     "tokens_estimados_totales": 0
   },
@@ -233,11 +233,11 @@
       "descripcion": "Generador IA que recomiende los mejores temas de vídeo usando como contexto el conocimiento recopilado (contenido del curso redactado desde los vídeos de Romuald + datos del canal del usuario). Diseñar cómo inyectar ese corpus en los prompts (resumen del método por secciones) para mejorar la calidad de las sugerencias de forma continua. Petición del usuario 2026-06-11.",
       "fase": "desarrollo",
       "prioridad": "media",
-      "estado": "en_progreso",
+      "estado": "completada",
       "depende_de": null,
       "tokens_estimados": "alto",
       "complejidad": "alta",
-      "resultado": null
+      "resultado": "corpus.js destila s3/s4/s6 del seed (solo clases con contenido, max 4000 chars, crece solo con cada tanda) + generador temas_canal (5 ideas con angulo/porque/formato/dificultad, evita titulos existentes del usuario) + bloque Ideas en Dashboard con AiBlock sin video. Reviewer APROBADO sin arreglos, 78/78, 7/7 E2E. En produccion"
     },
     {
       "id": "T020",
@@ -245,11 +245,11 @@
       "descripcion": "Evaluación según el criterio de Romuald al completar cada etapa del wizard: la IA revisa lo introducido (título, miniatura, guion…) contra las reglas del método (consejos.ts + contenido del curso) y devuelve un veredicto visual tipo 'Romu approves' con puntos a corregir si no pasa. Petición del usuario 2026-06-11.",
       "fase": "desarrollo",
       "prioridad": "media",
-      "estado": "pendiente",
+      "estado": "completada",
       "depende_de": "T019",
       "tokens_estimados": "alto",
       "complejidad": "alta",
-      "resultado": null
+      "resultado": "Generador romu_aprueba (veredicto aprobado/ajustar + puntuacion + max 6 puntos + resumen en tono Romuald) con guardias de 6000 chars + RomuAprueba.tsx montado en 8 etapas del wizard (mapa de campos por etapa; no en grabacion/edicion) con sello visual verde/ambar en tokens. Reviewer APROBADO sin arreglos, 78/78, 7/7 E2E. En produccion"
     }
   ]
 }
