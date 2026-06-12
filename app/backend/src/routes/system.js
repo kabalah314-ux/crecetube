@@ -2,13 +2,23 @@
 import { Router } from "express";
 import { ApiError, h } from "../errors.js";
 import { adoptVideosSinCanal, jparse } from "../db.js";
+import { cfg } from "../config.js";
 
 const EXPORT_VERSION = 1;
 
 const router = Router();
 
+// dbHost (T027): solo el host, nunca credenciales — para diagnosticar a qué BD apunta cada deploy.
+const dbHost = () => {
+  try {
+    return cfg.DB_URL.startsWith("file:") ? "local-file" : new URL(cfg.DB_URL).host;
+  } catch {
+    return "desconocido";
+  }
+};
+
 router.get("/health", (_req, res) => {
-  res.json({ ok: true, app: "CRECETUBE Assistant", version: "1.0.0", ts: new Date().toISOString() });
+  res.json({ ok: true, app: "CRECETUBE Assistant", version: "1.0.0", ts: new Date().toISOString(), dbHost: dbHost() });
 });
 
 router.get("/export", h(async (req, res) => {

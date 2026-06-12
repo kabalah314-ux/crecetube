@@ -36,9 +36,12 @@ const EMPTY: Draft = {
   iaKey: "",
 };
 
-function loadDraft(): { paso: number; draft: Draft } {
+// T026: el borrador se guarda POR USUARIO — con clave fija, otra cuenta en el mismo
+// navegador veía el borrador ajeno.
+function loadDraft(clave: string): { paso: number; draft: Draft } {
   try {
-    const raw = localStorage.getItem(DRAFT_KEY);
+    localStorage.removeItem(DRAFT_KEY); // limpia el borrador legado sin usuario
+    const raw = localStorage.getItem(clave);
     if (raw) {
       const parsed = JSON.parse(raw);
       return { paso: parsed.paso ?? 0, draft: { ...EMPTY, ...parsed.draft } };
@@ -73,7 +76,9 @@ const urlValida = (v: string) => {
 };
 
 export function Onboarding() {
-  const init = useMemo(loadDraft, []);
+  const auth = useStore((s) => s.auth);
+  const draftKey = `${DRAFT_KEY}:${auth?.id ?? "anon"}`;
+  const init = useMemo(() => loadDraft(draftKey), [draftKey]);
   const [paso, setPaso] = useState(init.paso);
   const [draft, setDraft] = useState<Draft>(init.draft);
   const [error, setError] = useState("");
@@ -84,8 +89,8 @@ export function Onboarding() {
   const toast = useStore((s) => s.toast);
 
   useEffect(() => {
-    localStorage.setItem(DRAFT_KEY, JSON.stringify({ paso, draft }));
-  }, [paso, draft]);
+    localStorage.setItem(draftKey, JSON.stringify({ paso, draft }));
+  }, [paso, draft, draftKey]);
 
   const set = <K extends keyof Draft>(k: K, v: Draft[K]) => {
     setDraft((d) => ({ ...d, [k]: v }));
@@ -156,7 +161,7 @@ export function Onboarding() {
         gestionMulticanal: draft.tieneCanalYa === false ? false : Boolean(draft.gestionMulticanal),
         ...(draft.iaKey ? ({ iaConfig: { apiKey: draft.iaKey } } as never) : {}),
       });
-      localStorage.removeItem(DRAFT_KEY);
+      localStorage.removeItem(draftKey);
       // T025 — sin canal todavía: el primer paso del método es validar que hay hueco.
       navigate(draft.tieneCanalYa === false ? "/viabilidad" : "/dashboard");
       toast("success", es.onboarding.bienvenidaToast(p.canalNombre));
