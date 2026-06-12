@@ -333,7 +333,7 @@
       "depende_de": null,
       "tokens_estimados": "medio",
       "complejidad": "alta",
-      "resultado": "CAUSA RAIZ: la integracion Turso creaba una RAMA de BD por deploy (host dpl-*) — cada deploy arrancaba con BD vacia. FIX: DB_URL+DB_AUTH_TOKEN explicitos en Vercel hacia la BD canonica (database-champagne-arrow); verificado con cuenta que sobrevive a un redeploy (login 200). dbHost visible en /api/health"
+      "resultado": "CAUSA RAIZ: la integracion Turso creaba una RAMA de BD por deploy (host dpl-*) — cada deploy arrancaba con BD vacia. FIX: DB_URL+DB_AUTH_TOKEN explicitos en Vercel hacia la BD canonica (database-champagne-arrow); verificado con cuenta que sobrevive a un redeploy (login 200). dbHost visible en /api/health + branching por deploy DESACTIVADO en la integracion via API (PATCH connection): tursoHost ya entrega la canonica. Doble proteccion verificada."
     }
   ]
 }
