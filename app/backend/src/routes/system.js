@@ -18,7 +18,14 @@ const dbHost = () => {
 };
 
 router.get("/health", (_req, res) => {
-  res.json({ ok: true, app: "CRECETUBE Assistant", version: "1.0.0", ts: new Date().toISOString(), dbHost: dbHost() });
+  // tursoHost: la BD que entregaría la integración (red de seguridad si DB_URL faltara).
+  let tursoHost = null;
+  try {
+    tursoHost = process.env.TURSO_DATABASE_URL ? new URL(process.env.TURSO_DATABASE_URL).host : null;
+  } catch {
+    tursoHost = "desconocido";
+  }
+  res.json({ ok: true, app: "CRECETUBE Assistant", version: "1.0.0", ts: new Date().toISOString(), dbHost: dbHost(), tursoHost });
 });
 
 router.get("/export", h(async (req, res) => {
