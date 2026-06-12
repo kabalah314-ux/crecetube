@@ -3,9 +3,9 @@
   "version": "1.0",
   "ultima_actualizacion": "2026-06-11",
   "resumen": {
-    "total": 22,
-    "pendientes": 0,
-    "en_progreso": 1,
+    "total": 25,
+    "pendientes": 1,
+    "en_progreso": 3,
     "completadas": 21,
     "bloqueadas": 0,
     "tokens_estimados_totales": 0
@@ -274,6 +274,42 @@
       "tokens_estimados": "alto",
       "complejidad": "alta",
       "resultado": "requisitos.js fuente unica (11 generadores con requisitos sobre campos reales verificados con flujo API), 422 REQUISITO_FALTANTE con details, AiBlock bloqueado (candado + mensaje Romu + Ir al paso), generador sugerir_nombres_canal con Usar este en Viabilidad y Settings. 94/94 backend (+16), 8/8 E2E x2. Reviewer APROBADO sin arreglos. En produccion"
+    },
+    {
+      "id": "T023",
+      "titulo": "Modo demo: cuenta sandbox precargada desde el login",
+      "descripcion": "Petición usuario 2026-06-12: botón 'Probar la demo' en /acceso que crea una cuenta demo efímera por visitante (sin onboarding) con datos realistas que muestran la app en pleno uso: perfil completo con nicho, gestionMulticanal con 2 canales, ~6 vídeos en etapas variadas (publicado con snapshot de métricas, sprint día 3, guion a medias, idea, evergreen 30+ días, miniatura), checklists avanzadas, progreso del curso y notas. Distintivo DEMO en el sidebar. users.esDemo + limpieza al arrancar de demos de más de 7 días. Visible solo con auth configurada (producción).",
+      "fase": "desarrollo",
+      "prioridad": "alta",
+      "estado": "en_progreso",
+      "depende_de": "T016",
+      "tokens_estimados": "alto",
+      "complejidad": "alta",
+      "resultado": null
+    },
+    {
+      "id": "T024",
+      "titulo": "IA por campo: 'Rellenar con IA' en cada campo de texto del wizard",
+      "descripcion": "Petición usuario 2026-06-12: TODO campo de texto del wizard debe poder rellenarse con IA. Cada campo declara qué información necesita para generar algo coherente (ej.: palabras clave requieren título; hook requiere título; descripción requiere guion) — extensión del mapa requisitos.js a nivel de CAMPO. Si falta info: pestañita con lo que se necesita antes + enlace al paso. La respuesta sigue las instrucciones de Romuald PARA ESE CAMPO (consejos.ts como fuente). Campos abiertos (idea) → sugerencias amplias ligadas a la temática del canal (reutilizar temas_canal en StepIdea). Requiere: inventario completo de campos por etapa, generador genérico parametrizado o por-campo, componente UI botón ✨ + pestañita.",
+      "fase": "desarrollo",
+      "prioridad": "alta",
+      "estado": "en_progreso",
+      "depende_de": "T022",
+      "tokens_estimados": "alto",
+      "complejidad": "alta",
+      "resultado": null
+    },
+    {
+      "id": "T025",
+      "titulo": "Viabilidad como paso inicial del flujo sin canal + IA en sus campos",
+      "descripcion": "Petición usuario 2026-06-12: la viabilidad es el PRIMER paso del método para quien no tiene canal → al terminar el onboarding con tieneCanalYa=false (o al crear un canal nuevo en Proyectos), se le propone directamente el estudio de viabilidad (pantalla intermedia de propuesta, no solo banner del Dashboard; saltable). Sus campos también rellenables con IA (mismo patrón por-campo de T024: la sugerencia de demanda necesita la idea descrita, etc.).",
+      "fase": "desarrollo",
+      "prioridad": "alta",
+      "estado": "pendiente",
+      "depende_de": "T024",
+      "tokens_estimados": "medio",
+      "complejidad": "media",
+      "resultado": null
     }
   ]
 }

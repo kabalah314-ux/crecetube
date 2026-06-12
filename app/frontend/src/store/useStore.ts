@@ -51,7 +51,7 @@ export const useStore = create<Store>((set, get) => ({
     } catch {
       // Backend antiguo o sin conexión → comportarse como modo local sin auth.
       set({
-        auth: { id: "local", email: null, nombre: null, modo: "local" },
+        auth: { id: "local", email: null, nombre: null, modo: "local", esDemo: false },
         authConfig: { googleClientId: null, authConfigurada: false },
       });
     }

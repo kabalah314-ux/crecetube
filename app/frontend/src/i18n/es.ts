@@ -154,6 +154,11 @@ export const es = {
     avisoModoLocal:
       "Modo local activo: tus datos viven en este equipo; crea una cuenta cuando el servidor tenga auth configurada.",
     volverInicio: "← Volver a la app",
+    probarDemo: "Probar la demo",
+    demoHint: "Una cuenta de ejemplo con datos de muestra. Puedes tocarlo todo.",
+    demoIniciada: "Demo lista. Explora sin miedo: nada de esto toca datos reales.",
+    demoError: "No se pudo crear la cuenta demo",
+    demoBadge: "DEMO",
   },
   proyectos: {
     anadirCanal: "Añadir canal",

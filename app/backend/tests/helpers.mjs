@@ -33,7 +33,7 @@ export async function boot() {
     return { status: res.status, body: json, setCookie: res.headers.get("set-cookie") };
   };
 
-  return { base, call, close: () => new Promise((r) => srv.close(r)) };
+  return { base, call, app, close: () => new Promise((r) => srv.close(r)) };
 }
 
 export const PERFIL_OK = {

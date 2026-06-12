@@ -1,62 +1,56 @@
-# Reviewer Log — T021 (onboarding adaptativo) + T022 (cadena del método)
+# Reviewer Log — T023 (Modo demo: cuenta sandbox precargada desde el login)
 
 **Fecha:** 2026-06-12
-**Agente:** REVIEWER (director de calidad)
-**Veredicto:** APROBADO — sin arreglos necesarios. Todo verde.
+**Veredicto:** APROBADO — sin arreglos. Todo pasó a la primera; no toqué código de producto.
 
 ## Suites ejecutadas
 
-| Suite | Resultado |
-|-------|-----------|
-| `npm test --workspace app/backend` | **94/94 pass** (12.6s) |
-| `npm run typecheck -w app/frontend` (tsc --noEmit) | limpio, 0 errores |
-| `npm run build -w app/frontend` (vite) | OK — solo warning preexistente de chunk >500 kB (no relacionado) |
-| `npm run test:e2e` (Playwright) — pasada 1 | **8/8 pass** (51.8s) |
-| `npm run test:e2e` (Playwright) — pasada 2 | **8/8 pass** (1.1m) — estable, sin residuo entre ejecuciones |
+| Verificación | Resultado |
+|--------------|-----------|
+| `npm test --workspace app/backend` | **104/104 pass** (94 previos + 10 nuevos de demo.test.mjs) |
+| `npx tsc --noEmit` (frontend) | limpio |
+| `npm run build` (frontend) | OK (solo warning preexistente de chunk >500 kB) |
+| `npm run test:e2e` (Playwright) | **8/8 pass** — corren SIN SESSION_SECRET; nada se rompió, el botón demo no aparece por diseño |
+| Lint | N/A — el proyecto no define script de lint ni config ESLint propia (solo dentro de node_modules). El gate de calidad del repo es `test` = backend+tsc+build, todo verde |
 
-## Verificación dura, punto por punto
+## Verificación profunda extra (script efímero, ya borrado)
 
-### 1. Lógica de la cadena (requisitos.js) — campos REALES
-Validado cada requisito contra `videoDefaults.js` y `types.ts`. Todos los campos
-evaluados existen y son **planos** (no anidados bajo `investigacion`):
-`video.palabrasClave[]`, `video.seoPreguntas[]`, `video.tituloFinal`,
-`video.guion.seoInicio`, `video.guion.desarrollo[]`, `video.publishedAt`,
-`profile.nicho`. Ningún requisito apunta a un campo inexistente que bloquearía
-SIEMPRE. Confirmado además con los subtests unitarios (bloqueado + desbloqueado
-por cada generador).
+Arranqué un backend efímero (BD temporal en tmpdir) y verifiqué lo que las suites
+existentes no cubren del todo. Todo VERDE:
 
-### 2. Flujo end-to-end por API (con stub LLM)
-Cubierto por la suite HTTP de `requisitos.test.mjs`:
-- crear perfil → `titulo` sin keywords → **422 REQUISITO_FALTANTE**, details[0]={falta:"palabrasClave", pasoSlug:"investigacion"}.
-- `descripcion` sin tituloFinal → 422 hacia "titulo"; con título pero sin guion → 422 hacia "guion".
-- `temas_canal` / `sugerir_nombres_canal` con nicho=null → 422 hacia "configuracion".
-- `sugerir_nombres_canal` con nicho → 200, 5 nombres normalizados (dedupe, vacíos fuera, porQue truncado ≤200, máx 5), historial sin vídeo asociado.
-- Respuesta malformada → degradación elegante (parseFallido=true).
-El cliente recibe `details`: `errorHandler` los serializa (errors.js) y `AiBlock` los lee (`e.details[0].pasoSlug`).
+1. **SEED REAL (con SESSION_SECRET):** POST /api/auth/demo → 201, id `demo-`, esDemo true,
+   cookie de sesión. Perfil ready ("Recetas en 15"), 2 canales (principal por defecto +
+   "Repostería fácil"), 6 vídeos con estados exactos `[guion, guion, idea, optimizacion,
+   publicado, publicado]`. **publishedAt coherente**: solo los publicado/optimizacion lo
+   tienen y son fechas pasadas. Snapshots progresivos del publicado **412→1530→4870** vistas;
+   resumen vistasTotales=11450, videosConMetricas=3. Curso: **7** asignaturas completadas
+   (con notaPersonal). Viabilidad completado=true, autoveredicto "viable".
+   **Español con tildes** muestreado y OK en: nicho ("cocina rápida…"), canal ("Repostería
+   fácil"), descripción publicada, títulos (¿/tildes), notas de snapshot, notaPersonal de
+   curso y PVU de viabilidad.
+2. **AISLAMIENTO:** dos demos no comparten ningún vídeo; el usuario local/anónimo ve 0 vídeos
+   y perfil 404 (no ve nada del demo).
+3. **503 sin SESSION_SECRET:** en child process aparte (config.js congela `cfg` al cargarse),
+   POST /demo → 503 y config.authConfigurada=false → el botón demo queda oculto por diseño.
+4. **PURGA:** demo envejecida 8 días → `purgeDemoUsers`=1, borrada de las 9 tablas por usuario;
+   un usuario NORMAL con createdAt antiguo (999 días) queda **intacto** con su vídeo. Segunda
+   pasada idempotente (0).
+5. **MIGRACIÓN v5 idempotente:** re-arranque de `initDb` sobre la MISMA BD (migrate v5 +
+   purgeDemoUsers en cold-start) sin lanzar; schemaVersion estable en "5".
 
-### 3. Nulabilidad (canalNombre/nicho/frecuencia null)
-- `Dashboard`: saludo `canalNombre || "creador"`; subtítulo nicho condicional sin "·" huérfano; banner ampliado a `tieneCanalYa===false || !canalNombre || !nicho`.
-- `Settings`: inputs controlados con `?? ""`; select frecuencia con `?? ""` ↔ `null`; guardado normaliza vacío→null; AiBlock sugerir_nombres_canal visible solo si `!canalNombre && nicho`.
-- `TemplateDetail`: `profile?.canalNombre ? ... : valorPorDefecto` (sin asunción non-null).
-- Resumen onboarding: muestra `sinDecidir` ("Todavía sin decidir") en lugar de null.
-- `construirContexto` (prompts.js): `canalNombre ?? "(sin especificar)"`, `nicho ?? "(sin especificar)"` — sin literales "null".
-- `bienvenidaToast(nombre: string | null)` con fallback `?? "creador"`.
+## UI por código (revisión estática)
 
-### 4. Onboarding bifurcado + E2E x2
-Ambas ramas correctas por código (`pasosActivos`/`siguientePasoActivo`, centinela
-`"no_se"` aislado y convertido a null en `crear()`). Todos los testids del spec
-nuevo (`onboarding-nombre-todavia-no`, `onboarding-nicho-no-se`,
-`onboarding-frequency-no-se`, etc.) existen en Onboarding.tsx. Suite E2E 8/8 en
-dos pasadas; la limpieza con `POST /api/import {replaceAll:true}` en afterEach
-mantiene estables los specs 02/03.
+- **Botón "Probar la demo"** (`Acceso.tsx`): renderizado solo bajo `authConfig?.authConfigurada`
+  (línea 282); reutiliza `enviando`/`fallo()` existentes; `entrarDemo` navega a /dashboard sin
+  onboarding. Correcto.
+- **Badge DEMO** (`Layout.tsx`): anidado DENTRO de la rama `auth?.modo === "cuenta"` → div
+  `sidebar-cuenta`, condicionado a `auth.esDemo`. Las ramas Viabilidad/Proyectos (NAV) y el
+  login-local quedan intactas. Usa `.tag` + `--tag-color: var(--accent-gold)`, mismo patrón que
+  VideosList y StepTitulo; ambos (clase `.tag` y token `--accent-gold`) existen. No rompe nada.
+- i18n: `probarDemo`, `demoHint`, `demoIniciada`, `demoError`, `demoBadge` presentes en `es.ts`.
 
-### 5. UI del bloqueo (AiBlock)
-- Captura solo `REQUISITO_FALTANTE`; `setBloqueado(null)` al regenerar con éxito.
-- `finally { setCargando(false) }` → no deja spinner colgado al navegar.
-- `enlacePaso`: configuracion→/configuracion, viabilidad→/viabilidad, resto→`/videos/{id}/wizard/{slug}`. Rutas confirmadas contra App.tsx (`/videos/:id/wizard/:stepId`, `/configuracion`, `/viabilidad`). El centinela `videoProjectId="viabilidad"` queda excluido del enlace al wizard.
+## Notas
 
-## Arreglos
-Ninguno. Ambos lotes llegaron 100% funcionales tal como se entregaron.
-
-## Patrones recurrentes / candidatos a improvements/
-Ninguno (cero rechazos).
+- No hubo nada que arreglar: el implementor entregó la tarea 100% funcional.
+- El único cambio que hice en el árbol fue un script de verificación temporal que ya eliminé;
+  ningún archivo de producto ni de test permanente fue modificado.

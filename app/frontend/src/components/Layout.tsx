@@ -68,6 +68,15 @@ export function Layout() {
             <div className="nav-item sidebar-cuenta" data-testid="sidebar-cuenta" title={auth.email ?? undefined}>
               <UserRound size={20} />
               <span className="nav-label">{auth.nombre ?? auth.email}</span>
+              {auth.esDemo && (
+                <span
+                  className="tag"
+                  data-testid="sidebar-demo-badge"
+                  style={{ ["--tag-color" as never]: "var(--accent-gold)" }}
+                >
+                  {es.acceso.demoBadge}
+                </span>
+              )}
             </div>
             <button
               className="nav-item"

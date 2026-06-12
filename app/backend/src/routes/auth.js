@@ -7,6 +7,7 @@ import { createRemoteJWKSet, jwtVerify } from "jose";
 import { ApiError, h } from "../errors.js";
 import { cfg } from "../config.js";
 import { ensureDefaultChannel } from "../db.js";
+import { sembrarDemo } from "../demoSeed.js";
 import { assert422, nowIso, uuid } from "../util.js";
 import { clearSessionCookie, createSessionToken, setSessionCookie } from "../middleware/auth.js";
 
@@ -34,7 +35,13 @@ function requireSecret() {
     throw new ApiError("AUTH_NOT_CONFIGURED", 503, "Las cuentas están desactivadas (falta SESSION_SECRET): la app funciona en modo local");
 }
 
-const publicUser = (u) => ({ id: u.id, email: u.email ?? null, nombre: u.nombre ?? null, modo: "cuenta" });
+const publicUser = (u) => ({
+  id: u.id,
+  email: u.email ?? null,
+  nombre: u.nombre ?? null,
+  modo: "cuenta",
+  esDemo: Boolean(u.esDemo),
+});
 
 const iniciarSesion = async (res, userId) => setSessionCookie(res, await createSessionToken(userId));
 
@@ -138,6 +145,20 @@ router.post("/google", h(async (req, res) => {
   res.json(publicUser(user));
 }));
 
+// Cuenta demo efímera (T023): usuario sandbox con datos de muestra y sesión normal.
+// initDb purga las cuentas demo con más de 7 días junto con todos sus datos.
+router.post("/demo", h(async (req, res) => {
+  requireSecret();
+  const db = req.app.locals.db;
+  const user = { id: `demo-${uuid()}`, email: null, nombre: "Cuenta demo", esDemo: 1, createdAt: nowIso() };
+  await db.run("INSERT INTO users(id,email,nombre,esDemo,createdAt) VALUES(?,?,?,?,?)", [
+    user.id, user.email, user.nombre, user.esDemo, user.createdAt,
+  ]);
+  await sembrarDemo(db, user.id);
+  await iniciarSesion(res, user.id);
+  res.status(201).json(publicUser(user));
+}));
+
 router.post("/logout", h(async (_req, res) => {
   clearSessionCookie(res);
   res.json({ ok: true });
@@ -145,10 +166,10 @@ router.post("/logout", h(async (_req, res) => {
 
 router.get("/me", h(async (req, res) => {
   if (req.userId !== "local") {
-    const user = await req.app.locals.db.get("SELECT id,email,nombre FROM users WHERE id=?", [req.userId]);
+    const user = await req.app.locals.db.get("SELECT id,email,nombre,esDemo FROM users WHERE id=?", [req.userId]);
     if (user) return res.json(publicUser(user));
   }
-  res.json({ id: "local", email: null, nombre: null, modo: "local" });
+  res.json({ id: "local", email: null, nombre: null, modo: "local", esDemo: false });
 }));
 
 export default router;

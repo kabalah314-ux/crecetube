@@ -1,94 +1,50 @@
-# Implementor Log — LOTE A (T021: onboarding adaptativo)
+# Implementor Log — T023 (Modo demo: cuenta sandbox precargada desde el login)
 
 **Fecha:** 2026-06-12
-**Estado:** Implementación completa. tsc OK · build OK · tests backend 78/78 OK.
-
-## Archivos modificados
-
-| Archivo | Cambio |
-|---------|--------|
-| `app/frontend/src/types.ts` | `canalNombre`, `nicho` → `string \| null`; `frecuenciaObjetivo` → `Frecuencia \| null` |
-| `app/frontend/src/i18n/es.ts` | `tuCanalTituloNuevo` → "¿Tienes un nombre pensado para tu canal?"; nuevos: `nombreTodaviaNo`, `nichoTituloNuevo` ("¿Tienes clara la temática?"), `nichoNoSe`, `frecuenciaNoSe`, `sinDecidir`; `bienvenidaToast` acepta `string \| null` (fallback "creador"); `viabilidad.bannerDashboardTituloIncompleto` + `bannerDashboardDescIncompleto` |
-| `app/frontend/src/routes/Onboarding.tsx` | Bifurcación completa (ver abajo) |
-| `app/frontend/src/routes/Dashboard.tsx` | `perfilIncompleto = tieneCanalYa===false \|\| !canalNombre \|\| !nicho`; useEffect de viabilidad y condición del banner usan esa variable; banner con texto variante según rama; saludo `canalNombre \|\| "creador"`; subtítulo nicho null-safe (sin "·" huérfano) |
-| `app/frontend/src/routes/Settings.tsx` | Inputs `?? ""` (canalNombre/nicho); `guardarPerfil()` normaliza vacío→null; select frecuencia con `<option value="">Aún no lo sé</option>` ("" ↔ null) |
-| `app/frontend/src/routes/TemplateDetail.tsx` | **Fix extra para tsc** (no estaba en el inventario del explorer): `profile.canalNombre` se usaba como `string`; ahora `profile?.canalNombre ? ... : v.valorPorDefecto` |
-| `app/backend/src/routes/profile.js` | `validate()`: canalNombre/nicho aceptan `null` o string 1-80/1-60; frecuenciaObjetivo acepta `null` o valor de FRECUENCIAS. Aplica a POST y PATCH |
-| `app/backend/src/prompts.js` | Solo `construirContexto()`: `canalNombre ?? "(sin especificar)"`, `nicho ?? "(sin especificar)"` |
-| `e2e/01-onboarding.spec.ts` | Nuevo describe "rama sin canal" (ver abajo). El test existente NO cambió de lógica |
-
-## Detalle Onboarding.tsx
-
-- `pasosActivos(draft)`: `[0,1,3..9]` si `tieneCanalYa===false`, `[0..9]` en el resto (incl. `null` para que la barra no salte antes del paso 1). Helpers `siguientePasoActivo`/`anteriorPasoActivo` a nivel de módulo.
-- `next()` y botón Atrás usan los helpers; la barra y el contador son dinámicos: `pasoVisual = indexOf(paso)` sobre activos, `totalVisibles = activos.length - 1` (el paso 0 no cuenta). **Rama con canal: "Paso X de 9". Rama sin canal: "Paso X de 8".**
-- Paso 3: título ya condicional (`tuCanalTituloNuevo`); input `value={draft.canalNombre ?? ""}`; botón "Todavía no" (`onboarding-nombre-todavia-no`, solo rama sin canal) → `canalNombre=null` y avanza. `valida(3)`: nombre obligatorio solo si `tieneCanalYa`.
-- Paso 4: título adaptado en rama sin canal; chip "Aún no lo sé" (`onboarding-nicho-no-se`) → `nicho=null`, `valida(4)` lo acepta. El campo libre ya existía (input con placeholder), no se duplicó — la tarea decía "si no lo tiene ya".
-- Paso 6: Card extra "Aún no lo sé" (`onboarding-frequency-no-se`). **Decisión menor:** en el Draft uso centinela `"no_se"` (no `null`) para distinguir "eligió no sé" de "no eligió nada" (null sigue bloqueando en `valida(6)`); `crear()` lo convierte a `null`.
-- `crear()`: `(draft.canalNombre ?? "").trim() || null`, ídem nicho; `gestionMulticanal: false` automático en rama sin canal; frecuencia `"no_se"` → `null`.
-- Resumen (paso 9): la fila multicanal se OCULTA en rama sin canal (su botón Editar saltaría a un paso inexistente); nombre/nicho/frecuencia muestran "Todavía sin decidir" en vez de null.
-
-## Detalle e2e
-
-- El nuevo describe va **antes** del existente y limpia en `afterEach` con `POST /api/import {replaceAll:true, data:{version:1}}` (vía proxy Vite). Motivo: los 3 specs comparten BD y usuario "local" en orden (01 con-canal crea el perfil que usan 02/03); el afterEach garantiza limpieza incluso si el test falla.
-- Flujo verificado: "Todavía no" canal → multicanal ausente (`toHaveCount(0)`) → nombre "Todavía no" → nicho "Aún no lo sé" → frecuencia "Aún no lo sé" → dashboard con heading `/Hola, creador/` y `dashboard-card-viabilidad` visible.
-
-## Decisiones menores
-
-1. Testid del chip de nicho: `onboarding-nicho-no-se` (literal del encargo del orquestador; el explorer sugería `onboarding-niche-no-se`). Frecuencia: `onboarding-frequency-no-se`.
-2. Banner Dashboard: variante "incompleto" cuando `tieneCanalYa !== false` (tiene canal pero falta nombre/nicho); texto original cuando `tieneCanalYa === false`. CTA sin cambios.
-3. Tests backend: NO necesitaron ajuste — el caso `canalNombre: ""` sigue dando 422 (vacío ≠ null), que respeta su intención.
-4. Saludo Dashboard: cambié `?? "creador"` por `|| "creador"` para cubrir perfiles antiguos con `canalNombre: ""`.
-
-## Verificación (rápida, según rol)
-
-- `npx tsc --noEmit` (frontend): limpio.
-- `npm run build` (frontend): OK (warning preexistente de chunk >500 kB, no relacionado).
-- `npm test --workspace app/backend`: 78/78 pass.
-- Suite E2E NO ejecutada (corresponde al reviewer).
-
-Sin DUDAs pendientes.
-
----
-
-# LOTE B (T022: cadena del método — requisitos por generador + bloqueo duro + sugerir nombres)
-
-**Fecha:** 2026-06-12
-**Estado:** Implementación completa. tests backend 94/94 OK (eran 78) · tsc limpio · build OK.
+**Estado:** Implementación completa. tests backend 104/104 OK (eran 94) · tsc limpio · build OK.
 
 ## Archivos creados
 
 | Archivo | Contenido |
 |---------|-----------|
-| `app/backend/src/requisitos.js` | Única fuente de verdad: mapa generador→requisitos + `evaluarRequisitos(tipo, { video, profile })` → `null \| { falta, pasoSlug, mensaje }`. Mensajes en tono Romu con consecuencia. 11 generadores con requisitos activos; `romu_aprueba` y `evaluacion_nicho` exentos explícitos |
-| `app/backend/tests/requisitos.test.mjs` | 2 tests / 14 subtests: unidad de cada generador (bloqueado+desbloqueado), HTTP 422 REQUISITO_FALTANTE con `details[0].{falta,pasoSlug}` (titulo, descripcion×2, temas_canal, sugerir_nombres_canal), generador de nombres con stub (feliz: dedupe/truncado/máx 5 + historial; malformado: degradación) |
+| `app/backend/src/demoSeed.js` | `sembrarDemo(db, userId)`: datos realistas en español del nicho "cocina rápida para gente sin tiempo". Perfil completo (canal "Recetas en 15", tieneCanalYa, gestionMulticanal, nivel intermedio, semanal, suscriptores), 2 canales ("Recetas en 15" por defecto + "Repostería fácil"), 6 vídeos construidos con `nuevoVideo()` de videoDefaults.js y mutados (nunca campos inventados), 6 snapshots con progresión creíble, 7 asignaturas completadas (s1_a7/a8/a9, s5_a1/a2/a7/a8 — todas con contenido real; 2 con notaPersonal), estudio de viabilidad completado:true con autoveredicto "viable". Todo en un solo `db.batch` |
+| `app/backend/tests/demo.test.mjs` | 2 tests / 8 subtests: creación (201, id `demo-`, esDemo, cookie), /me con esDemo, perfil ready, 2 canales, 6 vídeos con estados `[guion, guion, idea, optimizacion, publicado, publicado]` y 2 canales usados, snapshots>0 con progresión, curso+viabilidad, aislamiento entre 2 demos y modo local, purga (envejece 8 días vía SQL, `purgeDemoUsers`→1, tablas limpias, demo nueva intacta, sesión purgada→perfil 404, segunda pasada→0) |
 
 ## Archivos modificados
 
 | Archivo | Cambio |
 |---------|--------|
-| `app/backend/src/routes/ia.js` | Import `evaluarRequisitos`; chequeo tras cargar el vídeo y ANTES de los bloques de contexto extra → `throw new ApiError("REQUISITO_FALTANTE", 422, mensaje, [{falta, pasoSlug}])`. `ApiError` ya soporta `details` (4º arg) y `errorHandler` ya lo serializa: sin cambios en errors.js |
-| `app/backend/src/prompts.js` | Generador NUEVO `sugerir_nombres_canal` (patrón exacto: maxTokens 600, temp 0.9, salida `{"nombres":[{"nombre","porQue"}]}`, 5 ítems, normalizador con dedupe/trim/truncado nombre≤80 porQue≤200). Usa `extraerCorpusIdeacion(2000)` como contexto del método |
-| `app/backend/tests/ia-metricas.test.mjs` | El fixture del vídeo ahora cumple la cadena (PATCH con 3 palabrasClave + 1 seoPregunta + tituloFinal) para que titulo/seo_preguntas/hook/hashtags sigan en 200 |
-| `app/frontend/src/wizard/AiBlock.tsx` | Estado `bloqueado` al capturar 422 `REQUISITO_FALTANTE`; render candado (`Lock`) + mensaje del backend + enlace "Ir al paso →" (`data-testid="aiblock-bloqueado"`, enlace `aiblock-bloqueado-ir`); botón Generar deshabilitado en ese estado. Helper `enlacePaso(pasoSlug, videoProjectId)`: configuracion→`/configuracion`, viabilidad→`/viabilidad`, resto→`/videos/{id}/wizard/{slug}` (excluye el centinela `videoProjectId="viabilidad"`) |
-| `app/frontend/src/routes/Viabilidad.tsx` | Card nuevo en paso 5 tras la evaluación de nicho: AiBlock `sugerir_nombres_canal` (opciones `{nicho: subNicho||perfil.nicho, ideaCanal, pvu}`); tarjetas con "Usar este" → `patchProfile({canalNombre})` + toast. Testids `nombres-canal-block`, `nombre-sugerido-{i}`, `nombre-usar-{i}` |
-| `app/frontend/src/routes/Settings.tsx` | Bajo el campo "Nombre del canal", visible SOLO si `!profile.canalNombre && profile.nicho`: mismo AiBlock; "Usar este" aplica al estado local del formulario (`setPerfil`) + toast "Recuerda guardar" (el guardado usa el botón existente, según explorer-log) |
-| `app/frontend/src/i18n/es.ts` | `wizard.bloqueadoTitulo`, `wizard.bloqueadoIrAlPaso`; sección nueva `nombresCanal` (etiqueta, tip, usar, aplicadoToast, aplicadoLocal, errorAplicar, parseFallido) |
-| `app/frontend/src/styles/wizard.css` | `.ai-bloqueado` + icono/título/mensaje/enlace, con tokens (`--accent-gold`, `--bg-elevated`, `--border-subtle`…), junto al resto de estilos del bloque IA |
+| `app/backend/src/db.js` | Migración **v5**: `addColumn(users, "esDemo INTEGER NOT NULL DEFAULT 0")`. Constante `TABLAS_POR_USUARIO` (profile, videos, deleted_videos, course_progress, templates, metric_snapshots, ai_interactions, channels, viabilidad — las mismas de export/import + viabilidad). `purgeDemoUsers(db, dias=7)` exportada y llamada al final de `initDb` (idempotente, apta cold-start) |
+| `app/backend/src/routes/auth.js` | `POST /demo`: `requireSecret()` (503 sin SESSION_SECRET, como el resto) → INSERT user `{ id: demo-uuid, nombre: "Cuenta demo", email: null, esDemo: 1 }` → `sembrarDemo` → cookie de sesión normal → 201. `publicUser` ahora incluye `esDemo: Boolean(u.esDemo)`; `GET /me` selecciona `esDemo` y la respuesta de modo local añade `esDemo: false` |
+| `app/backend/tests/helpers.mjs` | `boot()` devuelve también `app` (acceso a `app.locals.db` para el test de purga). No rompe a los demás callers |
+| `app/frontend/src/types.ts` | `AuthUser.esDemo: boolean` |
+| `app/frontend/src/store/useStore.ts` | Fallback de `loadAuth` (backend antiguo/sin conexión) añade `esDemo: false` |
+| `app/frontend/src/routes/Acceso.tsx` | `entrarDemo()`: POST /api/auth/demo → `loadAuth` + `loadProfile` → toast → `/dashboard` (replace, cero onboarding). Botón secundario `acceso-demo` + hint "Una cuenta de ejemplo…" bajo la grid de login/registro, visible SOLO si `authConfig?.authConfigurada`. Reutiliza `fallo()` y el estado `enviando` existentes |
+| `app/frontend/src/components/Layout.tsx` | Badge `sidebar-demo-badge` (clase `.tag` con `--tag-color: var(--accent-gold)`) dentro del div `sidebar-cuenta` existente, solo si `auth.esDemo`. El botón Salir es el existente; NO se tocaron las ramas Viabilidad/Proyectos/login-local |
+| `app/frontend/src/i18n/es.ts` | `acceso.probarDemo`, `demoHint`, `demoIniciada`, `demoError`, `demoBadge` |
+
+## Resumen del seed (6 vídeos)
+
+1. **Publicado hace 20 días** (mixto, canal principal): "5 cenas en 15 minutos con 6 ingredientes (sin horno)" — keyword en título, descripción completa, timestamps, tarjeta SEOjeta, difusión completa, 3 snapshots (412→1530→4870 vistas, CTR 4.2→5.6).
+2. **Sprint día 3** (publicado hace 3 días): "3 desayunos para llevar que preparas el domingo" — difusión a medias (email+post sí, twitter/tiktok no), checklist sprint hasta snapshot-dia2, 1 snapshot.
+3. **Guion a medias**: "7 errores al congelar comida" — seoInicio+seoShock escritos, 1 bloque de desarrollo, sin seoResultado, nota de pendientes.
+4. **Idea recién creada** (ayer): "Menú semanal con 25 euros".
+5. **Evergreen 40 días** (estado `optimizacion`, el que produce la transición automática): "Batch cooking para principiantes" — 2 snapshots con aceleración (980 d7 → 6200 d30), checklist evergreen a medias.
+6. **En miniatura** (canal secundario): "Bizcocho de yogur sin báscula" — estrategia SEOcara elegida, brief escrito, título cerrado.
 
 ## Decisiones menores
 
-1. **Bloqueo reactivo, no proactivo:** hacerlo proactivo exigiría duplicar el mapa de requisitos en el frontend (el explorer lo prohíbe: "Frontend NO duplica el mapa"). El orquestador lo permitía ("si el error llega al pulsar, vale").
-2. `services/api.ts` NO necesitó cambios: el `ApiError` del cliente ya expone `details` (línea 7 y parser línea 35). Verificado, no tocado.
-3. No añadí prop `videoId` a AiBlock: todos los callers del wizard ya pasan `videoProjectId={video.id}`; el enlace se construye con esa prop. El centinela `"viabilidad"` que usa Viabilidad.tsx queda excluido de los enlaces al wizard.
-4. El botón queda deshabilitado mientras dura el estado bloqueado (directiva literal). Si el generador convive en la misma página con el campo que falta (p. ej. `seo_preguntas` en investigación), el usuario debe salir/volver al paso para reintentar. Anotado por si el reviewer quiere relajarlo.
-5. El chequeo de requisitos va DESPUÉS de `resolveIaConfig` (sin clave sigue ganando el 503 `AI_NOT_CONFIGURED`, como esperan los tests existentes) y ANTES de los bloques de contexto extra (no se hace trabajo de BD inútil).
-6. En el HTTP test de `temas_canal`/`sugerir_nombres_canal` bloqueados se pone `nicho: null` vía PATCH (nullable desde el lote A) y se restaura después.
+1. El vídeo 5 se siembra directamente en `optimizacion` (lo que `aplicarTransicionesAuto` produciría con publishedAt −40d): estados deterministas en tests y banner de optimización visible desde el primer render.
+2. La purga vive en `db.js` (no en demoSeed.js): es mantenimiento de BD ligado a `initDb`, y el test la importa de ahí. `demoSeed.js` solo siembra.
+3. No hay test del 503 de `/demo` sin SESSION_SECRET: `helpers.mjs` fija el secreto a nivel de módulo y la suite existente tampoco lo cubre para registro/login (mismo `requireSecret()` compartido).
+4. `templates` se purga por `userId` directo: las precargadas tienen `userId='local'` (default v1), jamás colisionan con un `demo-uuid`.
+5. El botón demo comparte el estado `enviando` con login/registro (evita doble submit cruzado).
 
 ## Verificación (rápida, según rol)
 
-- `npm test --workspace app/backend`: **94/94 pass** (78 previos + 16 nuevos).
+- `npm test --workspace app/backend`: **104/104 pass** (94 previos + 10 nuevos).
 - `npx tsc --noEmit` (frontend): limpio.
 - `npm run build` (frontend): OK (warning preexistente de chunk >500 kB).
-- E2E/Playwright NO ejecutados (corresponde al reviewer). Hay un preview server corriendo por si el reviewer quiere verificar visualmente el estado `aiblock-bloqueado` y los bloques de nombres.
+- E2E/Playwright NO ejecutados (encargo explícito). Para verificar el botón en el preview, el backend debe tener SESSION_SECRET (si no, el botón no se muestra por diseño): queda para el reviewer.
 
-Sin DUDAs pendientes en el LOTE B.
+Sin DUDAs pendientes.

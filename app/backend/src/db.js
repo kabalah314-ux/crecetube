@@ -229,7 +229,40 @@ const MIGRATIONS = [
       await db.run("ALTER TABLE viabilidad_new RENAME TO viabilidad");
     },
   },
+  {
+    version: 5, // modo demo (T023): cuentas efímeras marcadas con users.esDemo
+    async up(db) {
+      await addColumn(db, "users", "esDemo INTEGER NOT NULL DEFAULT 0");
+    },
+  },
 ];
+
+// Tablas con datos escopados por userId (las mismas que limpia /api/import con replaceAll, + viabilidad).
+const TABLAS_POR_USUARIO = [
+  "profile",
+  "videos",
+  "deleted_videos",
+  "course_progress",
+  "templates",
+  "metric_snapshots",
+  "ai_interactions",
+  "channels",
+  "viabilidad",
+];
+
+// Purga cuentas demo (esDemo=1) con más de `dias` días junto con TODOS sus datos. Devuelve cuántas eliminó.
+export async function purgeDemoUsers(db, dias = 7) {
+  const limite = new Date(Date.now() - dias * 24 * 60 * 60 * 1000).toISOString();
+  const viejos = await db.all("SELECT id FROM users WHERE esDemo=1 AND createdAt < ?", [limite]);
+  if (!viejos.length) return 0;
+  const stmts = [];
+  for (const { id } of viejos) {
+    for (const tbl of TABLAS_POR_USUARIO) stmts.push({ sql: `DELETE FROM ${tbl} WHERE userId=?`, args: [id] });
+    stmts.push({ sql: "DELETE FROM users WHERE id=?", args: [id] });
+  }
+  await db.batch(stmts);
+  return viejos.length;
+}
 
 async function migrate(db) {
   const actual = Number((await getMeta(db, "schemaVersion")) ?? 0);
@@ -245,6 +278,7 @@ export async function initDb(db) {
   await db.exec(SCHEMA);
   await migrate(db);
   await seed(db);
+  await purgeDemoUsers(db);
 }
 
 export async function getCourseStructure(db) {

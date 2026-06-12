@@ -42,6 +42,7 @@ export interface AuthUser {
   email: string | null;
   nombre: string | null;
   modo: "local" | "cuenta";
+  esDemo: boolean; // cuenta sandbox efímera (T023)
 }
 
 export interface AuthConfig {

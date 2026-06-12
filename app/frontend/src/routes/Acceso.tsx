@@ -108,6 +108,22 @@ export function Acceso() {
     }
   };
 
+  // Cuenta demo (T023): sandbox precargada con datos de muestra, sin onboarding.
+  const entrarDemo = async () => {
+    setEnviando(true);
+    try {
+      await api.post<AuthUser>("/api/auth/demo");
+      await loadAuth();
+      await loadProfile();
+      toast("success", es.acceso.demoIniciada);
+      navigate("/dashboard", { replace: true });
+    } catch (e) {
+      fallo(e, es.acceso.demoError);
+    } finally {
+      setEnviando(false);
+    }
+  };
+
   // Aviso de modo local: proactivo si el backend no tiene auth configurada (GET /api/auth/config),
   // o reactivo si un intento devuelve AUTH_NOT_CONFIGURED.
   const mostrarAvisoLocal = avisoModoLocal || (authConfig !== null && !authConfig.authConfigurada);
@@ -262,6 +278,23 @@ export function Acceso() {
             </button>
           </form>
         </div>
+
+        {authConfig?.authConfigurada && (
+          <div style={{ marginTop: "var(--space-5)", textAlign: "center" }}>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              disabled={enviando}
+              data-testid="acceso-demo"
+              onClick={() => void entrarDemo()}
+            >
+              {enviando ? <span className="spinner" /> : null} {es.acceso.probarDemo}
+            </button>
+            <p className="field-hint" style={{ marginTop: "var(--space-2)" }}>
+              {es.acceso.demoHint}
+            </p>
+          </div>
+        )}
 
         <Link to="/" className="field-hint">
           {es.acceso.volverInicio}
