@@ -6,11 +6,11 @@ import { nowIso, uuid } from "../util.js";
 
 const router = Router();
 
-const snapsDe = async (db, videoId) =>
-  (await db.all("SELECT data FROM metric_snapshots WHERE videoProjectId=? ORDER BY fecha", [videoId])).map(jparse);
+const snapsDe = async (db, userId, videoId) =>
+  (await db.all("SELECT data FROM metric_snapshots WHERE userId=? AND videoProjectId=? ORDER BY fecha", [userId, videoId])).map(jparse);
 
-const ultimoSnapPorVideo = async (db) => {
-  const todos = (await db.all("SELECT data FROM metric_snapshots ORDER BY fecha")).map(jparse);
+const ultimoSnapPorVideo = async (db, userId) => {
+  const todos = (await db.all("SELECT data FROM metric_snapshots WHERE userId=? ORDER BY fecha", [userId])).map(jparse);
   const ultimo = new Map();
   for (const s of todos) ultimo.set(s.videoProjectId, s); // ordenados asc → queda el último
   return ultimo;
@@ -29,7 +29,7 @@ function validarSnapshot(body) {
 
 router.get("/resumen", h(async (req, res) => {
   const db = req.app.locals.db;
-  const ultimos = [...(await ultimoSnapPorVideo(db)).values()];
+  const ultimos = [...(await ultimoSnapPorVideo(db, req.userId)).values()];
   const n = ultimos.length;
   const suma = (f) => ultimos.reduce((a, s) => a + (Number(f(s)) || 0), 0);
   res.json({
@@ -44,9 +44,9 @@ router.get("/resumen", h(async (req, res) => {
 
 router.get("/insights", h(async (req, res) => {
   const db = req.app.locals.db;
-  const ultimos = await ultimoSnapPorVideo(db);
+  const ultimos = await ultimoSnapPorVideo(db, req.userId);
   const videos = new Map(
-    (await db.all("SELECT data FROM videos")).map(jparse).map((v) => [v.id, v])
+    (await db.all("SELECT data FROM videos WHERE userId=?", [req.userId])).map(jparse).map((v) => [v.id, v])
   );
   const insights = [];
   let mejorCtr = null;
@@ -67,7 +67,7 @@ router.get("/insights", h(async (req, res) => {
       texto: `“${nombre(peorRet.vid)}” retiene solo el ${peorRet.s.retencionMediaPct}%: revisa el gancho de los primeros 15s y añade roturas de patrón (s9).`,
     });
   for (const [vid, s] of ultimos) {
-    const serie = await snapsDe(db, vid);
+    const serie = await snapsDe(db, req.userId, vid);
     if (serie.length >= 2) {
       const v0 = serie[0].velocidadVisualizacion;
       const v1 = serie.at(-1).velocidadVisualizacion;
@@ -81,7 +81,7 @@ router.get("/insights", h(async (req, res) => {
 }));
 
 router.get("/video/:videoId", h(async (req, res) => {
-  res.json(await snapsDe(req.app.locals.db, req.params.videoId));
+  res.json(await snapsDe(req.app.locals.db, req.userId, req.params.videoId));
 }));
 
 router.post("/snapshot", h(async (req, res) => {
@@ -90,7 +90,7 @@ router.post("/snapshot", h(async (req, res) => {
   const errors = validarSnapshot(body);
   if (errors.length) throw new ApiError("VALIDATION_ERROR", 422, "Snapshot inválido", errors);
 
-  const video = jparse(await db.get("SELECT data FROM videos WHERE id=?", [body.videoProjectId]));
+  const video = jparse(await db.get("SELECT data FROM videos WHERE id=? AND userId=?", [body.videoProjectId, req.userId]));
   if (!video) throw notFound("Vídeo", "VIDEO_NOT_FOUND");
 
   const fecha = body.fecha.slice(0, 10);
@@ -121,8 +121,8 @@ router.post("/snapshot", h(async (req, res) => {
   };
 
   try {
-    await db.run("INSERT INTO metric_snapshots(id,data,videoProjectId,fecha) VALUES(?,?,?,?)", [
-      snap.id, JSON.stringify(snap), snap.videoProjectId, snap.fecha,
+    await db.run("INSERT INTO metric_snapshots(id,data,videoProjectId,fecha,userId) VALUES(?,?,?,?,?)", [
+      snap.id, JSON.stringify(snap), snap.videoProjectId, snap.fecha, req.userId,
     ]);
   } catch (e) {
     if (String(e.message).includes("UNIQUE"))
@@ -139,7 +139,7 @@ router.post("/snapshot", h(async (req, res) => {
 
 router.patch("/snapshot/:id", h(async (req, res) => {
   const db = req.app.locals.db;
-  const snap = jparse(await db.get("SELECT data FROM metric_snapshots WHERE id=?", [req.params.id]));
+  const snap = jparse(await db.get("SELECT data FROM metric_snapshots WHERE id=? AND userId=?", [req.params.id, req.userId]));
   if (!snap) throw notFound("Snapshot", "SNAPSHOT_NOT_FOUND");
   const campos = ["vistas", "impresiones", "ctr", "retencionMediaPct", "duracionMediaSeg", "suscriptoresGanados", "comentarios", "likes", "ingresosEstimados", "rpm", "notas", "diasDesdePublicacion"];
   for (const k of campos) if (req.body?.[k] !== undefined) snap[k] = req.body[k];
@@ -151,7 +151,7 @@ router.patch("/snapshot/:id", h(async (req, res) => {
 
 router.delete("/snapshot/:id", h(async (req, res) => {
   const db = req.app.locals.db;
-  const r = await db.run("DELETE FROM metric_snapshots WHERE id=?", [req.params.id]);
+  const r = await db.run("DELETE FROM metric_snapshots WHERE id=? AND userId=?", [req.params.id, req.userId]);
   if (!r.rowsAffected) throw notFound("Snapshot", "SNAPSHOT_NOT_FOUND");
   res.json({ ok: true });
 }));

@@ -163,6 +163,29 @@
   box-shadow: var(--shadow-lg);
 }
 
+/* ---------- Tarjetas de canal (T017: vista Proyectos) ---------- */
+.proyecto-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  cursor: pointer;
+  text-align: left;
+  color: var(--text-primary);
+  font: inherit;
+  transition: border-color 150ms ease, transform 150ms ease;
+}
+
+.proyecto-card:hover {
+  border-color: var(--accent-primary);
+  transform: translateY(-2px);
+}
+
+.proyecto-card .meta {
+  color: var(--text-tertiary);
+  font-size: var(--text-sm);
+}
+
 /* ---------- Tags / badges ---------- */
 .tag {
   display: inline-flex;

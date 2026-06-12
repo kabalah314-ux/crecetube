@@ -18,6 +18,7 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
   try {
     res = await fetch(BASE + path, {
       method,
+      credentials: "include", // la sesión viaja en cookie httpOnly (T016)
       headers: body === undefined ? undefined : { "Content-Type": "application/json" },
       body: body === undefined ? undefined : JSON.stringify(body),
     });

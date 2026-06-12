@@ -26,6 +26,7 @@ export function nuevoVideo({ tituloIdea, nicho = "", tipo = "evergreen", formato
     tipo,
     estado: "idea",
     formato,
+    canalId: null,
     createdAt: now,
     updatedAt: now,
     publishedAt: null,

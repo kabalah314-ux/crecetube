@@ -1,7 +1,8 @@
 // /videos/nuevo — creación perezosa (02 §2.4.1): el POST se dispara al primer
 // cambio válido del título y se continúa en el wizard con autosave normal.
+// Con ?canalId= (modo multicanal, T017) el vídeo se crea dentro de ese canal.
 import { useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { es } from "../i18n/es";
 import { api, isApiError } from "../services/api";
 import { useStore } from "../store/useStore";
@@ -11,6 +12,8 @@ export function NewVideo() {
   const [titulo, setTitulo] = useState("");
   const creando = useRef(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const canalId = searchParams.get("canalId");
   const profile = useStore((s) => s.profile);
   const toast = useStore((s) => s.toast);
 
@@ -21,6 +24,7 @@ export function NewVideo() {
       const v = await api.post<VideoProject>("/api/videos", {
         tituloIdea: valor.trim(),
         nicho: profile?.nicho ?? "",
+        ...(canalId ? { canalId } : {}),
       });
       navigate(`/videos/${v.id}/wizard/idea`, { replace: true });
     } catch (e) {
@@ -57,7 +61,7 @@ export function NewVideo() {
         />
         <p className="field-hint">Pulsa Enter (o sal del campo) y seguimos en el wizard. {es.common.guardando.replace("…", "")} automático a partir de ahí.</p>
       </div>
-      <Link to="/videos" className="field-hint">
+      <Link to={canalId ? `/videos?canalId=${canalId}` : "/videos"} className="field-hint">
         ← Volver a vídeos
       </Link>
     </div>

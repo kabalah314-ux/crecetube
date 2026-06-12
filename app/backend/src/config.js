@@ -25,4 +25,7 @@ export const cfg = {
   LLM_PROVIDER: process.env.LLM_PROVIDER || "openrouter",
   LLM_MODEL: process.env.LLM_MODEL || "openrouter/free",
   LLM_BASE_URL: process.env.LLM_BASE_URL || "https://openrouter.ai/api/v1",
+  // Autenticación opcional: si SESSION_SECRET está vacío la app opera en MODO LOCAL (userId 'local').
+  SESSION_SECRET: process.env.SESSION_SECRET || "",
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || "",
 };

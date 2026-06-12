@@ -1,7 +1,7 @@
-// useStore.ts — estado global (perfil, tema, toasts).
+// useStore.ts — estado global (perfil, sesión, tema, toasts).
 import { create } from "zustand";
 import { api, isApiError } from "../services/api";
-import type { DeepPartial, Tema, UserProfile } from "../types";
+import type { AuthConfig, AuthUser, DeepPartial, Tema, UserProfile } from "../types";
 
 export type ProfileStatus = "loading" | "missing" | "ready";
 
@@ -15,7 +15,11 @@ export interface Toast {
 interface Store {
   profile: UserProfile | null;
   profileStatus: ProfileStatus;
+  auth: AuthUser | null; // null = aún sin cargar
+  authConfig: AuthConfig | null;
   toasts: Toast[];
+  loadAuth: () => Promise<void>;
+  logout: () => Promise<void>;
   loadProfile: () => Promise<void>;
   createProfile: (datos: Partial<UserProfile>) => Promise<UserProfile>;
   patchProfile: (patch: DeepPartial<UserProfile>) => Promise<void>;
@@ -33,7 +37,34 @@ let toastSeq = 1;
 export const useStore = create<Store>((set, get) => ({
   profile: null,
   profileStatus: "loading",
+  auth: null,
+  authConfig: null,
   toasts: [],
+
+  loadAuth: async () => {
+    try {
+      const [me, config] = await Promise.all([
+        api.get<AuthUser>("/api/auth/me"),
+        api.get<AuthConfig>("/api/auth/config"),
+      ]);
+      set({ auth: me, authConfig: config });
+    } catch {
+      // Backend antiguo o sin conexión → comportarse como modo local sin auth.
+      set({
+        auth: { id: "local", email: null, nombre: null, modo: "local" },
+        authConfig: { googleClientId: null, authConfigurada: false },
+      });
+    }
+  },
+
+  logout: async () => {
+    try {
+      await api.post("/api/auth/logout");
+    } catch {
+      /* la cookie puede haber caducado ya; recargar igualmente */
+    }
+    window.location.assign("/");
+  },
 
   loadProfile: async () => {
     try {

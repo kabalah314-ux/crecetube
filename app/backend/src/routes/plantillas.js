@@ -20,18 +20,20 @@ const TIPOS = [
   "pantalla_final", "tarjeta", "checklist", "banner", "trailer",
 ];
 
-const get = async (db, id) => {
-  const t = jparse(await db.get("SELECT data FROM templates WHERE id=?", [id]));
+// Visibles para el usuario: las precargadas (globales) + las suyas propias.
+const get = async (db, userId, id) => {
+  const t = jparse(await db.get("SELECT data FROM templates WHERE id=? AND (esPrecargada=1 OR userId=?)", [id, userId]));
   if (!t) throw notFound("Plantilla", "TEMPLATE_NOT_FOUND");
   return t;
 };
 
-const save = (db, t) =>
-  db.run("INSERT OR REPLACE INTO templates(id,data,tipo,esPrecargada) VALUES(?,?,?,?)", [
+const save = (db, userId, t) =>
+  db.run("INSERT OR REPLACE INTO templates(id,data,tipo,esPrecargada,userId) VALUES(?,?,?,?,?)", [
     t.id,
     JSON.stringify(t),
     t.tipo,
     t.esPrecargada ? 1 : 0,
+    userId,
   ]);
 
 // Resuelve {variables}; las no provistas se quedan visibles como {nombre} (08 §8.6).
@@ -46,14 +48,16 @@ export function aplicarVariables(contenido, variables = {}) {
 const router = Router();
 
 router.get("/", h(async (req, res) => {
-  let rows = (await req.app.locals.db.all("SELECT data FROM templates")).map(jparse);
+  let rows = (
+    await req.app.locals.db.all("SELECT data FROM templates WHERE esPrecargada=1 OR userId=?", [req.userId])
+  ).map(jparse);
   if (req.query.tipo) rows = rows.filter((t) => t.tipo === req.query.tipo);
   rows.sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
   res.json(rows);
 }));
 
 router.get("/:id", h(async (req, res) => {
-  res.json(await get(req.app.locals.db, req.params.id));
+  res.json(await get(req.app.locals.db, req.userId, req.params.id));
 }));
 
 router.post("/", h(async (req, res) => {
@@ -61,7 +65,7 @@ router.post("/", h(async (req, res) => {
   const { nombre, tipo, contenido, variablesDinamicas, seccionRelacionadaId, duplicaDe } = req.body ?? {};
 
   if (duplicaDe) {
-    const orig = await get(db, duplicaDe);
+    const orig = await get(db, req.userId, duplicaDe);
     const copia = {
       ...structuredClone(orig),
       id: uuid(),
@@ -71,7 +75,7 @@ router.post("/", h(async (req, res) => {
       createdAt: nowIso(),
       updatedAt: nowIso(),
     };
-    await save(db, copia);
+    await save(db, req.userId, copia);
     return res.status(201).json(copia);
   }
 
@@ -89,13 +93,13 @@ router.post("/", h(async (req, res) => {
     createdAt: nowIso(),
     updatedAt: nowIso(),
   };
-  await save(db, t);
+  await save(db, req.userId, t);
   res.status(201).json(t);
 }));
 
 router.patch("/:id", h(async (req, res) => {
   const db = req.app.locals.db;
-  const t = await get(db, req.params.id);
+  const t = await get(db, req.userId, req.params.id);
   if (!t.esEditable) throw new ApiError("TEMPLATE_NOT_EDITABLE", 403, "Las plantillas precargadas no se editan: duplícala");
   const { nombre, contenido, variablesDinamicas, seccionRelacionadaId, tipo } = req.body ?? {};
   if (nombre !== undefined) t.nombre = nombre;
@@ -104,25 +108,25 @@ router.patch("/:id", h(async (req, res) => {
   if (seccionRelacionadaId !== undefined) t.seccionRelacionadaId = seccionRelacionadaId;
   if (tipo !== undefined && TIPOS.includes(tipo)) t.tipo = tipo;
   t.updatedAt = nowIso();
-  await save(db, t);
+  await save(db, req.userId, t);
   res.json(t);
 }));
 
 router.delete("/:id", h(async (req, res) => {
   const db = req.app.locals.db;
-  const t = await get(db, req.params.id);
+  const t = await get(db, req.userId, req.params.id);
   if (t.esPrecargada) throw new ApiError("TEMPLATE_NOT_EDITABLE", 403, "Las plantillas precargadas no se eliminan");
   await db.run("DELETE FROM templates WHERE id=?", [t.id]);
   res.json({ ok: true, id: t.id });
 }));
 
 router.post("/:id/aplicar", h(async (req, res) => {
-  const t = await get(req.app.locals.db, req.params.id);
+  const t = await get(req.app.locals.db, req.userId, req.params.id);
   res.json({ texto: aplicarVariables(t.contenido, req.body?.variables ?? {}) });
 }));
 
 router.get("/:id/descargar", h(async (req, res) => {
-  const t = await get(req.app.locals.db, req.params.id);
+  const t = await get(req.app.locals.db, req.userId, req.params.id);
   const formato = req.query.formato ?? "md";
   if (formato !== "md" && formato !== "txt" && formato !== "pdf")
     throw new ApiError("VALIDATION_ERROR", 422, "Formato no soportado: usa md, txt o pdf");

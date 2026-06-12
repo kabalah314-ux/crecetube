@@ -80,6 +80,23 @@
   gap: 2px;
 }
 
+/* Cuenta activa en el sidebar (T016): solo informativa, no clicable */
+.sidebar-cuenta {
+  cursor: default;
+  color: var(--text-tertiary);
+}
+
+.sidebar-cuenta:hover {
+  background: none;
+  color: var(--text-tertiary);
+}
+
+.sidebar-cuenta .nav-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* ---------- Topbar móvil ---------- */
 .topbar {
   display: none;

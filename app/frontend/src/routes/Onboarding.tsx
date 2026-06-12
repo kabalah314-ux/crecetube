@@ -1,4 +1,4 @@
-// Onboarding — 9 pasos según 02 §2.2, con borrador en localStorage.
+// Onboarding — 10 pasos (02 §2.2 + pregunta multicanal de T017), con borrador en localStorage.
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight, Check, Pencil, X } from "lucide-react";
@@ -12,6 +12,7 @@ const NICHOS = ["cocina", "gaming", "finanzas", "tecnología", "fitness", "educa
 
 interface Draft {
   tieneCanalYa: boolean | null;
+  gestionMulticanal: boolean | null;
   canalNombre: string;
   canalUrl: string;
   nicho: string;
@@ -23,6 +24,7 @@ interface Draft {
 
 const EMPTY: Draft = {
   tieneCanalYa: null,
+  gestionMulticanal: null,
   canalNombre: "",
   canalUrl: "",
   nicho: "",
@@ -84,17 +86,19 @@ export function Onboarding() {
       case 1:
         return draft.tieneCanalYa === null ? "Elige una opción para continuar" : "";
       case 2:
+        return draft.gestionMulticanal === null ? es.onboarding.multicanalError : "";
+      case 3:
         if (!draft.canalNombre.trim()) return "El nombre es obligatorio";
         if (draft.canalNombre.length > 80) return "Máximo 80 caracteres";
         if (draft.tieneCanalYa && draft.canalUrl && !urlValida(draft.canalUrl)) return es.onboarding.urlInvalida;
         return "";
-      case 3:
-        return draft.nicho.trim() ? "" : "Cuéntame tu nicho para personalizar la app";
       case 4:
-        return draft.nivel ? "" : "Elige tu nivel";
+        return draft.nicho.trim() ? "" : "Cuéntame tu nicho para personalizar la app";
       case 5:
-        return draft.frecuenciaObjetivo ? "" : "Elige una frecuencia";
+        return draft.nivel ? "" : "Elige tu nivel";
       case 6:
+        return draft.frecuenciaObjetivo ? "" : "Elige una frecuencia";
+      case 7:
         return draft.objetivoPrincipal ? "" : "Elige tu objetivo";
       default:
         return "";
@@ -104,7 +108,7 @@ export function Onboarding() {
   const next = () => {
     const err = valida(paso);
     if (err) return setError(err);
-    go(Math.min(paso + 1, 8));
+    go(Math.min(paso + 1, 9));
   };
 
   const probarConexion = async () => {
@@ -130,6 +134,7 @@ export function Onboarding() {
         frecuenciaObjetivo: draft.frecuenciaObjetivo!,
         objetivoPrincipal: draft.objetivoPrincipal!,
         tieneCanalYa: Boolean(draft.tieneCanalYa),
+        gestionMulticanal: Boolean(draft.gestionMulticanal),
         ...(draft.iaKey ? ({ iaConfig: { apiKey: draft.iaKey } } as never) : {}),
       });
       localStorage.removeItem(DRAFT_KEY);
@@ -198,6 +203,27 @@ export function Onboarding() {
     ),
     2: (
       <>
+        <h1 className="ob-title">{es.onboarding.multicanalTitulo}</h1>
+        <div className="radio-cards">
+          <Card
+            sel={draft.gestionMulticanal === false}
+            onClick={() => set("gestionMulticanal", false)}
+            title={es.onboarding.multicanalUno}
+            desc={es.onboarding.multicanalUnoDesc}
+            testid="onboarding-multichannel-single"
+          />
+          <Card
+            sel={draft.gestionMulticanal === true}
+            onClick={() => set("gestionMulticanal", true)}
+            title={es.onboarding.multicanalVarios}
+            desc={es.onboarding.multicanalVariosDesc}
+            testid="onboarding-multichannel-multi"
+          />
+        </div>
+      </>
+    ),
+    3: (
+      <>
         <h1 className="ob-title">
           {draft.tieneCanalYa ? es.onboarding.tuCanalTitulo : es.onboarding.tuCanalTituloNuevo}
         </h1>
@@ -238,7 +264,7 @@ export function Onboarding() {
         )}
       </>
     ),
-    3: (
+    4: (
       <>
         <h1 className="ob-title">{es.onboarding.nichoTitulo}</h1>
         <div className="field">
@@ -267,7 +293,7 @@ export function Onboarding() {
         </div>
       </>
     ),
-    4: (
+    5: (
       <>
         <h1 className="ob-title">{es.onboarding.nivelTitulo}</h1>
         <div className="radio-cards">
@@ -283,7 +309,7 @@ export function Onboarding() {
         </div>
       </>
     ),
-    5: (
+    6: (
       <>
         <h1 className="ob-title">{es.onboarding.frecuenciaTitulo}</h1>
         <div className="radio-cards" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(110px, 1fr))" }}>
@@ -300,7 +326,7 @@ export function Onboarding() {
         <p className="field-hint">{es.onboarding.frecuenciaHint}</p>
       </>
     ),
-    6: (
+    7: (
       <>
         <h1 className="ob-title">{es.onboarding.objetivoTitulo}</h1>
         <div className="radio-cards" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))" }}>
@@ -316,7 +342,7 @@ export function Onboarding() {
         </div>
       </>
     ),
-    7: (
+    8: (
       <>
         <h1 className="ob-title">{es.onboarding.iaTitulo}</h1>
         <p className="ob-sub">{es.onboarding.iaDesc}</p>
@@ -360,18 +386,19 @@ export function Onboarding() {
         </div>
       </>
     ),
-    8: (
+    9: (
       <>
         <h1 className="ob-title">{es.onboarding.resumenTitulo}</h1>
         <dl className="ob-resumen">
           {(
             [
-              [es.onboarding.nombreCanal, draft.canalNombre, 2],
-              ["Nicho", draft.nicho, 3],
-              ["Nivel", draft.nivel ? es.onboarding[`nivel${cap(draft.nivel)}` as "nivelIntermedio"] : "", 4],
-              ["Frecuencia", draft.frecuenciaObjetivo ? es.frecuencias[draft.frecuenciaObjetivo] : "", 5],
-              ["Objetivo", draft.objetivoPrincipal ? es.objetivos[draft.objetivoPrincipal] : "", 6],
-              ["IA", draft.iaKey ? "Configurada" : "Sin configurar (puedes hacerlo luego)", 7],
+              [es.onboarding.multicanalResumen, draft.gestionMulticanal ? es.onboarding.multicanalVarios : es.onboarding.multicanalUno, 2],
+              [es.onboarding.nombreCanal, draft.canalNombre, 3],
+              ["Nicho", draft.nicho, 4],
+              ["Nivel", draft.nivel ? es.onboarding[`nivel${cap(draft.nivel)}` as "nivelIntermedio"] : "", 5],
+              ["Frecuencia", draft.frecuenciaObjetivo ? es.frecuencias[draft.frecuenciaObjetivo] : "", 6],
+              ["Objetivo", draft.objetivoPrincipal ? es.objetivos[draft.objetivoPrincipal] : "", 7],
+              ["IA", draft.iaKey ? "Configurada" : "Sin configurar (puedes hacerlo luego)", 8],
             ] as Array<[string, string, number]>
           ).map(([k, v, p]) => (
             <div className="ob-resumen-row" key={k}>
@@ -393,10 +420,10 @@ export function Onboarding() {
         {paso > 0 && (
           <>
             <div className="progress-thin">
-              <div style={{ width: `${(paso / 8) * 100}%` }} />
+              <div style={{ width: `${(paso / 9) * 100}%` }} />
             </div>
             <div className="field-hint" style={{ marginTop: 6 }}>
-              Paso {paso} de 8
+              Paso {paso} de 9
             </div>
           </>
         )}
@@ -405,8 +432,7 @@ export function Onboarding() {
         className="ob-body"
         onSubmit={(e) => {
           e.preventDefault();
-          if (paso === 8) crear();
-          else if (paso === 7) next();
+          if (paso === 9) crear();
           else next();
         }}
       >
@@ -421,16 +447,16 @@ export function Onboarding() {
             <button type="button" className="btn btn-ghost" onClick={() => go(paso - 1)} data-testid="onboarding-back">
               {es.common.atras}
             </button>
-            {paso === 7 ? (
+            {paso === 8 ? (
               <div style={{ display: "flex", gap: "var(--space-3)" }}>
-                <button type="button" className="btn btn-ghost" data-testid="onboarding-ai-skip" onClick={() => { set("iaKey", ""); go(8); }}>
+                <button type="button" className="btn btn-ghost" data-testid="onboarding-ai-skip" onClick={() => { set("iaKey", ""); go(9); }}>
                   {es.onboarding.iaDespues}
                 </button>
                 <button type="submit" className="btn btn-primary">
                   {es.onboarding.iaGuardarSeguir}
                 </button>
               </div>
-            ) : paso === 8 ? (
+            ) : paso === 9 ? (
               <button type="submit" className="btn btn-primary btn-lg" disabled={enviando} data-testid="onboarding-submit">
                 {enviando ? <span className="spinner" /> : <Check size={18} />} {es.onboarding.crearEspacio}
               </button>

@@ -17,6 +17,7 @@ import { TemplatesLibrary } from "./routes/TemplatesLibrary";
 import { TemplateDetail } from "./routes/TemplateDetail";
 import { Metrics } from "./routes/Metrics";
 import { Viabilidad } from "./routes/Viabilidad";
+import { Acceso } from "./routes/Acceso";
 import { es } from "./i18n/es";
 
 function Splash() {
@@ -46,6 +47,8 @@ export default function App() {
   return (
     <>
       <Routes>
+        {/* /acceso vive fuera de RequireProfile: se puede entrar sin perfil creado (T016). */}
+        <Route path="/acceso" element={<Acceso />} />
         <Route
           path="/onboarding"
           element={status === "ready" ? <Navigate to="/dashboard" replace /> : status === "loading" ? <Splash /> : <Onboarding />}

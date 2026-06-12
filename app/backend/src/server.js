@@ -1,9 +1,13 @@
 // server.js — app Express. createApp() (async) exportable para tests y para la función serverless.
 import express from "express";
+import cookieParser from "cookie-parser";
 import { pathToFileURL } from "node:url";
 import { cfg } from "./config.js";
 import { makeDb, initDb } from "./db.js";
 import { errorHandler } from "./errors.js";
+import { authMiddleware } from "./middleware/auth.js";
+import authRoutes from "./routes/auth.js";
+import canalesRoutes from "./routes/canales.js";
 import profileRoutes from "./routes/profile.js";
 import iaRoutes from "./routes/ia.js";
 import systemRoutes from "./routes/system.js";
@@ -21,7 +25,12 @@ export async function createApp({ dbUrl, dbAuthToken } = {}) {
   app.locals.db = db;
   // límite alto: las miniaturas viajan como data-URL dentro del VideoProject
   app.use(express.json({ limit: "25mb" }));
+  app.use(cookieParser());
+  // Sesión opcional: sin cookie válida (o sin SESSION_SECRET) req.userId = "local" (modo local, nunca 401).
+  app.use(authMiddleware);
 
+  app.use("/api/auth", authRoutes);
+  app.use("/api/canales", canalesRoutes);
   app.use("/api", systemRoutes);
   app.use("/api/profile", profileRoutes);
   app.use("/api/ia", iaRoutes);

@@ -1,4 +1,4 @@
-// routes/viabilidad.js — estudio de viabilidad singleton (T018).
+// routes/viabilidad.js — estudio de viabilidad singleton POR USUARIO (T018, escopado por req.userId).
 import { Router } from "express";
 import { h } from "../errors.js";
 import { jparse } from "../db.js";
@@ -10,14 +10,14 @@ const ID = "main";
 
 // GET /api/viabilidad — devuelve el estudio o null si no existe
 router.get("/", h(async (req, res) => {
-  const row = await req.app.locals.db.get("SELECT data FROM viabilidad WHERE id=?", [ID]);
+  const row = await req.app.locals.db.get("SELECT data FROM viabilidad WHERE userId=? AND id=?", [req.userId, ID]);
   res.json(jparse(row));
 }));
 
 // PATCH /api/viabilidad — upsert con merge de campos
 router.patch("/", h(async (req, res) => {
   const db = req.app.locals.db;
-  const existing = jparse(await db.get("SELECT data FROM viabilidad WHERE id=?", [ID]));
+  const existing = jparse(await db.get("SELECT data FROM viabilidad WHERE userId=? AND id=?", [req.userId, ID]));
   const now = nowIso();
 
   const actualizado = {
@@ -28,9 +28,10 @@ router.patch("/", h(async (req, res) => {
   };
 
   await db.run(
-    "INSERT OR REPLACE INTO viabilidad(id, data, completado, createdAt, updatedAt) VALUES(?,?,?,?,?)",
+    "INSERT OR REPLACE INTO viabilidad(id, userId, data, completado, createdAt, updatedAt) VALUES(?,?,?,?,?,?)",
     [
       ID,
+      req.userId,
       JSON.stringify(actualizado),
       actualizado.completado ? 1 : 0,
       actualizado.createdAt,

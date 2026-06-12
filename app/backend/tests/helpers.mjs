@@ -1,5 +1,8 @@
 // helpers.mjs — arranca la app con BD temporal en puerto efímero (08 §8.2).
 process.env.LLM_API_KEY = ""; // los tests nunca llaman a la red real
+// Secreto fijo para poder probar las rutas de auth; las peticiones SIN cookie siguen en modo local.
+process.env.SESSION_SECRET = "secreto-de-tests-crecetube";
+process.env.GOOGLE_CLIENT_ID = "";
 
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -16,16 +19,18 @@ export async function boot() {
   await once(srv, "listening");
   const base = `http://127.0.0.1:${srv.address().port}`;
 
-  const call = async (method, path, body) => {
+  const call = async (method, path, body, { cookie } = {}) => {
+    const headers = { "Content-Type": "application/json" };
+    if (cookie) headers.Cookie = cookie;
     const res = await fetch(base + path, {
       method,
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: body === undefined ? undefined : JSON.stringify(body),
     });
     const text = await res.text();
     let json = null;
     try { json = text ? JSON.parse(text) : null; } catch { json = { raw: text }; }
-    return { status: res.status, body: json };
+    return { status: res.status, body: json, setCookie: res.headers.get("set-cookie") };
   };
 
   return { base, call, close: () => new Promise((r) => srv.close(r)) };

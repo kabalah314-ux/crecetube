@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -11,6 +11,9 @@ import {
   Sun,
   Moon,
   Target,
+  UserRound,
+  LogIn,
+  LogOut,
 } from "lucide-react";
 import { es } from "../i18n/es";
 import { useStore } from "../store/useStore";
@@ -19,14 +22,22 @@ export function Layout() {
   const [drawer, setDrawer] = useState(false);
   const profile = useStore((s) => s.profile);
   const setTheme = useStore((s) => s.setTheme);
+  const auth = useStore((s) => s.auth);
+  const authConfig = useStore((s) => s.authConfig);
+  const loadAuth = useStore((s) => s.loadAuth);
+  const logout = useStore((s) => s.logout);
   const tema = profile?.preferenciasUi.tema ?? "dark";
+
+  useEffect(() => {
+    if (!auth) void loadAuth();
+  }, [auth, loadAuth]);
 
   const NAV = [
     { to: "/dashboard", label: es.nav.dashboard, icon: LayoutDashboard, testid: "nav-dashboard" },
     ...(profile?.tieneCanalYa === false
       ? [{ to: "/viabilidad", label: es.viabilidad.nav, icon: Target, testid: "nav-viabilidad" }]
       : []),
-    { to: "/videos", label: es.nav.videos, icon: Video, testid: "nav-videos" },
+    { to: "/videos", label: profile?.gestionMulticanal ? es.nav.proyectos : es.nav.videos, icon: Video, testid: "nav-videos" },
     { to: "/curso", label: es.nav.curso, icon: BookOpen, testid: "nav-curso" },
     { to: "/plantillas", label: es.nav.plantillas, icon: FileText, testid: "nav-plantillas" },
     { to: "/metricas", label: es.nav.metricas, icon: LineChart, testid: "nav-metricas" },
@@ -52,6 +63,33 @@ export function Layout() {
         ))}
       </nav>
       <div className="sidebar-foot">
+        {auth?.modo === "cuenta" ? (
+          <>
+            <div className="nav-item sidebar-cuenta" data-testid="sidebar-cuenta" title={auth.email ?? undefined}>
+              <UserRound size={20} />
+              <span className="nav-label">{auth.nombre ?? auth.email}</span>
+            </div>
+            <button
+              className="nav-item"
+              style={{ border: "none", background: "none", cursor: "pointer", width: "100%" }}
+              onClick={() => void logout()}
+              data-testid="sidebar-logout"
+            >
+              <LogOut size={20} />
+              <span className="nav-label">{es.acceso.salir}</span>
+            </button>
+          </>
+        ) : auth?.modo === "local" && authConfig?.authConfigurada ? (
+          <NavLink
+            to="/acceso"
+            data-testid="sidebar-login"
+            className={({ isActive }) => `nav-item${isActive ? " active" : ""}`}
+            onClick={() => setDrawer(false)}
+          >
+            <LogIn size={20} />
+            <span className="nav-label">{es.acceso.iniciarSesion}</span>
+          </NavLink>
+        ) : null}
         <button
           className="nav-item"
           style={{ border: "none", background: "none", cursor: "pointer", width: "100%" }}

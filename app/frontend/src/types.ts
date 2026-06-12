@@ -15,6 +15,7 @@ export interface UserProfile {
   objetivoPrincipal: Objetivo;
   idioma: "es";
   tieneCanalYa: boolean;
+  gestionMulticanal: boolean;
   preferenciasUi: { tema: Tema; densidad: "compacta" | "comoda"; sonidos: boolean };
   iaConfig: {
     proveedor: string;
@@ -25,6 +26,27 @@ export interface UserProfile {
   };
   createdAt: string;
   updatedAt: string;
+}
+
+// Canal del usuario (T017). Espejo de GET /api/canales.
+export interface Channel {
+  id: string;
+  nombre: string;
+  esPorDefecto: boolean;
+  createdAt: string;
+}
+
+// Sesión (T016). Espejo de GET /api/auth/me y GET /api/auth/config.
+export interface AuthUser {
+  id: string;
+  email: string | null;
+  nombre: string | null;
+  modo: "local" | "cuenta";
+}
+
+export interface AuthConfig {
+  googleClientId: string | null;
+  authConfigurada: boolean;
 }
 
 export type VideoState =
@@ -67,6 +89,7 @@ export interface Tarjeta {
 
 export interface VideoProject {
   id: string;
+  canalId: string | null;
   tituloIdea: string;
   tituloFinal: string | null;
   titulosAlternativos: string[];
