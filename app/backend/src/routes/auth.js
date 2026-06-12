@@ -161,6 +161,8 @@ router.post("/demo", h(async (req, res) => {
 
 router.post("/logout", h(async (_req, res) => {
   clearSessionCookie(res);
+  // Evita que el botón atrás resucite páginas de la sesión cerrada (caché HTTP y bfcache en Chromium).
+  res.setHeader("Clear-Site-Data", '"cache"');
   res.json({ ok: true });
 }));
 

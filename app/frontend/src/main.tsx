@@ -21,6 +21,12 @@ import "./styles/course.css";
 
 import App from "./App";
 
+// Si el navegador restaura la página desde el bfcache (botón atrás tras logout/login),
+// la instantánea en memoria puede pertenecer a otro usuario — forzar una carga real.
+window.addEventListener("pageshow", (e) => {
+  if (e.persisted) window.location.reload();
+});
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>

@@ -28,6 +28,12 @@ export async function createApp({ dbUrl, dbAuthToken } = {}) {
   app.use(cookieParser());
   // Sesión opcional: sin cookie válida (o sin SESSION_SECRET) req.userId = "local" (modo local, nunca 401).
   app.use(authMiddleware);
+  // Respuestas por usuario: prohibir todo caché (navegador/CDN). Sin esto, al volver atrás
+  // el navegador puede servir datos de la sesión anterior.
+  app.use("/api", (_req, res, next) => {
+    res.setHeader("Cache-Control", "no-store");
+    next();
+  });
 
   app.use("/api/auth", authRoutes);
   app.use("/api/canales", canalesRoutes);
