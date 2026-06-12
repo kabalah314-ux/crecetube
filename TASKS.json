@@ -5,8 +5,8 @@
   "resumen": {
     "total": 20,
     "pendientes": 1,
-    "en_progreso": 4,
-    "completadas": 15,
+    "en_progreso": 2,
+    "completadas": 17,
     "bloqueadas": 0,
     "tokens_estimados_totales": 0
   },
@@ -197,11 +197,11 @@
       "descripcion": "Añadir registro/inicio de sesión con 'Continuar con Google' Y con email+contraseña (petición ampliada del usuario 2026-06-11). DECISIÓN (explorer 2026-06-11): auth OPCIONAL — Google Identity Services en frontend + verificación del ID token en backend + sesión JWT stateless en cookie httpOnly; si GOOGLE_CLIENT_ID está vacío, modo local automático (req.user = 'local'), no rompe localhost ni E2E. Email/contraseña: tabla users con passwordHash NULLABLE (los usuarios de Google no tienen), hash con scrypt de node:crypto (CERO dependencias extra), registro + login en la misma pantalla; SIN recuperación de contraseña por ahora (necesitaría servicio de email — anotar como mejora futura). Dependencias AUTORIZADAS: jose + cookie-parser (alternativa: google-auth-library). Env vars nuevas: GOOGLE_CLIENT_ID (opcional), SESSION_SECRET. FASES: Fase 0 (sin credenciales): migraciones versionadas en initDb, userId en tablas, canal por defecto — va junto a T017. Fase 1: pantalla login/registro + tabla users + email/contraseña + botón Google. CREDENCIALES LISTAS (2026-06-12, creadas por el agente vía Chrome en Google Cloud, proyecto 'crecetube'): GOOGLE_CLIENT_ID=240361777799-jsp36v0vbaq94o5a2878mcj8gb070u3a.apps.googleusercontent.com (orígenes autorizados: http://localhost:5173 y https://crecetube.vercel.app; app en modo Prueba con oscarcon314@gmail.com como usuario de prueba; para abrirla a todo el mundo: botón 'Publicar app' en Google Auth Platform → Público). Riesgo clave: PK de course_progress colisiona en multi-usuario. Análisis completo: progress/explorer-log-t016.md.",
       "fase": "desarrollo",
       "prioridad": "media",
-      "estado": "en_progreso",
+      "estado": "completada",
       "depende_de": null,
       "tokens_estimados": "alto",
       "complejidad": "alta",
-      "resultado": null
+      "resultado": "Auth completa en produccion: /acceso con registro/login (scrypt+timingSafeEqual) y Continuar con Google (JWKS+audience), sesion JWT en cookie httpOnly/secure, modo local automatico intacto, GET /api/auth/config. Migraciones v1-v4 validadas sobre copia de BD real y aplicadas en Turso. SESSION_SECRET y GOOGLE_CLIENT_ID en Vercel. Reviewer APROBADO: 73/73 backend, 7/7 E2E x2; smoke en produccion 201/200/401 OK"
     },
     {
       "id": "T017",
@@ -209,11 +209,11 @@
       "descripcion": "En el onboarding preguntar si gestiona un canal o varios. Si varios: la sección 'Vídeos' pasa a llamarse 'Proyectos' con los canales dentro, y dentro de cada canal sus vídeos + añadir nuevo. Implica añadir entidad Canal a la BD, asociar vídeos a canal, selector de canal y migración del modo single-canal. Petición del usuario 2026-06-11.",
       "fase": "desarrollo",
       "prioridad": "media",
-      "estado": "en_progreso",
+      "estado": "completada",
       "depende_de": "T016",
       "tokens_estimados": "alto",
       "complejidad": "alta",
-      "resultado": null
+      "resultado": "Tabla channels + videos.canalId con canal por defecto que adopta los videos existentes (migracion verificada con datos reales: 'Canal de Oscar'); pregunta un canal/varios en onboarding (10 pasos, e2e adaptado); sidebar 'Videos'->'Proyectos' y rejilla de canales con anadir/filtrado por canal cuando gestionMulticanal; CRUD /api/canales con default protegido. En produccion junto a T016"
     },
     {
       "id": "T018",
