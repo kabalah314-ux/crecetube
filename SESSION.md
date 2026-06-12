@@ -2,7 +2,7 @@
 
 Proyecto: CRECETUBE Assistant
 Última sesión: 2026-06-12
-Estado general: **19/20 tareas completadas** — v1 + capa Romuald + Fase 2 + curso 63/169 (oculta vacías) + tutorial OpenRouter + viabilidad + multi-usuario con login (Google/email) + multi-canal Proyectos + recomendador IA de temas + sello Romu aprueba. TODO EN PRODUCCIÓN (crecetube.vercel.app). Solo queda T012 en curso (más tandas de vídeos del usuario).
+Estado general: **21/22 tareas completadas** — v1 + capa Romuald + Fase 2 + curso 63/169 (oculta vacías) + tutorial OpenRouter + viabilidad + multi-usuario con login-first en producción (Google/email) + multi-canal Proyectos + recomendador IA de temas + sello Romu aprueba + onboarding adaptativo (ramas con/sin canal, "no sé" en todo) + cadena del método (11 generadores con requisitos y bloqueo duro en tono Romu + sugeridor de nombres). TODO EN PRODUCCIÓN (crecetube.vercel.app). Solo queda T012 en curso (más tandas de vídeos del usuario).
 
 ---
 

@@ -4,9 +4,9 @@
   "ultima_actualizacion": "2026-06-11",
   "resumen": {
     "total": 22,
-    "pendientes": 1,
-    "en_progreso": 2,
-    "completadas": 19,
+    "pendientes": 0,
+    "en_progreso": 1,
+    "completadas": 21,
     "bloqueadas": 0,
     "tokens_estimados_totales": 0
   },
@@ -257,11 +257,11 @@
       "descripcion": "Rediseño del onboarding (petición usuario 2026-06-12): si tieneCanalYa=false las preguntas se adaptan — '¿Tienes un nombre pensado?' con opción 'Todavía no' (canalNombre nullable, saludo 'creador/a'), '¿Tienes clara la temática?' con opciones + campo libre + 'Aún no lo sé' (nicho nullable); sin pregunta multicanal en esa rama (gestionMulticanal=false). Rama con canal: nicho con 'Otro: escríbelo tú' + 'No lo tengo claro'; frecuencia con 'Aún no lo sé'. Cada 'no sé' queda como pendiente que la IA retoma. Al terminar sin nicho/nombre: DECISIÓN usuario = recomendación fuerte (banner dominante hacia /viabilidad, NO obligatorio). Adaptar perfil backend (campos nullables), saludos del Dashboard, y e2e/01.",
       "fase": "desarrollo",
       "prioridad": "alta",
-      "estado": "en_progreso",
+      "estado": "completada",
       "depende_de": null,
       "tokens_estimados": "alto",
       "complejidad": "alta",
-      "resultado": null
+      "resultado": "Onboarding bifurcado (con canal 9 pasos / sin canal 8, numeracion y barra dinamicas), 'Todavia no' nombre + 'Aun no lo se' nicho/frecuencia con nulabilidad hasta el backend (7+1 puntos null-safe), saludo 'Hola, creador', banner viabilidad ampliado, e2e rama sin canal. Reviewer APROBADO sin arreglos. En produccion"
     },
     {
       "id": "T022",
@@ -269,11 +269,11 @@
       "descripcion": "Petición usuario 2026-06-12: cada generador IA declara requisitos según el orden del método Romu (nicho→nombre→temas→idea→investigación→título⇄miniatura→guion→descripción→publicación→sprint→análisis). Módulo único de requisitos en backend (fuente de verdad, validación 422 REQUISITO_FALTANTE con detalle) reflejado en frontend: DECISIÓN usuario = bloqueo DURO (AiBlock inhabilitado con explicación en tono Romu + enlace al paso que falta). Generador nuevo 'sugerir_nombres_canal' (DECISIÓN usuario: sí, requiere nicho; 5 nombres con porqué; en viabilidad y Configuración). La IA solo construye sobre cimientos puestos.",
       "fase": "desarrollo",
       "prioridad": "alta",
-      "estado": "pendiente",
+      "estado": "completada",
       "depende_de": "T021",
       "tokens_estimados": "alto",
       "complejidad": "alta",
-      "resultado": null
+      "resultado": "requisitos.js fuente unica (11 generadores con requisitos sobre campos reales verificados con flujo API), 422 REQUISITO_FALTANTE con details, AiBlock bloqueado (candado + mensaje Romu + Ir al paso), generador sugerir_nombres_canal con Usar este en Viabilidad y Settings. 94/94 backend (+16), 8/8 E2E x2. Reviewer APROBADO sin arreglos. En produccion"
     }
   ]
 }
