@@ -36,13 +36,25 @@ function RequireProfile({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
 
+// Con auth configurada en el servidor (producción), nadie navega anónimo:
+// lo primero es /acceso. El modo local solo aplica cuando NO hay auth (uso en el propio PC).
+function RequireSesion({ children }: { children: ReactNode }) {
+  const auth = useStore((s) => s.auth);
+  const authConfig = useStore((s) => s.authConfig);
+  if (auth === null || authConfig === null) return <Splash />;
+  if (authConfig.authConfigurada && auth.modo === "local") return <Navigate to="/acceso" replace />;
+  return <>{children}</>;
+}
+
 export default function App() {
   const status = useStore((s) => s.profileStatus);
   const loadProfile = useStore((s) => s.loadProfile);
+  const loadAuth = useStore((s) => s.loadAuth);
 
   useEffect(() => {
+    void loadAuth();
     void loadProfile();
-  }, [loadProfile]);
+  }, [loadAuth, loadProfile]);
 
   return (
     <>
@@ -51,13 +63,19 @@ export default function App() {
         <Route path="/acceso" element={<Acceso />} />
         <Route
           path="/onboarding"
-          element={status === "ready" ? <Navigate to="/dashboard" replace /> : status === "loading" ? <Splash /> : <Onboarding />}
+          element={
+            <RequireSesion>
+              {status === "ready" ? <Navigate to="/dashboard" replace /> : status === "loading" ? <Splash /> : <Onboarding />}
+            </RequireSesion>
+          }
         />
         <Route
           element={
-            <RequireProfile>
-              <Layout />
-            </RequireProfile>
+            <RequireSesion>
+              <RequireProfile>
+                <Layout />
+              </RequireProfile>
+            </RequireSesion>
           }
         >
           <Route path="/dashboard" element={<Dashboard />} />
