@@ -1,4 +1,5 @@
 // Viabilidad.tsx — T018: estudio de viabilidad del nicho (solo para tieneCanalYa === false).
+// T025: pantalla de propuesta como paso inicial + IA por campo (FieldIA) en los 8 campos.
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { CheckSquare, Square, Target } from "lucide-react";
@@ -6,6 +7,8 @@ import { es } from "../i18n/es";
 import { api } from "../services/api";
 import { useStore } from "../store/useStore";
 import { AiBlock } from "../wizard/AiBlock";
+import { FieldIA } from "../wizard/FieldIA";
+import { TIPS_VIABILIDAD } from "./viabilidadReglas";
 
 const TOTAL_PASOS = 5;
 const DEBOUNCE_MS = 800;
@@ -31,6 +34,26 @@ const CHECKS_VEREDICTO = [
   { id: "hueco", label: es.viabilidad.checkHuecoIdentificado },
   { id: "subnicho", label: es.viabilidad.checkSubNichoElegido },
   { id: "pvu", label: es.viabilidad.checkPVUFormulada },
+];
+
+// Campos de texto del estudio que tienen botón "Rellenar con IA" (T025).
+type CampoTextoViabilidad =
+  | "ideaCanal"
+  | "aQuienAyuda"
+  | "formatoPrevisto"
+  | "busquedasEncontradas"
+  | "canalesReferencia"
+  | "anguloReferencia"
+  | "subNicho"
+  | "pvu";
+
+// Qué incluye el estudio, para la pantalla de propuesta (T025).
+const PASOS_PROPUESTA = [
+  { titulo: es.viabilidad.paso1Titulo, desc: es.viabilidad.paso1Desc },
+  { titulo: es.viabilidad.paso2Titulo, desc: es.viabilidad.paso2Desc },
+  { titulo: es.viabilidad.paso3Titulo, desc: es.viabilidad.paso3Desc },
+  { titulo: es.viabilidad.paso4Titulo, desc: es.viabilidad.paso4Desc },
+  { titulo: es.viabilidad.paso5Titulo, desc: es.viabilidad.paso5Desc },
 ];
 
 const ESTADO_INICIAL: EstudioViabilidad = {
@@ -177,6 +200,8 @@ export function Viabilidad() {
   const [datos, setDatos] = useState<EstudioViabilidad>(ESTADO_INICIAL);
   const [guardando, setGuardando] = useState(false);
   const [cargado, setCargado] = useState(false);
+  // T025: el estudio nunca se empezó (GET null) y no fue saltado → proponer antes del wizard
+  const [propuesta, setPropuesta] = useState(false);
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -187,6 +212,8 @@ export function Viabilidad() {
       .then((d) => {
         if (d) {
           setDatos({ ...ESTADO_INICIAL, ...d });
+        } else {
+          setPropuesta(true);
         }
       })
       .catch(() => {
@@ -227,6 +254,16 @@ export function Viabilidad() {
     setDatos(nuevo);
     guardarDebounced(nuevo);
   }
+
+  // onUsar de los FieldIA (T025): update funcional para escribir sobre el estado más
+  // reciente (no sobre un closure viejo) y disparar el autosave con ese mismo valor.
+  const usarIA = (campo: CampoTextoViabilidad) => (texto: string) => {
+    setDatos((prev) => {
+      const nuevo = { ...prev, [campo]: texto };
+      guardarDebounced(nuevo);
+      return nuevo;
+    });
+  };
 
   async function saltar() {
     const nuevo = { ...datos, saltado: true };
@@ -274,6 +311,62 @@ export function Viabilidad() {
     );
   }
 
+  // T025 — pantalla de propuesta a pantalla completa: el estudio no existe y no fue saltado.
+  if (propuesta) {
+    return (
+      <div className="page" data-testid="viabilidad-page">
+        <div
+          className="card"
+          data-testid="viabilidad-propuesta"
+          style={{ maxWidth: 640, margin: "var(--space-6) auto 0", padding: "var(--space-6)" }}
+        >
+          <h1
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "var(--space-3)",
+              marginBottom: "var(--space-3)",
+            }}
+          >
+            <Target size={26} /> {es.viabilidadPropuesta.titulo}
+          </h1>
+          <p style={{ color: "var(--text-secondary)", marginBottom: "var(--space-5)" }}>
+            {es.viabilidadPropuesta.intro}
+          </p>
+          <p style={{ fontWeight: 600, marginBottom: "var(--space-2)" }}>{es.viabilidadPropuesta.incluye}</p>
+          <ol
+            style={{
+              paddingLeft: "var(--space-5)",
+              margin: "0 0 var(--space-6)",
+              display: "flex",
+              flexDirection: "column",
+              gap: "var(--space-2)",
+            }}
+          >
+            {PASOS_PROPUESTA.map((p) => (
+              <li key={p.titulo} style={{ fontSize: "var(--text-sm)" }}>
+                <strong>{p.titulo}</strong>{" "}
+                <span style={{ color: "var(--text-secondary)" }}>— {p.desc}</span>
+              </li>
+            ))}
+          </ol>
+          <div style={{ display: "flex", gap: "var(--space-3)", flexWrap: "wrap" }}>
+            <button
+              className="btn btn-primary"
+              data-testid="viabilidad-empezar"
+              onClick={() => setPropuesta(false)}
+            >
+              {es.viabilidadPropuesta.empezar}
+            </button>
+            <button className="btn btn-ghost" data-testid="viabilidad-saltar" onClick={() => void saltar()}>
+              {es.viabilidadPropuesta.ahoraNo}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const nicho = profile?.nicho ?? "";
   const nivel = profile?.nivel ?? "principiante";
 
@@ -310,11 +403,18 @@ export function Viabilidad() {
           <p style={{ color: "var(--text-secondary)", marginBottom: "var(--space-4)" }}>
             {es.viabilidad.paso1Desc}
           </p>
-          <TipViabilidad
-            texto="Romuald insiste: 'Cuanto más específico el nicho, menor la competencia y mayor el RPM de los anunciantes.' No busques un tema que te guste, busca el hueco donde la demanda supera la oferta."
-          />
+          <TipViabilidad texto={TIPS_VIABILIDAD.idea} />
           <div className="field" style={{ marginBottom: "var(--space-4)" }}>
-            <label className="field-label">{es.viabilidad.campoIdeaLabel}</label>
+            <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+              <label className="field-label">{es.viabilidad.campoIdeaLabel}</label>
+              <FieldIA
+                campoId="viabilidad.ideaCanal"
+                videoProjectId={null}
+                modo="texto"
+                valoresActuales={[datos.ideaCanal]}
+                onUsar={usarIA("ideaCanal")}
+              />
+            </div>
             <textarea
               className="field-input"
               rows={3}
@@ -324,7 +424,17 @@ export function Viabilidad() {
             />
           </div>
           <div className="field" style={{ marginBottom: "var(--space-4)" }}>
-            <label className="field-label">{es.viabilidad.campoAQuienLabel}</label>
+            <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+              <label className="field-label">{es.viabilidad.campoAQuienLabel}</label>
+              <FieldIA
+                campoId="viabilidad.aQuienAyuda"
+                videoProjectId={null}
+                modo="texto"
+                getContexto={() => ({ ideaCanal: datos.ideaCanal })}
+                valoresActuales={[datos.aQuienAyuda]}
+                onUsar={usarIA("aQuienAyuda")}
+              />
+            </div>
             <textarea
               className="field-input"
               rows={2}
@@ -334,7 +444,17 @@ export function Viabilidad() {
             />
           </div>
           <div className="field">
-            <label className="field-label">{es.viabilidad.campoFormatoLabel}</label>
+            <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+              <label className="field-label">{es.viabilidad.campoFormatoLabel}</label>
+              <FieldIA
+                campoId="viabilidad.formatoPrevisto"
+                videoProjectId={null}
+                modo="texto"
+                getContexto={() => ({ ideaCanal: datos.ideaCanal, aQuienAyuda: datos.aQuienAyuda })}
+                valoresActuales={[datos.formatoPrevisto]}
+                onUsar={usarIA("formatoPrevisto")}
+              />
+            </div>
             <input
               type="text"
               className="field-input"
@@ -353,11 +473,19 @@ export function Viabilidad() {
           <p style={{ color: "var(--text-secondary)", marginBottom: "var(--space-4)" }}>
             {es.viabilidad.paso2Desc}
           </p>
-          <TipViabilidad
-            texto="Método de validación triple de Romuald: 1) YouTube Autocomplete — escribe tu tema y anota las sugerencias que aparecen. 2) Google Keyword Planner — ¿hay anunciantes pujando por esas palabras? 3) Analiza los primeros resultados — ¿hay vídeos con pocas vistas a pesar de tener meses? Ahí está el hueco."
-          />
+          <TipViabilidad texto={TIPS_VIABILIDAD.demanda} />
           <div className="field" style={{ marginBottom: "var(--space-4)" }}>
-            <label className="field-label">{es.viabilidad.campoBusquedasLabel}</label>
+            <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+              <label className="field-label">{es.viabilidad.campoBusquedasLabel}</label>
+              <FieldIA
+                campoId="viabilidad.busquedasEncontradas"
+                videoProjectId={null}
+                modo="texto"
+                getContexto={() => ({ ideaCanal: datos.ideaCanal, aQuienAyuda: datos.aQuienAyuda })}
+                valoresActuales={[datos.busquedasEncontradas]}
+                onUsar={usarIA("busquedasEncontradas")}
+              />
+            </div>
             <span className="field-hint">
               Busca en YouTube y anota las sugerencias del autocompletado que aparezcan relacionadas con tu tema.
             </span>
@@ -370,7 +498,20 @@ export function Viabilidad() {
             />
           </div>
           <div className="field">
-            <label className="field-label">{es.viabilidad.campoCanalesLabel}</label>
+            <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+              <label className="field-label">{es.viabilidad.campoCanalesLabel}</label>
+              <FieldIA
+                campoId="viabilidad.canalesReferencia"
+                videoProjectId={null}
+                modo="texto"
+                getContexto={() => ({
+                  ideaCanal: datos.ideaCanal,
+                  busquedasEncontradas: datos.busquedasEncontradas,
+                })}
+                valoresActuales={[datos.canalesReferencia]}
+                onUsar={usarIA("canalesReferencia")}
+              />
+            </div>
             <span className="field-hint">
               Busca canales que ya traten este tema. Anota los que tienen suscriptores y vistas reales.
             </span>
@@ -392,11 +533,22 @@ export function Viabilidad() {
           <p style={{ color: "var(--text-secondary)", marginBottom: "var(--space-4)" }}>
             {es.viabilidad.paso3Desc}
           </p>
-          <TipViabilidad
-            texto="Ángulo diferencial = rotura de patrón conceptual. Pregúntate: ¿qué hace el 90% de los canales de mi nicho en sus miniaturas, títulos y estructuras? Haz lo opuesto o mejóralo radicalmente. Sin hueco identificado, eres uno más."
-          />
+          <TipViabilidad texto={TIPS_VIABILIDAD.hueco} />
           <div className="field">
-            <label className="field-label">{es.viabilidad.campoAnguloLabel}</label>
+            <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+              <label className="field-label">{es.viabilidad.campoAnguloLabel}</label>
+              <FieldIA
+                campoId="viabilidad.anguloReferencia"
+                videoProjectId={null}
+                modo="texto"
+                getContexto={() => ({
+                  ideaCanal: datos.ideaCanal,
+                  canalesReferencia: datos.canalesReferencia,
+                })}
+                valoresActuales={[datos.anguloReferencia]}
+                onUsar={usarIA("anguloReferencia")}
+              />
+            </div>
             <span className="field-hint">
               Revisa los canales que anotaste en el paso anterior. ¿Qué repiten todos? ¿Qué nadie hace? Ese es tu ángulo.
             </span>
@@ -418,11 +570,22 @@ export function Viabilidad() {
           <p style={{ color: "var(--text-secondary)", marginBottom: "var(--space-4)" }}>
             {es.viabilidad.paso4Desc}
           </p>
-          <TipViabilidad
-            texto="El método del triángulo de Romuald: pasión (¿lo harás aunque no pagues?) × demanda activa (¿la gente lo busca ya?) × competencia manejable (¿puedes diferenciarte?). Si los tres lados son positivos, tienes un negocio. Si falta uno, ajusta."
-          />
+          <TipViabilidad texto={TIPS_VIABILIDAD.triangulo} />
           <div className="field" style={{ marginBottom: "var(--space-4)" }}>
-            <label className="field-label">{es.viabilidad.campoSubNichoLabel}</label>
+            <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+              <label className="field-label">{es.viabilidad.campoSubNichoLabel}</label>
+              <FieldIA
+                campoId="viabilidad.subNicho"
+                videoProjectId={null}
+                modo="texto"
+                getContexto={() => ({
+                  ideaCanal: datos.ideaCanal,
+                  busquedasEncontradas: datos.busquedasEncontradas,
+                })}
+                valoresActuales={[datos.subNicho]}
+                onUsar={usarIA("subNicho")}
+              />
+            </div>
             <span className="field-hint">
               Parte de tu idea inicial y afínala. Cuanto más específico, menos competencia directa.
             </span>
@@ -435,7 +598,21 @@ export function Viabilidad() {
             />
           </div>
           <div className="field">
-            <label className="field-label">{es.viabilidad.campoPVULabel}</label>
+            <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+              <label className="field-label">{es.viabilidad.campoPVULabel}</label>
+              <FieldIA
+                campoId="viabilidad.pvu"
+                videoProjectId={null}
+                modo="texto"
+                getContexto={() => ({
+                  ideaCanal: datos.ideaCanal,
+                  subNicho: datos.subNicho,
+                  aQuienAyuda: datos.aQuienAyuda,
+                })}
+                valoresActuales={[datos.pvu]}
+                onUsar={usarIA("pvu")}
+              />
+            </div>
             <span className="field-hint">
               Una frase. Sin jerga. Debe responder: ¿por qué alguien elegiría tu canal sobre los demás?
             </span>

@@ -127,6 +127,25 @@ export const es = {
     bloqueadoTitulo: "Paso bloqueado por el método",
     bloqueadoIrAlPaso: "Ir al paso →",
   },
+  fieldIA: {
+    rellenarConIA: "Rellenar con IA",
+    usarSugerencia: "Usar",
+    anadirTodas: "Añadir todas",
+    anadirBloque: "Añadir bloque",
+    anadido: "Añadido ✓",
+    regenerar: "Regenerar",
+    pensando: "Pensando…",
+    confirmarPisar: "¿Sustituir el texto actual del campo?",
+    parseFallido: "No se pudo interpretar la respuesta de la IA. Vuelve a generar.",
+    sinSugerencias: "La IA no devolvió sugerencias. Vuelve a generar.",
+    sugerirIdeas: "Sugerir ideas con IA",
+    usarEsta: "Usar esta",
+    esqueletoBloques: "Esqueleto de bloques con IA",
+    sugerirHashtag: "Sugerir hashtag con IA",
+    derivarCapitulos: "Derivar capítulos del guion",
+    derivarSinBloques: "No hay bloques de desarrollo en el guion. Añádelos en la etapa Guion y vuelve.",
+    confirmarPisarCapitulos: "¿Sustituir los capítulos actuales por los derivados del guion?",
+  },
   nombresCanal: {
     etiqueta: "Sugerir nombres para tu canal",
     tip: "La IA propone 5 nombres memorables alineados con tu nicho. Elige uno y hazlo tuyo.",
@@ -272,6 +291,22 @@ export const es = {
     siguiente: "Siguiente",
     anterior: "Anterior",
     pasoDe: (actual: number, total: number) => `Paso ${actual} de ${total}`,
+  },
+  // T025 — propuesta del estudio de viabilidad (pantalla inicial + modal al crear canal)
+  viabilidadPropuesta: {
+    titulo: "Antes de grabar nada, valida que hay hueco",
+    intro:
+      "La mayoría de canales no mueren por grabar mal: mueren por elegir mal el nicho. Cinco pasos de método y sabrás si tu idea tiene hueco real antes de invertir una sola hora en grabar.",
+    incluye: "Qué incluye el estudio",
+    empezar: "Empezar estudio",
+    ahoraNo: "Ahora no",
+    modalTitulo: (nombre: string) => `¿Estudio de viabilidad para «${nombre}»?`,
+    modalTexto:
+      "Canal nuevo, mismas reglas: antes de grabar, valida que hay hueco. Cinco pasos y sabrás si la idea aguanta.",
+    modalTextoRevisar:
+      "Ya hiciste un estudio de viabilidad. ¿Quieres revisarlo para este canal? Lo que valía para una idea no tiene por qué valer para otra.",
+    modalHacer: "Hacer estudio",
+    modalRevisar: "Revisar estudio",
   },
   tutorial: {
     openrouter: {

@@ -1,8 +1,10 @@
 // Etapa 5 · guion (02 §2.4.5) — bloques reordenables drag&drop + botones.
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { GripVertical, Plus, Trash2, ChevronUp, ChevronDown } from "lucide-react";
 import { AiBlock } from "../AiBlock";
+import { FieldIA, type BloqueSugerido } from "../FieldIA";
 import { CONSEJOS } from "../consejos";
+import { es } from "../../i18n/es";
 import type { StepProps } from "./types";
 import type { BloqueGuion } from "../../types";
 
@@ -34,6 +36,26 @@ export function StepGuion({ video, patch }: StepProps) {
     const [b] = copia.splice(i, 1);
     copia.splice(j, 0, b);
     setBloques(copia);
+  };
+
+  // T024: el esqueleto IA AÑADE bloques al final (nunca reemplaza). Ref para tolerar
+  // varias adiciones seguidas sin perder bloques por closures viejos de `video`.
+  const desarrolloRef = useRef(bloques);
+  desarrolloRef.current = bloques;
+  const anadirBloqueIA = (b: BloqueSugerido) => {
+    const nuevas = [
+      ...desarrolloRef.current,
+      {
+        titulo: b.titulo,
+        contenido: b.contenido,
+        duracionSegundos: b.duracionSegundos,
+        roturaPatron: false,
+        seoReset: false,
+        seoZoom: false,
+      },
+    ];
+    desarrolloRef.current = nuevas;
+    setBloques(nuevas);
   };
 
   return (
@@ -88,7 +110,17 @@ export function StepGuion({ video, patch }: StepProps) {
 
       <div className="field" style={{ marginTop: "var(--space-5)" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-          <span className="label">Desarrollo</span>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--space-2)" }}>
+            <span className="label">Desarrollo</span>
+            <FieldIA
+              campoId="guion.desarrollo"
+              videoProjectId={video.id}
+              modo="bloques"
+              etiqueta={es.fieldIA.esqueletoBloques}
+              onUsar={() => {}}
+              onUsarBloque={anadirBloqueIA}
+            />
+          </span>
           <span
             className="mono"
             style={{ color: "var(--text-tertiary)", fontSize: "var(--text-sm)", cursor: "help" }}
@@ -199,9 +231,18 @@ export function StepGuion({ video, patch }: StepProps) {
 
       {CAMPOS_SEO.slice(3).map(({ k, label, tip }) => (
         <div className="field" key={k}>
-          <label className="label" htmlFor={`f-${k}`} data-tip={tip}>
-            {label} <span style={{ color: "var(--text-tertiary)", fontWeight: 400 }}>ⓘ</span>
-          </label>
+          <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+            <label className="label" htmlFor={`f-${k}`} data-tip={tip}>
+              {label} <span style={{ color: "var(--text-tertiary)", fontWeight: 400 }}>ⓘ</span>
+            </label>
+            <FieldIA
+              campoId={`guion.${k}`}
+              videoProjectId={video.id}
+              modo="texto"
+              valoresActuales={[video.guion[k]]}
+              onUsar={(texto) => patch({ guion: { ...video.guion, [k]: texto } })}
+            />
+          </div>
           <textarea
             id={`f-${k}`}
             className="textarea"
@@ -214,9 +255,18 @@ export function StepGuion({ video, patch }: StepProps) {
       ))}
 
       <div className="field">
-        <label className="label" htmlFor="f-cliffhanger" data-tip={CONSEJOS.guion.campos.cliffhanger}>
-          Cliffhanger (opcional) <span style={{ color: "var(--text-tertiary)", fontWeight: 400 }}>ⓘ</span>
-        </label>
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+          <label className="label" htmlFor="f-cliffhanger" data-tip={CONSEJOS.guion.campos.cliffhanger}>
+            Cliffhanger (opcional) <span style={{ color: "var(--text-tertiary)", fontWeight: 400 }}>ⓘ</span>
+          </label>
+          <FieldIA
+            campoId="guion.cliffhanger"
+            videoProjectId={video.id}
+            modo="texto"
+            valoresActuales={[video.guion.cliffhanger ?? ""]}
+            onUsar={(texto) => patch({ guion: { ...video.guion, cliffhanger: texto || null } })}
+          />
+        </div>
         <textarea
           id="f-cliffhanger"
           className="textarea"

@@ -4,9 +4,9 @@
   "ultima_actualizacion": "2026-06-11",
   "resumen": {
     "total": 25,
-    "pendientes": 1,
-    "en_progreso": 2,
-    "completadas": 22,
+    "pendientes": 0,
+    "en_progreso": 1,
+    "completadas": 24,
     "bloqueadas": 0,
     "tokens_estimados_totales": 0
   },
@@ -293,11 +293,11 @@
       "descripcion": "Petición usuario 2026-06-12: TODO campo de texto del wizard debe poder rellenarse con IA. Cada campo declara qué información necesita para generar algo coherente (ej.: palabras clave requieren título; hook requiere título; descripción requiere guion) — extensión del mapa requisitos.js a nivel de CAMPO. Si falta info: pestañita con lo que se necesita antes + enlace al paso. La respuesta sigue las instrucciones de Romuald PARA ESE CAMPO (consejos.ts como fuente). Campos abiertos (idea) → sugerencias amplias ligadas a la temática del canal (reutilizar temas_canal en StepIdea). Requiere: inventario completo de campos por etapa, generador genérico parametrizado o por-campo, componente UI botón ✨ + pestañita.",
       "fase": "desarrollo",
       "prioridad": "alta",
-      "estado": "en_progreso",
+      "estado": "completada",
       "depende_de": "T022",
       "tokens_estimados": "alto",
       "complejidad": "alta",
-      "resultado": null
+      "resultado": "Botón ✨ Rellenar con IA en 16 campos (8 wizard + 8 viabilidad) con generador genérico rellenar_campo, bloqueos por requisito y popover FieldIA; 125 tests backend + 8 e2e en verde"
     },
     {
       "id": "T025",
@@ -305,11 +305,11 @@
       "descripcion": "Petición usuario 2026-06-12: la viabilidad es el PRIMER paso del método para quien no tiene canal → al terminar el onboarding con tieneCanalYa=false (o al crear un canal nuevo en Proyectos), se le propone directamente el estudio de viabilidad (pantalla intermedia de propuesta, no solo banner del Dashboard; saltable). Sus campos también rellenables con IA (mismo patrón por-campo de T024: la sugerencia de demanda necesita la idea descrita, etc.).",
       "fase": "desarrollo",
       "prioridad": "alta",
-      "estado": "pendiente",
+      "estado": "completada",
       "depende_de": "T024",
       "tokens_estimados": "medio",
       "complejidad": "media",
-      "resultado": null
+      "resultado": "Viabilidad como paso inicial: propuesta en /viabilidad tras onboarding sin canal, modal al crear canal, 8 campos del estudio con FieldIA"
     }
   ]
 }

@@ -53,6 +53,14 @@ test.describe("Onboarding — rama sin canal", () => {
 
     // Resumen — crear perfil
     await page.getByTestId("onboarding-submit").click();
+
+    // T025 — sin canal todavía: el primer paso del método es validar que hay hueco,
+    // así que se aterriza en /viabilidad con la pantalla de propuesta (no en /dashboard).
+    await expect(page).toHaveURL(/\/viabilidad/, { timeout: 15_000 });
+    await expect(page.getByTestId("viabilidad-propuesta")).toBeVisible();
+
+    // "Ahora no": salta el estudio (saltado: true) y va al dashboard
+    await page.getByTestId("viabilidad-saltar").click();
     await expect(page).toHaveURL(/\/dashboard/, { timeout: 15_000 });
 
     // Cerrar el tutorial de OpenRouter si aparece (perfil sin clave IA)
@@ -61,9 +69,10 @@ test.describe("Onboarding — rama sin canal", () => {
       await tutorialClose.click();
     }
 
-    // Saludo genérico (canalNombre null) y banner de viabilidad visible
+    // Saludo genérico (canalNombre null)
     await expect(page.getByRole("heading", { name: /Hola, creador/ })).toBeVisible();
-    await expect(page.getByTestId("dashboard-card-viabilidad")).toBeVisible();
+    // T025 — tras saltar el estudio (saltado: true) el banner de viabilidad NO reaparece
+    await expect(page.getByTestId("dashboard-card-viabilidad")).toHaveCount(0);
   });
 });
 

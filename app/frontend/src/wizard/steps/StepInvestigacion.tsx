@@ -1,14 +1,38 @@
 // Etapa 2 · investigacion (02 §2.4.2)
+import { useRef } from "react";
 import { AiBlock } from "../AiBlock";
+import { FieldIA } from "../FieldIA";
 import { ChipsEditor, ListEditor, RefsEditor, LabelConTip } from "../fields";
 import { CONSEJOS } from "../consejos";
 import type { StepProps } from "./types";
 
 export function StepInvestigacion({ video, patch }: StepProps) {
+  // "Añadir todas" de FieldIA llama a onUsar varias veces en el mismo tick: se acumula
+  // sobre un ref (no sobre el closure de `video`) para no perder elementos.
+  const kwRef = useRef(video.palabrasClave);
+  kwRef.current = video.palabrasClave;
+  const anadirPalabraClave = (t: string) => {
+    const limpio = t.trim();
+    if (!limpio || kwRef.current.includes(limpio) || kwRef.current.length >= 15) return;
+    const nuevas = [...kwRef.current, limpio];
+    kwRef.current = nuevas;
+    patch({ palabrasClave: nuevas });
+  };
+
   return (
     <>
       <div className="field">
-        <LabelConTip as="span" tip={CONSEJOS.investigacion.campos.palabrasClave}>Palabras clave (máx 15)</LabelConTip>
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+          <LabelConTip as="span" tip={CONSEJOS.investigacion.campos.palabrasClave}>Palabras clave (máx 15)</LabelConTip>
+          <FieldIA
+            campoId="palabrasClave"
+            videoProjectId={video.id}
+            modo="lista"
+            valoresActuales={video.palabrasClave}
+            max={15}
+            onUsar={anadirPalabraClave}
+          />
+        </div>
         <ChipsEditor
           valores={video.palabrasClave}
           max={15}

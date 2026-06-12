@@ -157,7 +157,8 @@ export function Onboarding() {
         ...(draft.iaKey ? ({ iaConfig: { apiKey: draft.iaKey } } as never) : {}),
       });
       localStorage.removeItem(DRAFT_KEY);
-      navigate("/dashboard");
+      // T025 — sin canal todavía: el primer paso del método es validar que hay hueco.
+      navigate(draft.tieneCanalYa === false ? "/viabilidad" : "/dashboard");
       toast("success", es.onboarding.bienvenidaToast(p.canalNombre));
     } catch (e) {
       if (isApiError(e) && e.code === "PROFILE_ALREADY_EXISTS") navigate("/dashboard");

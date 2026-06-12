@@ -421,6 +421,56 @@ Formato de salida:
       return p?.resumen || insights.length ? [{ resumen: p?.resumen ?? "", insights }] : null;
     },
   },
+
+  // T024 — generador genérico "rellenar con IA" por campo del wizard/viabilidad.
+  // Las claves _instrucciones/_contexto/_usaCorpus/_n las inyecta ia.js desde el
+  // registro CAMPOS_IA (whitelist server-side): NUNCA se confía en el cliente.
+  // La regla Romuald llega en opciones.reglaCampo (consejos.ts, única fuente de verdad).
+  rellenar_campo: {
+    // Defaults de cortesía: ia.js los sobreescribe con los límites del campo (CAMPOS_IA).
+    maxTokens: 700,
+    temperatura: 0.8,
+    user: (op) => {
+      const partes = [];
+      if (op._usaCorpus)
+        partes.push(`CONOCIMIENTO DEL MÉTODO CRECETUBE (extracto del curso)\n${extraerCorpusIdeacion(2000)}`);
+      if (op._contexto) partes.push(op._contexto);
+      if (typeof op.reglaCampo === "string" && op.reglaCampo.trim())
+        partes.push(`REGLA DEL MÉTODO CRECETUBE PARA ESTE CAMPO\n${truncar(op.reglaCampo.trim(), 1200)}`);
+      partes.push(op._instrucciones ?? "Genera sugerencias útiles y concretas para el campo indicado.");
+      partes.push(
+        op.campoId === "guion.desarrollo"
+          ? `Formato de salida:\n{"bloques": [{"titulo": "...", "contenido": "...", "duracionSegundos": 120}]}`
+          : `Formato de salida:\n{"sugerencias": ["...", "..."]}`
+      );
+      return partes.join("\n\n");
+    },
+    normalizar: (p, op) => {
+      // Salida especial: esqueleto de bloques del guion (se AÑADEN, nunca reemplazan).
+      if (op?.campoId === "guion.desarrollo") {
+        const lista = Array.isArray(p?.bloques) ? p.bloques : null;
+        if (!lista) return null;
+        const out = lista
+          .filter((b) => typeof b?.titulo === "string" && b.titulo.trim())
+          .map((b) => {
+            const dur = Math.round(Number(b.duracionSegundos));
+            return {
+              titulo: truncar(b.titulo.trim(), 120),
+              contenido: typeof b.contenido === "string" && b.contenido.trim() ? truncar(b.contenido.trim(), 2000) : "",
+              duracionSegundos: Number.isFinite(dur) && dur >= 1 ? dur : 120,
+            };
+          })
+          .slice(0, op?._n ?? 6);
+        return out.length ? out : null;
+      }
+      // Salida uniforme: lista de sugerencias → [{texto}] (dedupe, vacíos fuera, tope n).
+      const lista = Array.isArray(p?.sugerencias) ? p.sugerencias : null;
+      if (!lista) return null;
+      const unicas = [...new Set(lista.filter((x) => typeof x === "string" && x.trim()).map((x) => x.trim()))];
+      const out = unicas.slice(0, op?._n ?? 5).map((texto) => ({ texto }));
+      return out.length ? out : null;
+    },
+  },
 };
 
 // Extracción robusta de JSON (04 §4.5.2.1): quita fences y recorta el primer bloque balanceado.

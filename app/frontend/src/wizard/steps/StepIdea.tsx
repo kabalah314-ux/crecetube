@@ -1,7 +1,19 @@
 // Etapa 1 · idea (02 §2.4.1)
+import { AiBlock } from "../AiBlock";
+import { FieldIA } from "../FieldIA";
 import { CharCount, LabelConTip } from "../fields";
 import { CONSEJOS } from "../consejos";
+import { es } from "../../i18n/es";
 import type { StepProps } from "./types";
+
+// Mismo contrato que el bloque de ideas del Dashboard (generador temas_canal)
+interface TemaSugerido {
+  titulo: string;
+  angulo: string | null;
+  porQueFunciona: string | null;
+  formato: string;
+  dificultad: string;
+}
 
 const TIPOS = [
   { v: "evergreen", t: "Evergreen", d: "Vídeo atemporal que acumula vistas meses" },
@@ -17,6 +29,15 @@ const FORMATOS = [
 ] as const;
 
 export function StepIdea({ video, patch }: StepProps) {
+  const usarTema = (tema: TemaSugerido) => {
+    const brief = [tema.angulo, tema.porQueFunciona].filter(Boolean).join(" ").slice(0, 500);
+    patch({
+      tituloIdea: tema.titulo.slice(0, 200),
+      ...(video.descripcionCorta.trim() === "" && brief ? { descripcionCorta: brief } : {}),
+      formato: tema.formato === "short" ? "short" : "long",
+    });
+  };
+
   return (
     <>
       <div className="field">
@@ -35,10 +56,70 @@ export function StepIdea({ video, patch }: StepProps) {
         <CharCount len={video.tituloIdea.length} ideal={120} max={200} />
       </div>
 
+      {/* T024: ideas amplias reutilizando temas_canal (mismo render que el Dashboard) + "Usar esta" */}
+      <details className="acordeon" data-testid="sugerir-ideas">
+        <summary>{es.fieldIA.sugerirIdeas}</summary>
+        <div className="acordeon-body">
+          <AiBlock
+            tipo="temas_canal"
+            etiqueta={es.ideas.etiqueta}
+            tip={es.ideas.tip}
+            render={(resultados, parseFallido) => {
+              if (parseFallido || !resultados.length) {
+                return (
+                  <p style={{ color: "var(--text-secondary)", fontSize: "var(--text-sm)" }}>{es.ideas.parseFallido}</p>
+                );
+              }
+              const temas = resultados as TemaSugerido[];
+              return (
+                <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
+                  {temas.map((tema, i) => (
+                    <div
+                      key={i}
+                      className="card"
+                      data-testid={`idea-tema-${i}`}
+                      style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)" }}
+                    >
+                      <p style={{ fontWeight: 700 }}>{tema.titulo}</p>
+                      {tema.angulo && (
+                        <p style={{ color: "var(--text-secondary)", fontSize: "var(--text-sm)" }}>{tema.angulo}</p>
+                      )}
+                      {tema.porQueFunciona && <p style={{ fontSize: "var(--text-sm)" }}>{tema.porQueFunciona}</p>}
+                      <div style={{ display: "flex", gap: "var(--space-2)", flexWrap: "wrap", alignItems: "center" }}>
+                        <span className="tag">{es.ideas.formato[tema.formato] ?? tema.formato}</span>
+                        <span className="tag">{es.ideas.dificultad[tema.dificultad] ?? tema.dificultad}</span>
+                        <button
+                          type="button"
+                          className="btn btn-primary btn-sm"
+                          style={{ marginLeft: "auto" }}
+                          data-testid={`idea-usar-${i}`}
+                          onClick={() => usarTema(tema)}
+                        >
+                          {es.fieldIA.usarEsta}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              );
+            }}
+          />
+        </div>
+      </details>
+
       <div className="field">
-        <LabelConTip htmlFor="f-brief" tip={CONSEJOS.idea.campos.descripcionCorta}>
-          Cuéntalo en 2–3 frases
-        </LabelConTip>
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+          <LabelConTip htmlFor="f-brief" tip={CONSEJOS.idea.campos.descripcionCorta}>
+            Cuéntalo en 2–3 frases
+          </LabelConTip>
+          <FieldIA
+            campoId="descripcionCorta"
+            videoProjectId={video.id}
+            modo="texto"
+            valoresActuales={[video.descripcionCorta]}
+            onUsar={(texto) => patch({ descripcionCorta: texto.slice(0, 500) })}
+          />
+        </div>
         <textarea
           id="f-brief"
           className="textarea"

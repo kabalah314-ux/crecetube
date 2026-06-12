@@ -384,6 +384,163 @@
   margin: 0;
 }
 
+/* T024 — FieldIA: botón ✨ por campo + popover de sugerencias */
+.field-ia-wrap {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.field-ia-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--accent-gold);
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.field-ia-btn:hover:not(:disabled) {
+  background: var(--bg-overlay);
+}
+
+.field-ia-btn:disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+
+/* z-index por encima del stepper sticky (10) y del acordeón de publicación */
+.field-ia-popover {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  left: 0;
+  z-index: 60;
+  width: min(340px, 82vw);
+  background: var(--bg-elevated);
+  border: var(--border-thin) solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-modal);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.field-ia-popover .ai-bloqueado {
+  margin-top: 0;
+}
+
+.field-ia-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--accent-gold);
+  font-size: var(--text-sm);
+}
+
+.field-ia-head strong {
+  flex: 1;
+}
+
+.field-ia-icono {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  padding: 2px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  flex: none;
+}
+
+.field-ia-icono:hover {
+  color: var(--text-primary);
+}
+
+.field-ia-estado {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.field-ia-error {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--accent-rust);
+}
+
+.field-ia-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.field-ia-sugerencia {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-3);
+  background: var(--bg-overlay);
+  border: var(--border-thin) solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.field-ia-sugerencia p {
+  margin: 0;
+  flex: 1;
+  white-space: pre-wrap;
+}
+
+.field-ia-sugerencia .btn {
+  flex: none;
+}
+
+.field-ia-bloque {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-2);
+}
+
+.field-ia-bloque-pie {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.field-ia-duracion {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+}
+
+.field-ia-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.field-ia-chips .chip:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 /* ---------- Listas y bloques ---------- */
 .lista-simple {
   list-style: none;

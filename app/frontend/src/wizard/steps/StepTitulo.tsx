@@ -1,11 +1,50 @@
 // Etapa 3 · titulo (02 §2.4.3)
-import { ArrowUp, Trash2, Check } from "lucide-react";
+import { useState } from "react";
+import { ArrowUp, Trash2, Check, Sparkles, Lock } from "lucide-react";
 import { AiBlock } from "../AiBlock";
 import { CharCount, LabelConTip } from "../fields";
 import { CONSEJOS } from "../consejos";
+import { es } from "../../i18n/es";
+import { api, isApiError } from "../../services/api";
+import { useStore } from "../../store/useStore";
 import type { StepProps } from "./types";
 
 export function StepTitulo({ video, patch }: StepProps) {
+  const profile = useStore((s) => s.profile);
+  const toast = useStore((s) => s.toast);
+  const configurada = profile?.iaConfig.apiKey === "***";
+  const [hashtagCargando, setHashtagCargando] = useState(false);
+  const [hashtagBloqueado, setHashtagBloqueado] = useState<string | null>(null);
+
+  // T024: reutiliza el generador `hashtags` existente (no rellenar_campo) y toma resultados[0].titulo
+  const sugerirHashtagTitulo = async () => {
+    setHashtagCargando(true);
+    setHashtagBloqueado(null);
+    try {
+      const r = await api.post<{ resultados: unknown[] }>("/api/ia/generar", {
+        tipo: "hashtags",
+        videoProjectId: video.id,
+        opciones: {},
+      });
+      const sugerido = (r.resultados?.[0] as { titulo?: string } | undefined)?.titulo?.trim();
+      if (!sugerido) {
+        toast("info", es.fieldIA.sinSugerencias);
+        return;
+      }
+      const actual = (video.hashtags.titulo[0] ?? "").trim();
+      if (actual && !window.confirm(es.fieldIA.confirmarPisar)) return;
+      patch({ hashtags: { ...video.hashtags, titulo: [sugerido] } });
+    } catch (e) {
+      if (isApiError(e) && e.code === "REQUISITO_FALTANTE") {
+        setHashtagBloqueado(e.message);
+      } else {
+        toast("error", isApiError(e) ? e.message : "Error generando");
+      }
+    } finally {
+      setHashtagCargando(false);
+    }
+  };
+
   const usarComoFinal = (alt: string) => {
     const previo = video.tituloFinal;
     const alternativos = video.titulosAlternativos.filter((t) => t !== alt);
@@ -116,9 +155,25 @@ export function StepTitulo({ video, patch }: StepProps) {
       />
 
       <div className="field" style={{ marginTop: "var(--space-5)" }}>
-        <LabelConTip htmlFor="f-hashtag-titulo" tip={CONSEJOS.titulo.campos.hashtagTitulo}>
-          Hashtag en el título (máx 1, opcional)
-        </LabelConTip>
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+          <LabelConTip htmlFor="f-hashtag-titulo" tip={CONSEJOS.titulo.campos.hashtagTitulo}>
+            Hashtag en el título (máx 1, opcional)
+          </LabelConTip>
+          <span className="field-ia-wrap">
+            <span data-tip={configurada ? es.fieldIA.sugerirHashtag : es.wizard.iaNoConfigurada}>
+              <button
+                type="button"
+                className="field-ia-btn"
+                data-testid="field-ia-hashtag-titulo"
+                aria-label={es.fieldIA.sugerirHashtag}
+                disabled={!configurada || hashtagCargando}
+                onClick={() => void sugerirHashtagTitulo()}
+              >
+                <Sparkles size={14} />
+              </button>
+            </span>
+          </span>
+        </div>
         <input
           id="f-hashtag-titulo"
           className="input"
@@ -132,6 +187,15 @@ export function StepTitulo({ video, patch }: StepProps) {
           }}
         />
         <p className="field-hint">Si lo usas, irá al final del título. Regla: corto y reconocible (s6_a6).</p>
+        {hashtagBloqueado && (
+          <div className="ai-bloqueado" data-testid="field-ia-hashtag-titulo-bloqueado" role="alert">
+            <Lock size={16} className="ai-bloqueado-icono" aria-hidden />
+            <div>
+              <strong className="ai-bloqueado-titulo">{es.wizard.bloqueadoTitulo}</strong>
+              <p className="ai-bloqueado-mensaje">{hashtagBloqueado}</p>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

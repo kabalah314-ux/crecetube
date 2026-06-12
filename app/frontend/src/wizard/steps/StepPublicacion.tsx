@@ -1,10 +1,12 @@
 // Etapa 8 · publicacion (02 §2.4.8) — acordeón de 5 subsecciones + acción culminante.
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CheckCircle2, Plus, Trash2, AlertTriangle } from "lucide-react";
+import { CheckCircle2, Plus, Trash2, AlertTriangle, ListOrdered } from "lucide-react";
 import { AiBlock } from "../AiBlock";
+import { FieldIA } from "../FieldIA";
 import { ChipsEditor, CharCount, LabelConTip } from "../fields";
 import { CONSEJOS } from "../consejos";
+import { es } from "../../i18n/es";
 import { Modal } from "../../components/ui/Modal";
 import { Confetti } from "../../components/Confetti";
 import { useStore } from "../../store/useStore";
@@ -59,6 +61,24 @@ export function StepPublicacion({
     setTsRows(rows);
     const ok = rows.length === 0 || (rows[0]?.tiempo === "00:00" && rows.every((r) => /^\d{1,3}:\d{2}$/.test(r.tiempo)));
     if (ok) patch({ timestamps: rows });
+  };
+
+  // T024: capítulos deterministas (sin IA) desde guion.desarrollo. La intro (SEOshock/inicio/loop)
+  // cuenta 60s por convención del método (misma suma que duracionTotalEstimadaSeg en StepGuion).
+  const derivarCapitulos = () => {
+    const bloquesGuion = video.guion.desarrollo;
+    if (bloquesGuion.length === 0) {
+      toast("info", es.fieldIA.derivarSinBloques);
+      return;
+    }
+    if (tsRows.length > 0 && !window.confirm(es.fieldIA.confirmarPisarCapitulos)) return;
+    let acumulado = 60;
+    const rows = [{ tiempo: "00:00", titulo: "Introducción" }];
+    bloquesGuion.forEach((b, i) => {
+      rows.push({ tiempo: aMmss(acumulado), titulo: b.titulo.trim() || `Bloque ${i + 1}` });
+      acumulado += b.duracionSegundos || 0;
+    });
+    setTimestamps(rows);
   };
 
   // ---- tarjetas con borrador local ----
@@ -154,9 +174,18 @@ export function StepPublicacion({
             }}
           />
           <div className="field" style={{ marginTop: "var(--space-4)" }}>
-            <LabelConTip htmlFor="f-fijado" tip={CONSEJOS.publicacion.campos.comentarioFijado}>
-              Comentario fijado
-            </LabelConTip>
+            <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+              <LabelConTip htmlFor="f-fijado" tip={CONSEJOS.publicacion.campos.comentarioFijado}>
+                Comentario fijado
+              </LabelConTip>
+              <FieldIA
+                campoId="comentarioFijado"
+                videoProjectId={video.id}
+                modo="texto"
+                valoresActuales={[video.comentarioFijado ?? ""]}
+                onUsar={(texto) => patch({ comentarioFijado: texto || null })}
+              />
+            </div>
             <textarea
               id="f-fijado"
               className="textarea"
@@ -294,11 +323,29 @@ export function StepPublicacion({
             >
               <Plus size={14} /> {tsRows.length === 0 ? "Añadir 00:00 Introducción" : "Añadir capítulo"}
             </button>
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm"
+              data-testid="derivar-capitulos"
+              data-tip="Sin IA: usa los títulos y duraciones de los bloques del guion"
+              onClick={derivarCapitulos}
+            >
+              <ListOrdered size={14} /> {es.fieldIA.derivarCapitulos}
+            </button>
           </div>
           <div className="field" style={{ marginTop: "var(--space-4)", maxWidth: 420 }}>
-            <label className="label" htmlFor="f-lista">
-              Lista de reproducción
-            </label>
+            <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+              <label className="label" htmlFor="f-lista">
+                Lista de reproducción
+              </label>
+              <FieldIA
+                campoId="listaReproduccionNombre"
+                videoProjectId={video.id}
+                modo="texto"
+                valoresActuales={[video.listaReproduccionNombre ?? ""]}
+                onUsar={(texto) => patch({ listaReproduccionNombre: texto || null })}
+              />
+            </div>
             <input
               id="f-lista"
               className="input"

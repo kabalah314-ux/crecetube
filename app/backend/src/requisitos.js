@@ -2,7 +2,9 @@
 // generador IA necesita tener hecho ANTES de ejecutarse (bloqueo duro).
 // Cada regla devuelve null (OK) o { falta, pasoSlug, mensaje } con tono Romuald:
 // corto, directo y con la consecuencia de saltarse el método.
-// pasoSlug ∈ investigacion | titulo | guion | publicacion | configuracion.
+// pasoSlug ∈ idea | investigacion | titulo | guion | publicacion | configuracion | viabilidad
+// (los dos últimos solo los usan los campos de rellenar_campo, definidos en campos.js).
+import { CAMPOS_IA } from "./campos.js";
 
 const hayTexto = (s) => typeof s === "string" && s.trim() !== "";
 
@@ -111,13 +113,18 @@ const REQUISITOS = {
             "Un nombre sin nicho es una lotería. Define primero tu nicho en Configuración: el nombre debe dejar claro de qué va el canal.",
         },
 
+  // T024 — rellenar_campo delega en el registro de campos (campos.js).
+  // Un campoId desconocido no bloquea aquí: la ruta lo rechaza con 422 VALIDATION_ERROR.
+  rellenar_campo: ({ video, profile, opciones }) =>
+    CAMPOS_IA[opciones?.campoId]?.requisitos?.({ video, profile, opciones }) ?? null,
+
   // Sin requisitos: evalúan lo que haya, aunque esté a medias.
   romu_aprueba: () => null,
   evaluacion_nicho: () => null,
 };
 
 // Devuelve null si el generador puede ejecutarse, o { falta, pasoSlug, mensaje } si no.
-export function evaluarRequisitos(tipo, { video, profile } = {}) {
+export function evaluarRequisitos(tipo, { video, profile, opciones } = {}) {
   const regla = REQUISITOS[tipo];
-  return regla ? regla({ video, profile }) : null;
+  return regla ? regla({ video, profile, opciones }) : null;
 }

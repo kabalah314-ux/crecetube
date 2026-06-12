@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Plus, Video as VideoIcon, ImageOff, Clapperboard } from "lucide-react";
 import { EmptyState } from "../components/ui/EmptyState";
+import { Modal } from "../components/ui/Modal";
 import { es } from "../i18n/es";
 import { api, isApiError } from "../services/api";
 import { useStore } from "../store/useStore";
@@ -26,6 +27,8 @@ export function VideosList() {
 function ProyectosGrid() {
   const [canales, setCanales] = useState<Channel[] | null>(null);
   const [conteo, setConteo] = useState<Record<string, number>>({});
+  // T025 — propuesta de estudio de viabilidad tras crear un canal nuevo
+  const [modalViabilidad, setModalViabilidad] = useState<{ nombre: string; yaCompletado: boolean } | null>(null);
   const navigate = useNavigate();
   const toast = useStore((s) => s.toast);
 
@@ -48,6 +51,16 @@ function ProyectosGrid() {
       const c = await api.post<Channel>("/api/canales", { nombre });
       toast("success", es.proyectos.canalCreado(c.nombre));
       await cargar();
+      // T025 — proponer el estudio de viabilidad para el canal nuevo. El estudio es
+      // singleton por usuario: si ya hay uno completado, la propuesta ofrece revisarlo.
+      let yaCompletado = false;
+      try {
+        const estudio = await api.get<{ completado?: boolean } | null>("/api/viabilidad");
+        yaCompletado = Boolean(estudio?.completado);
+      } catch {
+        // sin estudio o error de red → propuesta estándar
+      }
+      setModalViabilidad({ nombre: c.nombre, yaCompletado });
     } catch (e) {
       toast("error", isApiError(e) ? e.message : es.proyectos.errorCrear);
     }
@@ -85,6 +98,39 @@ function ProyectosGrid() {
           ))}
         </div>
       )}
+
+      {/* T025 — propuesta de estudio de viabilidad para el canal recién creado */}
+      <Modal
+        open={modalViabilidad !== null}
+        onClose={() => setModalViabilidad(null)}
+        title={es.viabilidadPropuesta.modalTitulo(modalViabilidad?.nombre ?? "")}
+        actions={
+          <>
+            <button
+              className="btn btn-ghost"
+              data-testid="modal-viabilidad-no"
+              onClick={() => setModalViabilidad(null)}
+            >
+              {es.viabilidadPropuesta.ahoraNo}
+            </button>
+            <button
+              className="btn btn-primary"
+              data-testid="modal-viabilidad-si"
+              onClick={() => navigate("/viabilidad")}
+            >
+              {modalViabilidad?.yaCompletado
+                ? es.viabilidadPropuesta.modalRevisar
+                : es.viabilidadPropuesta.modalHacer}
+            </button>
+          </>
+        }
+      >
+        <p data-testid="modal-viabilidad-canal" style={{ color: "var(--text-secondary)" }}>
+          {modalViabilidad?.yaCompletado
+            ? es.viabilidadPropuesta.modalTextoRevisar
+            : es.viabilidadPropuesta.modalTexto}
+        </p>
+      </Modal>
     </div>
   );
 }
