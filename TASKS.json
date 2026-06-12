@@ -3,9 +3,9 @@
   "version": "1.0",
   "ultima_actualizacion": "2026-06-11",
   "resumen": {
-    "total": 25,
-    "pendientes": 0,
-    "en_progreso": 1,
+    "total": 27,
+    "pendientes": 1,
+    "en_progreso": 2,
     "completadas": 24,
     "bloqueadas": 0,
     "tokens_estimados_totales": 0
@@ -310,6 +310,30 @@
       "tokens_estimados": "medio",
       "complejidad": "media",
       "resultado": "Viabilidad como paso inicial: propuesta en /viabilidad tras onboarding sin canal, modal al crear canal, 8 campos del estudio con FieldIA"
+    },
+    {
+      "id": "T026",
+      "titulo": "Aislar el borrador del onboarding por usuario (localStorage)",
+      "descripcion": "Bug menor detectado en el fix de sesiones: Onboarding.tsx guarda el borrador en localStorage con clave fija (DRAFT_KEY, lineas ~41/87/159). Si el usuario A abandona el onboarding y B entra en el mismo navegador sin perfil, B ve el borrador de A. Arreglo: clave por usuario (DRAFT_KEY + auth.id del useStore) + limpiar la clave antigua. Verificar: typecheck, build, e2e 01-onboarding.",
+      "fase": "desarrollo",
+      "prioridad": "media",
+      "estado": "pendiente",
+      "depende_de": null,
+      "tokens_estimados": "bajo",
+      "complejidad": "baja",
+      "resultado": null
+    },
+    {
+      "id": "T027",
+      "titulo": "CRITICO: consolidar la BD de produccion (Turso) — las cuentas pierden su progreso",
+      "descripcion": "Reportado por el usuario 2026-06-12: las cuentas no recuerdan su progreso. EVIDENCIA RECOGIDA: (1) vercel env pull production da TURSO_DATABASE_URL=host database-champagne-arrow-vercel-icfg-g165agwzu6zrj9reggrrvysh.aws-us-east-1.turso.io que apunta a una BD VACIA (0 tablas); (2) una demo creada via web en produccion NO aparece en esa BD => el deploy activo escribe en OTRA BD; (3) qa.smoke@crecetube.test (creada en el smoke de T016 esta madrugada) se pudo RE-registrar con 201 => la BD activa actual TAMPOCO tiene las cuentas de esa madrugada. CONCLUSION: hay 2+ BDs Turso y los deploys han ido cambiando de una a otra (las env se congelan por deploy) => perdida aparente de progreso segun que deploy este activo. PLAN: (a) usuario abre el dashboard de Turso/integracion en Vercel y lista las BDs existentes; (b) identificar la BD canonica (la que tenga las cuentas reales del usuario); (c) fijar DB_URL y DB_AUTH_TOKEN explicitos en Vercel produccion apuntando a la canonica (config.js las prefiere sobre TURSO_*); (d) redeploy + smoke con cuenta real (login + datos presentes); (e) fusionar datos huerfanos de las otras BDs si procede; (f) limpiar cuentas de prueba (qa.smoke re-creada id 38a1db91-45fb-4a5b-8f90-b81412b4de19 + demos). NOTA: GOOGLE_CLIENT_ID y SESSION_SECRET salen vacios en env pull (sensitive): si se re-crean las env, regenerarlos puede invalidar sesiones (aceptable) pero el client id de Google esta documentado en progress de T016.",
+      "fase": "produccion",
+      "prioridad": "critica",
+      "estado": "en_progreso",
+      "depende_de": null,
+      "tokens_estimados": "medio",
+      "complejidad": "alta",
+      "resultado": null
     }
   ]
 }
