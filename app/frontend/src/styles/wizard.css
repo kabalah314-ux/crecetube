@@ -691,6 +691,92 @@
   flex-shrink: 0;
 }
 
+/* ---------- RomuAprueba — sello de evaluación IA por etapa (T020) ---------- */
+.romu-aprueba {
+  margin-top: var(--space-5);
+}
+
+.romu-sello {
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  font-size: var(--text-sm);
+}
+
+.romu-sello-ok {
+  background: color-mix(in srgb, var(--accent-mint) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-mint) 40%, transparent);
+}
+
+.romu-sello-ajustar {
+  background: color-mix(in srgb, var(--accent-gold) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-gold) 35%, transparent);
+}
+
+.romu-sello-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.romu-sello-ok .romu-sello-head {
+  color: var(--accent-mint);
+}
+
+.romu-sello-ajustar .romu-sello-head {
+  color: var(--accent-gold);
+}
+
+.romu-sello-titulo {
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.04em;
+}
+
+.romu-sello-nota {
+  margin-left: auto;
+  font-weight: var(--weight-bold);
+  font-size: var(--text-xs);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--bg-overlay);
+}
+
+.romu-puntos {
+  list-style: none;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.romu-puntos li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.romu-puntos li svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.romu-puntos li.ok svg {
+  color: var(--accent-mint);
+}
+
+.romu-puntos li.ko svg {
+  color: var(--accent-rust);
+}
+
+.romu-resumen {
+  margin: var(--space-3) 0 0;
+  color: var(--text-primary);
+  font-style: italic;
+}
+
 /* ---------- ContextPanel: consejo Romuald + glosario ---------- */
 .context-consejo {
   margin: 0 0 var(--space-2) 0;

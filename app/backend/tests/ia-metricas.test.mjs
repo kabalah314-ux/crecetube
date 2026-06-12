@@ -2,6 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { boot, PERFIL_OK } from "./helpers.mjs";
 import { setTransport } from "../src/llm.js";
+import { extraerCorpusIdeacion } from "../src/corpus.js";
+import cursoSeed from "../../guia_maestra/07_curso_seed.json" with { type: "json" };
 
 const respuesta = (content) => ({
   model: "stub/modelo:free",
@@ -66,6 +68,124 @@ test("módulo IA con transporte stub + métricas", async (t) => {
     const r = await call("POST", "/api/ia/generar", { tipo: "hashtags", videoProjectId: video.id });
     assert.equal(r.body.resultados[0].amplio, "#cocina");
     assert.equal(r.body.resultados[0].medio, null);
+  });
+
+  await t.test("temas_canal: 5 temas normalizados sin videoProjectId", async () => {
+    let promptEnviado = "";
+    setTransport(async (_cfg, payload) => {
+      promptEnviado = payload?.messages?.find((m) => m.role === "user")?.content ?? "";
+      return respuesta(
+        JSON.stringify({
+          temas: Array.from({ length: 5 }, (_, i) => ({
+            titulo: `Tema sugerido ${i + 1}`,
+            angulo: "ángulo de prueba",
+            porQueFunciona: "encaja con el nicho",
+            formato: i === 0 ? "short" : "formato-inventado",
+            dificultad: i === 1 ? "alta" : "imposible",
+          })),
+        })
+      );
+    });
+    const r = await call("POST", "/api/ia/generar", { tipo: "temas_canal" });
+    assert.equal(r.status, 200);
+    assert.equal(r.body.parseFallido, false);
+    assert.equal(r.body.resultados.length, 5);
+    assert.equal(r.body.resultados[0].formato, "short");
+    assert.equal(r.body.resultados[1].formato, "video"); // formato inválido → default
+    assert.equal(r.body.resultados[1].dificultad, "alta");
+    assert.equal(r.body.resultados[0].dificultad, "media"); // dificultad inválida → default
+    // el prompt incluye el título del vídeo existente para no repetir temas
+    assert.ok(promptEnviado.includes("Audio pro sin micro caro"));
+    // y queda en historial sin vídeo asociado
+    const hist = await call("GET", "/api/ia/historial?tipo=temas_canal");
+    assert.equal(hist.body.length, 1);
+    assert.equal(hist.body[0].videoProjectId, null);
+  });
+
+  await t.test("temas_canal: respuesta malformada → degradación elegante", async () => {
+    setTransport(async () => respuesta('{"temas": "esto no es una lista"}'));
+    const r = await call("POST", "/api/ia/generar", { tipo: "temas_canal" });
+    assert.equal(r.status, 200);
+    assert.equal(r.body.parseFallido, true);
+    assert.ok(r.body.resultados[0].texto.includes("no es una lista"));
+  });
+
+  await t.test("romu_aprueba: veredicto normalizado, máx 6 puntos y guardia de tamaño", async () => {
+    let promptEnviado = "";
+    setTransport(async (_cfg, payload) => {
+      promptEnviado = payload?.messages?.find((m) => m.role === "user")?.content ?? "";
+      return respuesta(
+        JSON.stringify({
+          veredicto: "aprobado",
+          puntuacion: 8.6,
+          puntos: Array.from({ length: 8 }, (_, i) => ({
+            aspecto: `Aspecto ${i + 1}`,
+            ok: i % 2 === 0,
+            comentario: `comentario ${i + 1}`,
+          })),
+          resumen: "Esto ya huele a Pescaseo del bueno.",
+        })
+      );
+    });
+    const r = await call("POST", "/api/ia/generar", {
+      tipo: "romu_aprueba",
+      videoProjectId: video.id,
+      opciones: {
+        etapaNombre: "Título",
+        etapaProposito: "Elegir el título final",
+        datosEtapa: { tituloFinal: "Audio pro sin gastar un euro", relleno: "x".repeat(20000) },
+        reglas: ["El título no supera los 60 caracteres", "y".repeat(20000)],
+      },
+    });
+    assert.equal(r.status, 200);
+    assert.equal(r.body.parseFallido, false);
+    const v = r.body.resultados[0];
+    assert.equal(v.veredicto, "aprobado");
+    assert.equal(v.puntuacion, 9); // 8.6 redondeada
+    assert.equal(v.puntos.length, 6); // máximo 6 puntos
+    assert.equal(v.puntos[1].ok, false);
+    assert.ok(v.resumen.includes("Pescaseo"));
+    // el prompt lleva los datos y las reglas de la etapa…
+    assert.ok(promptEnviado.includes("Audio pro sin gastar un euro"));
+    assert.ok(promptEnviado.includes("El título no supera los 60 caracteres"));
+    // …pero recortados por la guardia de 6000 caracteres por bloque
+    assert.ok(!promptEnviado.includes("x".repeat(7000)));
+    assert.ok(!promptEnviado.includes("y".repeat(7000)));
+    // y queda en el historial ligado al vídeo actual
+    const hist = await call("GET", "/api/ia/historial?tipo=romu_aprueba");
+    assert.equal(hist.body.length, 1);
+    assert.equal(hist.body[0].videoProjectId, video.id);
+  });
+
+  await t.test("romu_aprueba: respuesta malformada → degradación elegante", async () => {
+    setTransport(async () => respuesta('{"veredicto":"ni idea","puntos":"sin lista"}'));
+    const r = await call("POST", "/api/ia/generar", {
+      tipo: "romu_aprueba",
+      videoProjectId: video.id,
+      opciones: { datosEtapa: { tituloFinal: "x" }, reglas: [] },
+    });
+    assert.equal(r.status, 200);
+    assert.equal(r.body.parseFallido, true);
+    assert.ok(r.body.resultados[0].texto.includes("ni idea"));
+  });
+
+  await t.test("corpus de ideación: respeta maxChars y solo asignaturas con contenido", () => {
+    const corpus = extraerCorpusIdeacion();
+    assert.ok(corpus.length > 0);
+    assert.ok(corpus.length <= 4000, `corpus de ${corpus.length} chars supera los 4000`);
+    assert.ok(extraerCorpusIdeacion(500).length <= 500);
+    const seccionesIdeacion = cursoSeed.secciones.filter((s) => ["s3", "s4", "s6"].includes(s.id));
+    const sinContenido = seccionesIdeacion.flatMap((s) =>
+      s.asignaturas.filter((a) => !(typeof a.contenido === "string" && a.contenido.trim()))
+    );
+    assert.ok(sinContenido.length > 0, "el seed actual debería tener asignaturas vacías en s3/s4/s6");
+    for (const a of sinContenido) {
+      assert.ok(!corpus.includes(`### ${a.titulo}`), `asignatura sin contenido en el corpus: ${a.id}`);
+    }
+    const conContenido = seccionesIdeacion.flatMap((s) =>
+      s.asignaturas.filter((a) => typeof a.contenido === "string" && a.contenido.trim())
+    );
+    assert.ok(conContenido.some((a) => corpus.includes(`### ${a.titulo}`)));
   });
 
   await t.test("historial registra y permite marcar selección", async () => {

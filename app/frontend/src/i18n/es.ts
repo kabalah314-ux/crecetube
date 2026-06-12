@@ -149,6 +149,37 @@ export const es = {
     volver: "← Volver a proyectos",
     errorCrear: "No se pudo crear el canal",
   },
+  ideas: {
+    etiqueta: "Ideas para tu próximo vídeo",
+    tip: "La IA cruza el método CRECETUBE con tu nicho y tus vídeos ya hechos para proponerte temas nuevos.",
+    parseFallido: "No se pudo interpretar la respuesta de la IA. Vuelve a generar.",
+    formato: {
+      video: "Vídeo",
+      short: "Short",
+    } as Record<string, string>,
+    dificultad: {
+      baja: "Dificultad baja",
+      media: "Dificultad media",
+      alta: "Dificultad alta",
+    } as Record<string, string>,
+  },
+  romu: {
+    etiqueta: "¿Romu aprueba esta etapa?",
+    tip: "La IA revisa lo que has rellenado en esta etapa contra las reglas del método CRECETUBE y te da el veredicto de Romuald.",
+    aprobado: "ROMU APRUEBA",
+    ajustar: "Romu dice: ajusta esto",
+    parseFallido: "No se pudo interpretar el veredicto de la IA. Vuelve a generar.",
+    proposito: {
+      idea: "Definir qué vídeo se va a hacer: título de trabajo, tipo sprint/evergreen, formato y brief validados contra demanda real.",
+      investigacion: "Reunir palabras clave, preguntas reales de la audiencia y análisis de competencia para fijar el ángulo diferencial.",
+      titulo: "Elegir un título final que combine palabra clave y curiosidad sin clickbait vacío (Pescaseo).",
+      miniatura: "Diseñar una miniatura de alto contraste con 3-5 palabras impresas que haga imposible no hacer clic.",
+      guion: "Escribir el guion con la estructura del método: SEOshock, SEOinicio, SEOloop, desarrollo con roturas de patrón, SEOresultado y PsicoCTA.",
+      publicacion: "Configurar descripción, hashtags, capítulos, pantallas finales y hora de publicación al servicio de la cadena de reproducción.",
+      sprint: "Ejecutar los 7 días críticos tras publicar: tráfico propio (email, comunidad, redes), vigilancia del CTR y SEO Swap si hace falta.",
+      evergreen: "Convertir el vídeo en patrimonio: analizar retención, decidir SEO Swap/SEOTE y conectarlo con la cadena de reproducción.",
+    } as Record<string, string>,
+  },
   settings: {
     titulo: "Configuración",
     perfil: "Perfil del canal",

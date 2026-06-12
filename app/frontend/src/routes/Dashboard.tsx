@@ -8,11 +8,20 @@ import { es } from "../i18n/es";
 import { COLOR_ESTADO } from "../wizard/estados";
 import { globalProgress, stepDeReanudacion } from "../wizard/config";
 import { OpenRouterTutorial } from "../wizard/OpenRouterTutorial";
+import { AiBlock } from "../wizard/AiBlock";
 import type { VideoProject } from "../types";
 
 interface ViabilidadData {
   completado?: boolean;
   saltado?: boolean;
+}
+
+interface TemaSugerido {
+  titulo: string;
+  angulo: string | null;
+  porQueFunciona: string | null;
+  formato: string;
+  dificultad: string;
 }
 
 const TUTORIAL_KEY = "ct.tutorial.openrouter";
@@ -116,6 +125,48 @@ export function Dashboard() {
           <span className="kpi-num">{progresoMedio}%</span>
           <span className="kpi-label">método aplicado de media</span>
         </div>
+      </div>
+
+      <div className="card" style={{ marginBottom: "var(--space-6)" }} data-testid="dashboard-ideas-block">
+        <AiBlock
+          tipo="temas_canal"
+          etiqueta={es.ideas.etiqueta}
+          tip={es.ideas.tip}
+          render={(resultados, parseFallido) => {
+            if (parseFallido || !resultados.length) {
+              return (
+                <p style={{ color: "var(--text-secondary)", fontSize: "var(--text-sm)" }}>
+                  {es.ideas.parseFallido}
+                </p>
+              );
+            }
+            const temas = resultados as TemaSugerido[];
+            return (
+              <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
+                {temas.map((tema, i) => (
+                  <div
+                    key={i}
+                    className="card"
+                    data-testid={`idea-tema-${i}`}
+                    style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)" }}
+                  >
+                    <p style={{ fontWeight: 700 }}>{tema.titulo}</p>
+                    {tema.angulo && (
+                      <p style={{ color: "var(--text-secondary)", fontSize: "var(--text-sm)" }}>{tema.angulo}</p>
+                    )}
+                    {tema.porQueFunciona && (
+                      <p style={{ fontSize: "var(--text-sm)" }}>{tema.porQueFunciona}</p>
+                    )}
+                    <div style={{ display: "flex", gap: "var(--space-2)", flexWrap: "wrap" }}>
+                      <span className="tag">{es.ideas.formato[tema.formato] ?? tema.formato}</span>
+                      <span className="tag">{es.ideas.dificultad[tema.dificultad] ?? tema.dificultad}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            );
+          }}
+        />
       </div>
 
       {continuar.length > 0 && (

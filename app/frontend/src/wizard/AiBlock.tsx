@@ -9,7 +9,8 @@ import { useStore } from "../store/useStore";
 
 interface Props {
   tipo: string;
-  videoProjectId: string;
+  /** opcional: los generadores de canal (temas_canal, evaluacion_nicho) no van ligados a un vídeo */
+  videoProjectId?: string | null;
   etiqueta: string;
   opciones?: Record<string, unknown>;
   /** recibe la respuesta parseada del backend y la pinta como cards */
@@ -32,7 +33,7 @@ export function AiBlock({ tipo, videoProjectId, etiqueta, opciones, render, disa
     try {
       const r = await api.post<{ resultados: unknown[]; parseFallido: boolean }>("/api/ia/generar", {
         tipo,
-        videoProjectId,
+        videoProjectId: videoProjectId ?? null,
         opciones: opciones ?? {},
       });
       setResultados(r.resultados);

@@ -1,92 +1,46 @@
-# Reviewer Log — T016+T017 COMPLETO (lotes 1 backend + 2 frontend)
+# Reviewer Log — T019 (recomendador IA de temas) + T020 (sello "Romu aprueba")
 **Fecha:** 2026-06-12
 **Agente:** REVIEWER (director de calidad)
-**Resultado:** APROBADO CON ARREGLO MENOR DE ENTORNO (no se tocó código de producción)
+**Veredicto:** APROBADO — sin arreglos necesarios. Todo verde a la primera.
 
-## Resumen ejecutivo
-Verificado con dureza el bloque multi-usuario + multi-canal + auth. Todo el código de
-producción funciona; no hubo que corregir nada en la app. El único arreglo fue de higiene
-del entorno de tests (BDs e2e huérfanas que provocaban un fallo inicial flaky).
+## Suites ejecutadas
+- `npm test --workspace app/backend` → **78 pass / 0 fail** (16.9s).
+- `npx tsc --noEmit` (app/frontend) → limpio, 0 errores.
+- `npm run build --workspace app/frontend` → OK (20.9s; warning de chunk >500 kB PREEXISTENTE, no introducido por este lote).
+- `npx playwright test` → **7/7 pass** (3 specs: 01-onboarding, 02-wizard, 03-romuald; 31.5s). El "7 specs" del encargo = 7 casos de test; el proyecto tiene 3 ficheros. Confirmado en playwright.config.ts (testDir e2e en raíz, no en app/frontend).
 
-## Suites ejecutadas (todas en verde)
-- `scripts/init.sh` → ✓ (incluye tests Node + build frontend)
-- `npm test --workspace app/backend` → **73 pass / 0 fail** (9 archivos)
-- `npm run typecheck --workspace app/frontend` (`tsc --noEmit`) → ✓ limpio
-- `npm run build --workspace app/frontend` → ✓ (21s; único warning: chunk >500 kB, preexistente)
-- `npx playwright test` (e2e COMPLETO) → **7 pass / 0 fail**, confirmado en 2 ejecuciones consecutivas
+## Verificaciones concretas (todas OK)
 
-## Migración sobre BD existente (camino v0 → v4) — CRÍTICO, verificado
-La BD real `app/backend/data/crecetube.db` YA estaba en schemaVersion 4 (el backend se había
-arrancado durante el desarrollo). Para probar el camino de upgrade sobre datos existentes:
-1. Copié la BD real + sus sidecars `-wal`/`-shm` a `node_modules/.cache/review-migra.db`
-   (los datos vivían en el WAL de 1.2 MB; copiar solo el `.db` de 4 KB daba "no such table").
-   **JAMÁS toqué el archivo real.**
-2. Revertí la copia a estado v0 genuino (sin tablas `users`/`channels`, sin columnas
-   userId/canalId, sin `meta.schemaVersion`), conservando el vídeo real (id 30637c14),
-   el perfil real (`canalNombre: "Canal de Oscar"`), 25 plantillas.
-3. Arranqué las migraciones reales (`initDb`) sobre la copia v0.
+### 1. Calidad de prompts y normalizadores
+- Tono Romuald coherente con SYSTEM_BASE (consecuencias, sin consejo genérico, términos del método).
+- JSON de salida bien especificado en `temas_canal` y `romu_aprueba`.
+- Normalizadores robustos y los tests lo prueban con aserciones REALES (no triviales):
+  - `temas_canal`: formato/dificultad inválidos → defaults "video"/"media" (aserción línea 94-96), array `"esto no es una lista"` → parseFallido con texto crudo, dedup + slice(5).
+  - `romu_aprueba`: 8.6→9 redondeado, 8 puntos→6 (slice), veredicto inválido `"ni idea"` → parseFallido, `ok: x.ok===true` estricto.
+  - `extraerJson`: extracción balanceada con fences (test seo_preguntas) y degradación con reintento (test hook: 2 llamadas).
 
-Resultado:
-- **schemaVersion final = 4** ✓
-- Vídeo conservado, `userId='local'`, **adoptado por el canal por defecto** en la columna
-  `canalId` Y en el JSON interno (ambos apuntan al mismo canal) ✓
-- Canal por defecto creado con el nombre real del perfil: **"Canal de Oscar"** (la migración v2
-  lee `profile.canalNombre`, no usa el genérico "Mi canal") ✓
-- Perfil intacto, `course_progress` y `viabilidad` recreadas con PK compuesta, 25 plantillas ✓
-- **Idempotente**: segundo arranque idéntico, sin duplicar canal ni datos ✓
+### 2. Guardias de tamaño (peor caso razonado)
+- **corpus ≤4000 SIEMPRE:** hoy el contenido bruto de s3/s4/s6 es 31.105 chars (8× la cota) y `extraerCorpusIdeacion()` devuelve 3.994. El `.slice(0, maxChars)` final es cota dura incondicional → crecer a 169 clases NO puede superarla. maxChars=500 → exactamente 500. Confirmado ejecutando la función.
+- **datosEtapa/reglas ≤6000:** test inyecta relleno de 20.000 chars en ambos y asserta `!includes(x.repeat(7000))` → la guardia MAX_EVAL_CHARS recorta. etapaNombre≤80, etapaProposito≤300, además recortes client-side con `corta()`.
+- **titulosExistentes acotado:** truncado a 2.000 chars en el `user()` del generador (línea 267). Con 200 vídeos se trunca correctamente.
 
-## Seguridad auth — verificada (crítico)
-- scrypt con salt aleatorio de 16 bytes (`randomBytes`), formato `salt:hash`, comparación con
-  `timingSafeEqual` y chequeo de longitud previo → ✓
-- Cookie de sesión `ct_session`: `httpOnly`, `sameSite: "lax"`, `secure` solo en producción,
-  `path: "/"`, maxAge 30d → ✓
-- JWT de sesión HS256 firmado/verificado con `jose` y `SESSION_SECRET`; `algorithms:["HS256"]`
-  explícito en verify → ✓
-- `POST /api/auth/google`: verifica firma contra JWKS de Google (`createRemoteJWKSet`),
-  `issuer` (accounts.google.com en sus 2 formas) Y `audience: GOOGLE_CLIENT_ID`. Sin
-  `GOOGLE_CLIENT_ID` → 503 (no acepta tokens). Token inválido → 401 → ✓
-- Comportamiento ante cookie inválida/caducada: cae a `req.userId = "local"` (modo local),
-  nunca 401. Sin `SESSION_SECRET`, la app entera funciona en modo local → ✓
-- `GET /me` con cookie de usuario inexistente → modo local (sin 500) → ✓
-- **Aislamiento por userId**: revisadas TODAS las rutas (profile, videos, curso, metricas, ia,
-  plantillas, viabilidad, canales, system). Todos los SELECT/INSERT/UPDATE de datos de usuario
-  filtran por `userId`. Los UPDATE/DELETE por `id` sin userId en la línea van SIEMPRE precedidos
-  de un SELECT escopado por userId que establece propiedad → ninguna ruta filtra datos ajenos ✓
-- Plantillas precargadas visibles globalmente (`esPrecargada=1 OR userId=?`); las propias por
-  userId → ✓
+### 3. Multi-usuario
+- `temas_canal`: `WHERE userId=? AND estado != 'archivado'` — solo vídeos del usuario.
+- AIInteraction siempre INSERT con `req.userId`; historial siempre `WHERE userId=?`. Sin fugas entre usuarios. Test confirma scoping: temas_canal → videoProjectId=null; romu_aprueba → videoProjectId=video.id.
 
-## Coherencia del Layout — verificada
-- Sidebar foot: modo `cuenta` → nombre/email + botón Salir; modo `local` + `authConfigurada`
-  → enlace discreto "Iniciar sesión"; modo local sin auth → no muestra nada (idéntico al
-  estado previo al bloque) ✓
-- NAV: "Vídeos" → "Proyectos" solo si `profile.gestionMulticanal`; Viabilidad condicional a
-  `tieneCanalYa === false` intacta ✓
-- Onboarding: paso multicanal con testids `onboarding-multichannel-single`/`-multi`, valida la
-  elección, `gestionMulticanal` propagado a `createProfile`; spec 01 cubre los 10 pasos ✓
+### 4. UI sin regresiones
+- `videoProjectId` ahora OPCIONAL (`?: string | null` con `?? null`). Las 9 (12 en total) usos previos pasan string → siguen tipando. TSC limpio lo confirma.
+- RomuAprueba montado entre Checklist y wizard-nav; devuelve `null` en grabacion/edicion. testids `romu-aprueba-*`/`romu-punto-*` NO colisionan con `checklist-sprint-*` que cuenta el spec 03. Spec 03 (c-1 grabacion 8 checks, c-2 sprint 11 checks, TipBanner, glosario 9 dt) → todo verde.
+- CSS 100% con tokens (`--accent-mint`/`--accent-gold`/`--accent-rust`/`--bg-overlay`/`--text-primary`/`--text-secondary`), 0 colores hardcodeados. Tokens definidos en AMBOS temas (tokens.css: dark en :root, light override ~línea 122; acentos remapeados para contraste). Fondos color-mix 12% + texto en --text-primary → legible en claro y oscuro.
 
-## Regresiones — sin impacto
-- Curso, Viabilidad y wizard de frontend NO se tocaron (Curso.tsx/Viabilidad.tsx sin cambios);
-  en backend solo se añadió `WHERE userId=?` (curso.js y viabilidad.js: +9 líneas cada uno).
-- Tutorial OpenRouter: el spec 01 lo abre y lo cierra correctamente (pasó).
-- Wizard / capa Romuald: specs 02 y 03 verdes (vídeo creado, checklists, TipBanner, ContextPanel).
-- Curso filtrado (63 visibles): lógica de seed/frontend no tocada por este bloque.
+### 5. Humo sin clave IA
+- AiBlock degrada igual para Dashboard (temas_canal) y RomuAprueba: botón "Generar" deshabilitado + enlace a /configuracion cuando `apiKey !== "***"`. parseFallido también degrada con mensaje. Nunca rompe. Test backend "generar sin clave → 503 AI_NOT_CONFIGURED" y e2e (sin IA configurada) lo confirman.
 
-## Lo que estaba "roto" y cómo lo arreglé
-**Nada de código.** En la PRIMERA ejecución de `npx playwright test` los 7 tests fallaron
-(el 01 no redirigía a /onboarding porque encontraba un perfil ya creado). Causa: **12 BDs
-`run-*.db` huérfanas** acumuladas en `node_modules/.cache/e2e/` de runs abortados durante el
-desarrollo + carrera de arranque del dev server. La config de Playwright crea una BD nueva por
-ejecución, pero las huérfanas ensuciaban el diagnóstico y el arranque.
-- **Arreglo:** limpié las 12 BDs huérfanas de `node_modules/.cache/e2e/` (solo ese directorio
-  de cache; jamás la BD real). Tras limpiar, la suite completa pasó 7/7 en dos ejecuciones
-  consecutivas. No es un bug del bloque T016/T017; es higiene del entorno de tests.
+## Arreglos
+Ninguno. El lote llegó 100% funcional.
 
-## Patrones recurrentes (candidatos a improvements/)
-- Ninguno con frecuencia ≥2. Nota de mejora opcional (NO bloqueante): la config e2e podría
-  borrar las BDs `run-*.db` previas al arrancar, para evitar acumulación y diagnósticos
-  confusos. Lo dejo a criterio del orquestador (`/improve`); fuera del alcance del bloque revisado.
+## Patrones recurrentes / candidatos a improvements/
+Ninguno (cero rechazos).
 
-## Veredicto
-**APROBADO** — init.sh ✓ · tsc ✓ · backend tests 73/73 ✓ · build ✓ · playwright 7/7 ✓ ·
-migración v0→v4 sobre BD existente ✓ · seguridad auth ✓ · aislamiento userId ✓ ·
-Layout coherente ✓ · sin regresiones.
+## Nota menor (no bloqueante, no arreglada por respetar intent)
+El "7 specs" del encargo se refiere a 7 casos de test (el repo tiene 3 ficheros .spec). Backend "78 esperados" confirmado en 78. Sin acción necesaria.

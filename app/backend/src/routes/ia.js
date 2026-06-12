@@ -40,6 +40,33 @@ router.post("/generar", h(async (req, res) => {
     opciones.snapshotsSerializados = snaps || "(ninguno)";
   }
 
+  // contexto extra para temas_canal (T019): perfil + títulos de TODOS los vídeos del usuario
+  // (todos sus canales) para que la IA no repita temas ya hechos.
+  if (tipo === "temas_canal") {
+    const vids = (await db.all("SELECT data FROM videos WHERE userId=? AND estado != 'archivado'", [req.userId])).map(jparse);
+    opciones.titulosExistentes = vids.map((v) => v?.tituloFinal ?? v?.tituloIdea).filter(Boolean);
+    opciones.canalNombre = profile?.canalNombre ?? null;
+    opciones.nicho = profile?.nicho ?? null;
+    opciones.tieneCanalYa = profile?.tieneCanalYa ?? null;
+  }
+
+  // guardia de tamaño para romu_aprueba (T020): datosEtapa y reglas llegan del frontend;
+  // se serializan y recortan aquí (misma filosofía maxChars que corpus.js).
+  if (tipo === "romu_aprueba") {
+    const MAX_EVAL_CHARS = 6000;
+    const datos = opciones.datosEtapa && typeof opciones.datosEtapa === "object" ? opciones.datosEtapa : null;
+    opciones.datosEtapa = datos ? JSON.stringify(datos, null, 1).slice(0, MAX_EVAL_CHARS) : null;
+    const reglas = Array.isArray(opciones.reglas)
+      ? opciones.reglas.filter((r) => typeof r === "string" && r.trim())
+      : [];
+    opciones.reglas = reglas.length
+      ? reglas.map((r) => `- ${r.trim()}`).join("\n").slice(0, MAX_EVAL_CHARS)
+      : null;
+    opciones.etapaNombre = typeof opciones.etapaNombre === "string" ? opciones.etapaNombre.slice(0, 80) : null;
+    opciones.etapaProposito = typeof opciones.etapaProposito === "string" ? opciones.etapaProposito.slice(0, 300) : null;
+    opciones.nicho = profile?.nicho ?? null;
+  }
+
   const ctx = construirContexto(profile, video);
   const userBase = `${ctx}\n\n${gen.user(opciones)}`;
 

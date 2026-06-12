@@ -1,4 +1,5 @@
-// prompts.js — 04 §4.4-4.6 LITERAL: system base, contexto y los 9 generadores.
+// prompts.js — 04 §4.4-4.6 LITERAL: system base, contexto y los generadores.
+import { extraerCorpusIdeacion } from "./corpus.js";
 
 export const SYSTEM_BASE = `Eres el asistente experto del método CRECETUBE para creadores de YouTube en español.
 Respondes SIEMPRE en español neutro, con tono cercano y didáctico, nunca robótico.
@@ -252,6 +253,108 @@ Formato de salida EXCLUSIVAMENTE JSON, sin texto adicional, sin markdown:
         : null;
       if (!veredicto && !fortalezas.length && !riesgos.length) return null;
       return [{ veredicto, puntuacion, fortalezas, riesgos, siguientePaso }];
+    },
+  },
+
+  temas_canal: {
+    maxTokens: 1200,
+    temperatura: 0.9,
+    user: (op) => {
+      const titulos = Array.isArray(op.titulosExistentes)
+        ? op.titulosExistentes.filter((t) => typeof t === "string" && t.trim())
+        : [];
+      const listaTitulos = titulos.length
+        ? truncar(titulos.map((t) => `- ${t.trim()}`).join("\n"), 2000)
+        : "(todavía ninguno)";
+      return `CONOCIMIENTO DEL MÉTODO CRECETUBE (extracto del curso)
+${extraerCorpusIdeacion()}
+
+PERFIL DEL CREADOR
+- Canal: ${op.canalNombre ?? "(sin nombre)"} · Nicho: ${op.nicho ?? "(sin especificar)"}
+- ¿Ya publica en YouTube?: ${op.tieneCanalYa ? "sí" : "no, está empezando"}
+
+VÍDEOS QUE YA TIENE O TIENE EN MARCHA (PROHIBIDO repetir estos temas o variaciones obvias):
+${listaTitulos}
+
+Propón exactamente 5 temas NUEVOS para el próximo vídeo de este canal aplicando el
+conocimiento del método de arriba (estrategia sprint/evergreen, nichos y títulos).
+Para cada tema:
+- titulo: título de trabajo concreto, ≤60 caracteres ideal (NUNCA >100), sin comillas ni emojis.
+- angulo: el enfoque diferencial en 1 frase corta.
+- porQueFunciona: por qué encaja con el método y con este canal, en 1-2 frases con criterio concreto.
+- formato: "video" (vídeo largo) o "short".
+- dificultad: "baja", "media" o "alta" según el esfuerzo de producción para este creador.
+Formato de salida:
+{"temas": [{"titulo": "...", "angulo": "...", "porQueFunciona": "...", "formato": "video|short", "dificultad": "baja|media|alta"}]}`;
+    },
+    normalizar: (p) => {
+      const lista = Array.isArray(p?.temas) ? p.temas : null;
+      if (!lista) return null;
+      const FORMATOS = ["video", "short"];
+      const DIFICULTADES = ["baja", "media", "alta"];
+      const vistos = new Set();
+      const out = [];
+      for (const t of lista) {
+        const titulo = typeof t?.titulo === "string" ? truncar(t.titulo.trim(), 100) : "";
+        if (!titulo || vistos.has(titulo)) continue;
+        vistos.add(titulo);
+        out.push({
+          titulo,
+          angulo: typeof t.angulo === "string" && t.angulo.trim() ? truncar(t.angulo.trim(), 160) : null,
+          porQueFunciona:
+            typeof t.porQueFunciona === "string" && t.porQueFunciona.trim() ? truncar(t.porQueFunciona.trim(), 300) : null,
+          formato: FORMATOS.includes(t.formato) ? t.formato : "video",
+          dificultad: DIFICULTADES.includes(t.dificultad) ? t.dificultad : "media",
+        });
+      }
+      return out.length ? out.slice(0, 5) : null;
+    },
+  },
+
+  romu_aprueba: {
+    maxTokens: 1000,
+    temperatura: 0.5,
+    user: (op) => `EVALUACIÓN DE ETAPA — SELLO "ROMU APRUEBA"
+Etapa evaluada: ${op.etapaNombre ?? "(sin nombre)"}
+Propósito de la etapa: ${op.etapaProposito ?? "(sin propósito declarado)"}
+Nicho del canal: ${op.nicho ?? "(sin especificar)"}
+
+DATOS INTRODUCIDOS POR EL CREADOR EN ESTA ETAPA (JSON, puede venir recortado):
+${op.datosEtapa ?? "(sin datos)"}
+
+REGLAS DEL MÉTODO CRECETUBE PARA ESTA ETAPA:
+${op.reglas ?? "(sin reglas)"}
+
+Evalúa SOLO esta etapa como lo haría Romuald revisando el trabajo de un alumno:
+crítico pero constructivo. Contrasta cada dato contra las reglas del método.
+Si algo viola el método, dilo claro y con su consecuencia (qué pierde el creador
+si no lo corrige). Si algo está bien hecho, reconócelo sin peloteo. Prohibido el
+consejo genérico: cada punto debe referirse a un dato concreto de arriba.
+Devuelve entre 3 y 6 puntos. El veredicto es "aprobado" solo si no hay ningún
+incumplimiento grave del método; si hay algo serio que corregir, es "ajustar".
+La puntuación es una nota de 1 a 10 del trabajo de la etapa.
+Formato de salida:
+{"veredicto":"aprobado|ajustar","puntuacion":1,"puntos":[{"aspecto":"...","ok":true,"comentario":"..."}],"resumen":"1 frase en tono Romuald"}`,
+    normalizar: (p) => {
+      if (!p || typeof p !== "object") return null;
+      const veredictoValido = ["aprobado", "ajustar"].includes(p.veredicto);
+      const puntos = Array.isArray(p.puntos)
+        ? p.puntos
+            .filter((x) => typeof x?.aspecto === "string" && x.aspecto.trim())
+            .map((x) => ({
+              aspecto: truncar(x.aspecto.trim(), 80),
+              ok: x.ok === true,
+              comentario:
+                typeof x.comentario === "string" && x.comentario.trim() ? truncar(x.comentario.trim(), 300) : null,
+            }))
+            .slice(0, 6)
+        : [];
+      if (!veredictoValido && !puntos.length) return null;
+      const veredicto = veredictoValido ? p.veredicto : puntos.some((x) => !x.ok) ? "ajustar" : "aprobado";
+      const puntuacion =
+        typeof p.puntuacion === "number" && p.puntuacion >= 1 && p.puntuacion <= 10 ? Math.round(p.puntuacion) : 5;
+      const resumen = typeof p.resumen === "string" && p.resumen.trim() ? truncar(p.resumen.trim(), 300) : null;
+      return [{ veredicto, puntuacion, puntos, resumen }];
     },
   },
 

@@ -23,6 +23,7 @@ import { es } from "../i18n/es";
 import { ESTADOS_ORDEN } from "../wizard/estados";
 import type { StepProps } from "../wizard/steps/types";
 import { TipBanner } from "../wizard/TipBanner";
+import { RomuAprueba } from "../wizard/RomuAprueba";
 
 function CuerpoEtapa({
   slug,
@@ -151,6 +152,8 @@ export function VideoWizard() {
         <CuerpoEtapa slug={step.slug} props={{ video, patch }} cambiarEstado={cambiarEstado} />
 
         <Checklist video={video} step={step} onToggle={(itemKey, valor) => toggleManual(step.slug, itemKey, valor)} />
+
+        <RomuAprueba slug={step.slug} video={video} />
 
         <div className="wizard-nav">
           {idx > 0 ? (
