@@ -1,4 +1,5 @@
-// Onboarding — 10 pasos (02 §2.2 + pregunta multicanal de T017), con borrador en localStorage.
+// Onboarding — adaptativo (02 §2.2 + multicanal de T017 + bifurcación de T021), con borrador en localStorage.
+// Rama con canal: 9 pasos visibles. Rama sin canal: 8 (se salta el paso multicanal).
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight, Check, Pencil, X } from "lucide-react";
@@ -13,11 +14,12 @@ const NICHOS = ["cocina", "gaming", "finanzas", "tecnología", "fitness", "educa
 interface Draft {
   tieneCanalYa: boolean | null;
   gestionMulticanal: boolean | null;
-  canalNombre: string;
+  canalNombre: string | null; // null = "Todavía no" (rama sin canal)
   canalUrl: string;
-  nicho: string;
+  nicho: string | null; // null = "Aún no lo sé"
   nivel: Nivel | null;
-  frecuenciaObjetivo: Frecuencia | null;
+  // "no_se" = eligió "Aún no lo sé"; null = aún no ha elegido nada
+  frecuenciaObjetivo: Frecuencia | "no_se" | null;
   objetivoPrincipal: Objetivo | null;
   iaKey: string;
 }
@@ -46,6 +48,20 @@ function loadDraft(): { paso: number; draft: Draft } {
   }
   return { paso: 0, draft: EMPTY };
 }
+
+// Bifurcación T021: la rama sin canal salta el paso multicanal (2).
+const pasosActivos = (d: Draft): number[] =>
+  d.tieneCanalYa === false ? [0, 1, 3, 4, 5, 6, 7, 8, 9] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+const siguientePasoActivo = (p: number, d: Draft): number => {
+  const activos = pasosActivos(d);
+  return activos[Math.min(activos.indexOf(p) + 1, activos.length - 1)];
+};
+
+const anteriorPasoActivo = (p: number, d: Draft): number => {
+  const activos = pasosActivos(d);
+  return activos[Math.max(activos.indexOf(p) - 1, 0)];
+};
 
 const urlValida = (v: string) => {
   try {
@@ -88,11 +104,13 @@ export function Onboarding() {
       case 2:
         return draft.gestionMulticanal === null ? es.onboarding.multicanalError : "";
       case 3:
-        if (!draft.canalNombre.trim()) return "El nombre es obligatorio";
-        if (draft.canalNombre.length > 80) return "Máximo 80 caracteres";
+        // Rama sin canal: el nombre es opcional ("Todavía no" → null)
+        if (draft.tieneCanalYa && !(draft.canalNombre ?? "").trim()) return "El nombre es obligatorio";
+        if ((draft.canalNombre ?? "").length > 80) return "Máximo 80 caracteres";
         if (draft.tieneCanalYa && draft.canalUrl && !urlValida(draft.canalUrl)) return es.onboarding.urlInvalida;
         return "";
       case 4:
+        if (draft.nicho === null) return ""; // "Aún no lo sé" elegido
         return draft.nicho.trim() ? "" : "Cuéntame tu nicho para personalizar la app";
       case 5:
         return draft.nivel ? "" : "Elige tu nivel";
@@ -108,7 +126,7 @@ export function Onboarding() {
   const next = () => {
     const err = valida(paso);
     if (err) return setError(err);
-    go(Math.min(paso + 1, 9));
+    go(siguientePasoActivo(paso, draft));
   };
 
   const probarConexion = async () => {
@@ -127,14 +145,15 @@ export function Onboarding() {
     setEnviando(true);
     try {
       const p = await createProfile({
-        canalNombre: draft.canalNombre.trim(),
+        canalNombre: (draft.canalNombre ?? "").trim() || null,
         canalUrl: draft.tieneCanalYa && draft.canalUrl ? draft.canalUrl : null,
-        nicho: draft.nicho.trim(),
+        nicho: (draft.nicho ?? "").trim() || null,
         nivel: draft.nivel!,
-        frecuenciaObjetivo: draft.frecuenciaObjetivo!,
+        frecuenciaObjetivo: draft.frecuenciaObjetivo === "no_se" ? null : draft.frecuenciaObjetivo,
         objetivoPrincipal: draft.objetivoPrincipal!,
         tieneCanalYa: Boolean(draft.tieneCanalYa),
-        gestionMulticanal: Boolean(draft.gestionMulticanal),
+        // Sin canal todavía no hay nada que gestionar: multicanal queda en false automáticamente
+        gestionMulticanal: draft.tieneCanalYa === false ? false : Boolean(draft.gestionMulticanal),
         ...(draft.iaKey ? ({ iaConfig: { apiKey: draft.iaKey } } as never) : {}),
       });
       localStorage.removeItem(DRAFT_KEY);
@@ -236,17 +255,32 @@ export function Onboarding() {
             className="input"
             data-testid="onboarding-channel-name"
             placeholder={es.onboarding.nombrePlaceholder}
-            value={draft.canalNombre}
+            value={draft.canalNombre ?? ""}
             maxLength={80}
             autoFocus
             onChange={(e) => set("canalNombre", e.target.value)}
           />
-          {draft.canalNombre.length >= 60 && (
-            <div className={`char-count${draft.canalNombre.length >= 75 ? " warn" : ""}`}>
-              {draft.canalNombre.length}/80
+          {(draft.canalNombre ?? "").length >= 60 && (
+            <div className={`char-count${(draft.canalNombre ?? "").length >= 75 ? " warn" : ""}`}>
+              {(draft.canalNombre ?? "").length}/80
             </div>
           )}
         </div>
+        {draft.tieneCanalYa === false && (
+          <div>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              data-testid="onboarding-nombre-todavia-no"
+              onClick={() => {
+                set("canalNombre", null);
+                go(siguientePasoActivo(3, draft));
+              }}
+            >
+              {es.onboarding.nombreTodaviaNo}
+            </button>
+          </div>
+        )}
         {draft.tieneCanalYa && (
           <div className="field">
             <label className="label" htmlFor="ob-url">
@@ -266,13 +300,15 @@ export function Onboarding() {
     ),
     4: (
       <>
-        <h1 className="ob-title">{es.onboarding.nichoTitulo}</h1>
+        <h1 className="ob-title">
+          {draft.tieneCanalYa === false ? es.onboarding.nichoTituloNuevo : es.onboarding.nichoTitulo}
+        </h1>
         <div className="field">
           <input
             className="input"
             data-testid="onboarding-niche"
             placeholder={es.onboarding.nichoPlaceholder}
-            value={draft.nicho}
+            value={draft.nicho ?? ""}
             maxLength={60}
             autoFocus
             onChange={(e) => set("nicho", e.target.value)}
@@ -290,6 +326,14 @@ export function Onboarding() {
               {n}
             </button>
           ))}
+          <button
+            type="button"
+            className={`chip${draft.nicho === null ? " active" : ""}`}
+            data-testid="onboarding-nicho-no-se"
+            onClick={() => set("nicho", null)}
+          >
+            {es.onboarding.nichoNoSe}
+          </button>
         </div>
       </>
     ),
@@ -322,6 +366,12 @@ export function Onboarding() {
               testid={`onboarding-frequency-${f}`}
             />
           ))}
+          <Card
+            sel={draft.frecuenciaObjetivo === "no_se"}
+            onClick={() => set("frecuenciaObjetivo", "no_se")}
+            title={es.onboarding.frecuenciaNoSe}
+            testid="onboarding-frequency-no-se"
+          />
         </div>
         <p className="field-hint">{es.onboarding.frecuenciaHint}</p>
       </>
@@ -392,11 +442,20 @@ export function Onboarding() {
         <dl className="ob-resumen">
           {(
             [
-              [es.onboarding.multicanalResumen, draft.gestionMulticanal ? es.onboarding.multicanalVarios : es.onboarding.multicanalUno, 2],
-              [es.onboarding.nombreCanal, draft.canalNombre, 3],
-              ["Nicho", draft.nicho, 4],
+              // El paso multicanal no existe en la rama sin canal: fuera del resumen
+              ...(draft.tieneCanalYa === false
+                ? []
+                : [[es.onboarding.multicanalResumen, draft.gestionMulticanal ? es.onboarding.multicanalVarios : es.onboarding.multicanalUno, 2]]),
+              [es.onboarding.nombreCanal, (draft.canalNombre ?? "").trim() || es.onboarding.sinDecidir, 3],
+              ["Nicho", (draft.nicho ?? "").trim() || es.onboarding.sinDecidir, 4],
               ["Nivel", draft.nivel ? es.onboarding[`nivel${cap(draft.nivel)}` as "nivelIntermedio"] : "", 5],
-              ["Frecuencia", draft.frecuenciaObjetivo ? es.frecuencias[draft.frecuenciaObjetivo] : "", 6],
+              [
+                "Frecuencia",
+                draft.frecuenciaObjetivo && draft.frecuenciaObjetivo !== "no_se"
+                  ? es.frecuencias[draft.frecuenciaObjetivo]
+                  : es.onboarding.sinDecidir,
+                6,
+              ],
               ["Objetivo", draft.objetivoPrincipal ? es.objetivos[draft.objetivoPrincipal] : "", 7],
               ["IA", draft.iaKey ? "Configurada" : "Sin configurar (puedes hacerlo luego)", 8],
             ] as Array<[string, string, number]>
@@ -414,16 +473,21 @@ export function Onboarding() {
     ),
   };
 
+  // Numeración dinámica según la rama: el paso 0 (bienvenida) no cuenta como paso visible.
+  const activos = pasosActivos(draft);
+  const totalVisibles = activos.length - 1;
+  const pasoVisual = Math.max(activos.indexOf(paso), 1);
+
   return (
     <div className="ob-wrap">
       <div className="ob-progress" aria-hidden={paso === 0}>
         {paso > 0 && (
           <>
             <div className="progress-thin">
-              <div style={{ width: `${(paso / 9) * 100}%` }} />
+              <div style={{ width: `${(pasoVisual / totalVisibles) * 100}%` }} />
             </div>
             <div className="field-hint" style={{ marginTop: 6 }}>
-              Paso {paso} de 9
+              Paso {pasoVisual} de {totalVisibles}
             </div>
           </>
         )}
@@ -444,7 +508,7 @@ export function Onboarding() {
         )}
         {paso > 0 && (
           <div className="ob-actions">
-            <button type="button" className="btn btn-ghost" onClick={() => go(paso - 1)} data-testid="onboarding-back">
+            <button type="button" className="btn btn-ghost" onClick={() => go(anteriorPasoActivo(paso, draft))} data-testid="onboarding-back">
               {es.common.atras}
             </button>
             {paso === 8 ? (

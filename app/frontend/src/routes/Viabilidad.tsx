@@ -169,6 +169,7 @@ function CheckItem({
 
 export function Viabilidad() {
   const profile = useStore((s) => s.profile);
+  const patchProfile = useStore((s) => s.patchProfile);
   const toast = useStore((s) => s.toast);
   const navigate = useNavigate();
 
@@ -237,6 +238,15 @@ export function Viabilidad() {
     }
     toast("info", es.viabilidad.saltadoToast);
     navigate("/dashboard");
+  }
+
+  async function usarNombre(nombre: string) {
+    try {
+      await patchProfile({ canalNombre: nombre });
+      toast("success", es.nombresCanal.aplicadoToast(nombre));
+    } catch {
+      toast("error", es.nombresCanal.errorAplicar);
+    }
   }
 
   async function finalizar(autoveredicto: "viable" | "ajustar" | "pivotar") {
@@ -543,6 +553,53 @@ export function Viabilidad() {
                       </p>
                     )}
                   </div>
+                );
+              }}
+            />
+          </div>
+
+          {/* Sugerir nombres de canal (T022) */}
+          <div className="card" style={{ marginBottom: "var(--space-5)" }} data-testid="nombres-canal-block">
+            <AiBlock
+              tipo="sugerir_nombres_canal"
+              etiqueta={es.nombresCanal.etiqueta}
+              tip={es.nombresCanal.tip}
+              opciones={{
+                nicho: datos.subNicho || nicho,
+                ideaCanal: datos.ideaCanal,
+                pvu: datos.pvu,
+              }}
+              render={(resultados, parseFallido) => {
+                if (parseFallido || !resultados.length) {
+                  return (
+                    <p style={{ color: "var(--text-secondary)", fontSize: "var(--text-sm)" }}>
+                      {es.nombresCanal.parseFallido}
+                    </p>
+                  );
+                }
+                return (
+                  <ul className="ai-cards">
+                    {(resultados as Array<{ nombre: string; porQue: string | null }>).map((r, i) => (
+                      <li key={i} className="ai-card" data-testid={`nombre-sugerido-${i}`}>
+                        <div>
+                          <strong>{r.nombre}</strong>
+                          {r.porQue && (
+                            <p style={{ margin: 0, fontSize: "var(--text-sm)", color: "var(--text-secondary)" }}>
+                              {r.porQue}
+                            </p>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          className="btn btn-secondary btn-sm"
+                          data-testid={`nombre-usar-${i}`}
+                          onClick={() => void usarNombre(r.nombre)}
+                        >
+                          {es.nombresCanal.usar}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
                 );
               }}
             />

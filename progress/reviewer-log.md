@@ -1,46 +1,62 @@
-# Reviewer Log — T019 (recomendador IA de temas) + T020 (sello "Romu aprueba")
+# Reviewer Log — T021 (onboarding adaptativo) + T022 (cadena del método)
+
 **Fecha:** 2026-06-12
 **Agente:** REVIEWER (director de calidad)
-**Veredicto:** APROBADO — sin arreglos necesarios. Todo verde a la primera.
+**Veredicto:** APROBADO — sin arreglos necesarios. Todo verde.
 
 ## Suites ejecutadas
-- `npm test --workspace app/backend` → **78 pass / 0 fail** (16.9s).
-- `npx tsc --noEmit` (app/frontend) → limpio, 0 errores.
-- `npm run build --workspace app/frontend` → OK (20.9s; warning de chunk >500 kB PREEXISTENTE, no introducido por este lote).
-- `npx playwright test` → **7/7 pass** (3 specs: 01-onboarding, 02-wizard, 03-romuald; 31.5s). El "7 specs" del encargo = 7 casos de test; el proyecto tiene 3 ficheros. Confirmado en playwright.config.ts (testDir e2e en raíz, no en app/frontend).
 
-## Verificaciones concretas (todas OK)
+| Suite | Resultado |
+|-------|-----------|
+| `npm test --workspace app/backend` | **94/94 pass** (12.6s) |
+| `npm run typecheck -w app/frontend` (tsc --noEmit) | limpio, 0 errores |
+| `npm run build -w app/frontend` (vite) | OK — solo warning preexistente de chunk >500 kB (no relacionado) |
+| `npm run test:e2e` (Playwright) — pasada 1 | **8/8 pass** (51.8s) |
+| `npm run test:e2e` (Playwright) — pasada 2 | **8/8 pass** (1.1m) — estable, sin residuo entre ejecuciones |
 
-### 1. Calidad de prompts y normalizadores
-- Tono Romuald coherente con SYSTEM_BASE (consecuencias, sin consejo genérico, términos del método).
-- JSON de salida bien especificado en `temas_canal` y `romu_aprueba`.
-- Normalizadores robustos y los tests lo prueban con aserciones REALES (no triviales):
-  - `temas_canal`: formato/dificultad inválidos → defaults "video"/"media" (aserción línea 94-96), array `"esto no es una lista"` → parseFallido con texto crudo, dedup + slice(5).
-  - `romu_aprueba`: 8.6→9 redondeado, 8 puntos→6 (slice), veredicto inválido `"ni idea"` → parseFallido, `ok: x.ok===true` estricto.
-  - `extraerJson`: extracción balanceada con fences (test seo_preguntas) y degradación con reintento (test hook: 2 llamadas).
+## Verificación dura, punto por punto
 
-### 2. Guardias de tamaño (peor caso razonado)
-- **corpus ≤4000 SIEMPRE:** hoy el contenido bruto de s3/s4/s6 es 31.105 chars (8× la cota) y `extraerCorpusIdeacion()` devuelve 3.994. El `.slice(0, maxChars)` final es cota dura incondicional → crecer a 169 clases NO puede superarla. maxChars=500 → exactamente 500. Confirmado ejecutando la función.
-- **datosEtapa/reglas ≤6000:** test inyecta relleno de 20.000 chars en ambos y asserta `!includes(x.repeat(7000))` → la guardia MAX_EVAL_CHARS recorta. etapaNombre≤80, etapaProposito≤300, además recortes client-side con `corta()`.
-- **titulosExistentes acotado:** truncado a 2.000 chars en el `user()` del generador (línea 267). Con 200 vídeos se trunca correctamente.
+### 1. Lógica de la cadena (requisitos.js) — campos REALES
+Validado cada requisito contra `videoDefaults.js` y `types.ts`. Todos los campos
+evaluados existen y son **planos** (no anidados bajo `investigacion`):
+`video.palabrasClave[]`, `video.seoPreguntas[]`, `video.tituloFinal`,
+`video.guion.seoInicio`, `video.guion.desarrollo[]`, `video.publishedAt`,
+`profile.nicho`. Ningún requisito apunta a un campo inexistente que bloquearía
+SIEMPRE. Confirmado además con los subtests unitarios (bloqueado + desbloqueado
+por cada generador).
 
-### 3. Multi-usuario
-- `temas_canal`: `WHERE userId=? AND estado != 'archivado'` — solo vídeos del usuario.
-- AIInteraction siempre INSERT con `req.userId`; historial siempre `WHERE userId=?`. Sin fugas entre usuarios. Test confirma scoping: temas_canal → videoProjectId=null; romu_aprueba → videoProjectId=video.id.
+### 2. Flujo end-to-end por API (con stub LLM)
+Cubierto por la suite HTTP de `requisitos.test.mjs`:
+- crear perfil → `titulo` sin keywords → **422 REQUISITO_FALTANTE**, details[0]={falta:"palabrasClave", pasoSlug:"investigacion"}.
+- `descripcion` sin tituloFinal → 422 hacia "titulo"; con título pero sin guion → 422 hacia "guion".
+- `temas_canal` / `sugerir_nombres_canal` con nicho=null → 422 hacia "configuracion".
+- `sugerir_nombres_canal` con nicho → 200, 5 nombres normalizados (dedupe, vacíos fuera, porQue truncado ≤200, máx 5), historial sin vídeo asociado.
+- Respuesta malformada → degradación elegante (parseFallido=true).
+El cliente recibe `details`: `errorHandler` los serializa (errors.js) y `AiBlock` los lee (`e.details[0].pasoSlug`).
 
-### 4. UI sin regresiones
-- `videoProjectId` ahora OPCIONAL (`?: string | null` con `?? null`). Las 9 (12 en total) usos previos pasan string → siguen tipando. TSC limpio lo confirma.
-- RomuAprueba montado entre Checklist y wizard-nav; devuelve `null` en grabacion/edicion. testids `romu-aprueba-*`/`romu-punto-*` NO colisionan con `checklist-sprint-*` que cuenta el spec 03. Spec 03 (c-1 grabacion 8 checks, c-2 sprint 11 checks, TipBanner, glosario 9 dt) → todo verde.
-- CSS 100% con tokens (`--accent-mint`/`--accent-gold`/`--accent-rust`/`--bg-overlay`/`--text-primary`/`--text-secondary`), 0 colores hardcodeados. Tokens definidos en AMBOS temas (tokens.css: dark en :root, light override ~línea 122; acentos remapeados para contraste). Fondos color-mix 12% + texto en --text-primary → legible en claro y oscuro.
+### 3. Nulabilidad (canalNombre/nicho/frecuencia null)
+- `Dashboard`: saludo `canalNombre || "creador"`; subtítulo nicho condicional sin "·" huérfano; banner ampliado a `tieneCanalYa===false || !canalNombre || !nicho`.
+- `Settings`: inputs controlados con `?? ""`; select frecuencia con `?? ""` ↔ `null`; guardado normaliza vacío→null; AiBlock sugerir_nombres_canal visible solo si `!canalNombre && nicho`.
+- `TemplateDetail`: `profile?.canalNombre ? ... : valorPorDefecto` (sin asunción non-null).
+- Resumen onboarding: muestra `sinDecidir` ("Todavía sin decidir") en lugar de null.
+- `construirContexto` (prompts.js): `canalNombre ?? "(sin especificar)"`, `nicho ?? "(sin especificar)"` — sin literales "null".
+- `bienvenidaToast(nombre: string | null)` con fallback `?? "creador"`.
 
-### 5. Humo sin clave IA
-- AiBlock degrada igual para Dashboard (temas_canal) y RomuAprueba: botón "Generar" deshabilitado + enlace a /configuracion cuando `apiKey !== "***"`. parseFallido también degrada con mensaje. Nunca rompe. Test backend "generar sin clave → 503 AI_NOT_CONFIGURED" y e2e (sin IA configurada) lo confirman.
+### 4. Onboarding bifurcado + E2E x2
+Ambas ramas correctas por código (`pasosActivos`/`siguientePasoActivo`, centinela
+`"no_se"` aislado y convertido a null en `crear()`). Todos los testids del spec
+nuevo (`onboarding-nombre-todavia-no`, `onboarding-nicho-no-se`,
+`onboarding-frequency-no-se`, etc.) existen en Onboarding.tsx. Suite E2E 8/8 en
+dos pasadas; la limpieza con `POST /api/import {replaceAll:true}` en afterEach
+mantiene estables los specs 02/03.
+
+### 5. UI del bloqueo (AiBlock)
+- Captura solo `REQUISITO_FALTANTE`; `setBloqueado(null)` al regenerar con éxito.
+- `finally { setCargando(false) }` → no deja spinner colgado al navegar.
+- `enlacePaso`: configuracion→/configuracion, viabilidad→/viabilidad, resto→`/videos/{id}/wizard/{slug}`. Rutas confirmadas contra App.tsx (`/videos/:id/wizard/:stepId`, `/configuracion`, `/viabilidad`). El centinela `videoProjectId="viabilidad"` queda excluido del enlace al wizard.
 
 ## Arreglos
-Ninguno. El lote llegó 100% funcional.
+Ninguno. Ambos lotes llegaron 100% funcionales tal como se entregaron.
 
 ## Patrones recurrentes / candidatos a improvements/
 Ninguno (cero rechazos).
-
-## Nota menor (no bloqueante, no arreglada por respetar intent)
-El "7 specs" del encargo se refiere a 7 casos de test (el repo tiene 3 ficheros .spec). Backend "78 esperados" confirmado en 78. Sin acción necesaria.

@@ -31,7 +31,7 @@ export function TemplateDetail() {
         const iniciales: Record<string, string> = {};
         for (const v of t.variablesDinamicas) {
           iniciales[v.nombre] =
-            v.nombre === "nombreCanal" && profile ? profile.canalNombre : v.valorPorDefecto;
+            v.nombre === "nombreCanal" && profile?.canalNombre ? profile.canalNombre : v.valorPorDefecto;
         }
         setVars(iniciales);
       })

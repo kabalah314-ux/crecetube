@@ -23,7 +23,7 @@ export function construirContexto(profile, video) {
   if (profile) {
     lineas.push("CONTEXTO DEL CANAL");
     lineas.push(
-      `- Canal: ${profile.canalNombre} · Nicho: ${profile.nicho} · Nivel: ${profile.nivel} · Objetivo: ${profile.objetivoPrincipal}`
+      `- Canal: ${profile.canalNombre ?? "(sin especificar)"} · Nicho: ${profile.nicho ?? "(sin especificar)"} · Nivel: ${profile.nivel} · Objetivo: ${profile.objetivoPrincipal}`
     );
   }
   if (video) {
@@ -305,6 +305,41 @@ Formato de salida:
             typeof t.porQueFunciona === "string" && t.porQueFunciona.trim() ? truncar(t.porQueFunciona.trim(), 300) : null,
           formato: FORMATOS.includes(t.formato) ? t.formato : "video",
           dificultad: DIFICULTADES.includes(t.dificultad) ? t.dificultad : "media",
+        });
+      }
+      return out.length ? out.slice(0, 5) : null;
+    },
+  },
+
+  sugerir_nombres_canal: {
+    maxTokens: 600,
+    temperatura: 0.9,
+    user: (op) => `CONOCIMIENTO DEL MÉTODO CRECETUBE (extracto del curso)
+${extraerCorpusIdeacion(2000)}
+
+NICHO DEL CANAL: ${op.nicho ?? "(sin especificar)"}
+Idea de canal: ${op.ideaCanal ?? "(sin especificar)"}
+PVU propuesta: ${op.pvu ?? "(sin especificar)"}
+
+Propón exactamente 5 nombres para un canal de YouTube de este nicho aplicando el
+conocimiento del método de arriba. Cada nombre: memorable, pronunciable en español,
+de 1 a 4 palabras, que deje claro el tema y diferencie del resto del nicho.
+Nada de nombres genéricos ni corporativos. Sin emojis ni comillas.
+Para cada nombre explica en 1 frase por qué funciona (claridad, búsqueda o marca).
+Formato de salida:
+{"nombres": [{"nombre": "...", "porQue": "..."}]}`,
+    normalizar: (p) => {
+      const lista = Array.isArray(p?.nombres) ? p.nombres : null;
+      if (!lista) return null;
+      const vistos = new Set();
+      const out = [];
+      for (const n of lista) {
+        const nombre = typeof n?.nombre === "string" ? truncar(n.nombre.trim(), 80) : "";
+        if (!nombre || vistos.has(nombre)) continue;
+        vistos.add(nombre);
+        out.push({
+          nombre,
+          porQue: typeof n?.porQue === "string" && n.porQue.trim() ? truncar(n.porQue.trim(), 200) : null,
         });
       }
       return out.length ? out.slice(0, 5) : null;

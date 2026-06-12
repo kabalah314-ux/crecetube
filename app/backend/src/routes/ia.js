@@ -6,6 +6,7 @@ import { nowIso, uuid } from "../util.js";
 import { chat, resolveIaConfig, testConexion } from "../llm.js";
 import { getProfileRow } from "./profile.js";
 import { GENERADORES, SYSTEM_BASE, construirContexto, extraerJson } from "../prompts.js";
+import { evaluarRequisitos } from "../requisitos.js";
 
 const esFree = (modelo) => modelo === "openrouter/free" || modelo?.endsWith(":free");
 
@@ -30,6 +31,13 @@ router.post("/generar", h(async (req, res) => {
   const video = videoProjectId
     ? jparse(await db.get("SELECT data FROM videos WHERE id=? AND userId=?", [videoProjectId, req.userId]))
     : null;
+
+  // T022 — cadena del método: bloqueo duro si la etapa previa no está hecha.
+  const requisito = evaluarRequisitos(tipo, { video, profile });
+  if (requisito)
+    throw new ApiError("REQUISITO_FALTANTE", 422, requisito.mensaje, [
+      { falta: requisito.falta, pasoSlug: requisito.pasoSlug },
+    ]);
 
   // contexto extra para analisis_retencion: snapshots serializados (04 §4.6.9)
   if (tipo === "analisis_retencion" && video) {

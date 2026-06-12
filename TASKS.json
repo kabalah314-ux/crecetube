@@ -3,9 +3,9 @@
   "version": "1.0",
   "ultima_actualizacion": "2026-06-11",
   "resumen": {
-    "total": 20,
-    "pendientes": 0,
-    "en_progreso": 1,
+    "total": 22,
+    "pendientes": 1,
+    "en_progreso": 2,
     "completadas": 19,
     "bloqueadas": 0,
     "tokens_estimados_totales": 0
@@ -250,6 +250,30 @@
       "tokens_estimados": "alto",
       "complejidad": "alta",
       "resultado": "Generador romu_aprueba (veredicto aprobado/ajustar + puntuacion + max 6 puntos + resumen en tono Romuald) con guardias de 6000 chars + RomuAprueba.tsx montado en 8 etapas del wizard (mapa de campos por etapa; no en grabacion/edicion) con sello visual verde/ambar en tokens. Reviewer APROBADO sin arreglos, 78/78, 7/7 E2E. En produccion"
+    },
+    {
+      "id": "T021",
+      "titulo": "Onboarding adaptativo: rama con/sin canal y opciones 'no sé'",
+      "descripcion": "Rediseño del onboarding (petición usuario 2026-06-12): si tieneCanalYa=false las preguntas se adaptan — '¿Tienes un nombre pensado?' con opción 'Todavía no' (canalNombre nullable, saludo 'creador/a'), '¿Tienes clara la temática?' con opciones + campo libre + 'Aún no lo sé' (nicho nullable); sin pregunta multicanal en esa rama (gestionMulticanal=false). Rama con canal: nicho con 'Otro: escríbelo tú' + 'No lo tengo claro'; frecuencia con 'Aún no lo sé'. Cada 'no sé' queda como pendiente que la IA retoma. Al terminar sin nicho/nombre: DECISIÓN usuario = recomendación fuerte (banner dominante hacia /viabilidad, NO obligatorio). Adaptar perfil backend (campos nullables), saludos del Dashboard, y e2e/01.",
+      "fase": "desarrollo",
+      "prioridad": "alta",
+      "estado": "en_progreso",
+      "depende_de": null,
+      "tokens_estimados": "alto",
+      "complejidad": "alta",
+      "resultado": null
+    },
+    {
+      "id": "T022",
+      "titulo": "Cadena del método: requisitos por generador + bloqueo duro + sugerir nombres",
+      "descripcion": "Petición usuario 2026-06-12: cada generador IA declara requisitos según el orden del método Romu (nicho→nombre→temas→idea→investigación→título⇄miniatura→guion→descripción→publicación→sprint→análisis). Módulo único de requisitos en backend (fuente de verdad, validación 422 REQUISITO_FALTANTE con detalle) reflejado en frontend: DECISIÓN usuario = bloqueo DURO (AiBlock inhabilitado con explicación en tono Romu + enlace al paso que falta). Generador nuevo 'sugerir_nombres_canal' (DECISIÓN usuario: sí, requiere nicho; 5 nombres con porqué; en viabilidad y Configuración). La IA solo construye sobre cimientos puestos.",
+      "fase": "desarrollo",
+      "prioridad": "alta",
+      "estado": "pendiente",
+      "depende_de": "T021",
+      "tokens_estimados": "alto",
+      "complejidad": "alta",
+      "resultado": null
     }
   ]
 }

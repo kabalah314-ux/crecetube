@@ -7,11 +7,11 @@ export type Tema = "dark" | "light";
 
 export interface UserProfile {
   id: string;
-  canalNombre: string;
+  canalNombre: string | null; // null = todavía sin decidir (T021)
   canalUrl: string | null;
-  nicho: string;
+  nicho: string | null; // null = aún no lo sabe (T021)
   nivel: Nivel;
-  frecuenciaObjetivo: Frecuencia;
+  frecuenciaObjetivo: Frecuencia | null; // null = aún no lo sabe (T021)
   objetivoPrincipal: Objetivo;
   idioma: "es";
   tieneCanalYa: boolean;

@@ -18,10 +18,11 @@ export const maskProfile = (p) => ({
 });
 
 function validate(body, errors) {
-  assert422(typeof body.canalNombre === "string" && body.canalNombre.trim().length >= 1 && body.canalNombre.length <= 80, "canalNombre", "Obligatorio, 1-80 caracteres", errors);
-  assert422(typeof body.nicho === "string" && body.nicho.trim().length >= 1 && body.nicho.length <= 60, "nicho", "Obligatorio, 1-60 caracteres", errors);
+  // T021: canalNombre, nicho y frecuenciaObjetivo aceptan null ("todavía sin decidir").
+  assert422(body.canalNombre === null || (typeof body.canalNombre === "string" && body.canalNombre.trim().length >= 1 && body.canalNombre.length <= 80), "canalNombre", "Texto de 1-80 caracteres, o null", errors);
+  assert422(body.nicho === null || (typeof body.nicho === "string" && body.nicho.trim().length >= 1 && body.nicho.length <= 60), "nicho", "Texto de 1-60 caracteres, o null", errors);
   assert422(NIVELES.includes(body.nivel), "nivel", `Debe ser uno de: ${NIVELES.join(", ")}`, errors);
-  assert422(FRECUENCIAS.includes(body.frecuenciaObjetivo), "frecuenciaObjetivo", `Debe ser uno de: ${FRECUENCIAS.join(", ")}`, errors);
+  assert422(body.frecuenciaObjetivo === null || FRECUENCIAS.includes(body.frecuenciaObjetivo), "frecuenciaObjetivo", `Debe ser null o uno de: ${FRECUENCIAS.join(", ")}`, errors);
   assert422(OBJETIVOS.includes(body.objetivoPrincipal), "objetivoPrincipal", `Debe ser uno de: ${OBJETIVOS.join(", ")}`, errors);
   assert422(body.gestionMulticanal === undefined || typeof body.gestionMulticanal === "boolean", "gestionMulticanal", "Debe ser booleano", errors);
 }

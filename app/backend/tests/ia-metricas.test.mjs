@@ -20,6 +20,12 @@ test("módulo IA con transporte stub + métricas", async (t) => {
 
   await call("POST", "/api/profile", PERFIL_OK);
   const video = (await call("POST", "/api/videos", { tituloIdea: "Audio pro sin micro caro", nicho: "tech" })).body;
+  // T022: los generadores exigen la cadena del método — el fixture cumple los requisitos
+  await call("PATCH", `/api/videos/${video.id}`, {
+    palabrasClave: ["micro barato", "audio youtube", "sonido limpio"],
+    seoPreguntas: ["¿qué micrófono comprar por menos de 50€?"],
+    tituloFinal: "Audio pro sin micro caro",
+  });
 
   await t.test("generar sin clave → 503 AI_NOT_CONFIGURED", async () => {
     const r = await call("POST", "/api/ia/generar", { tipo: "titulo", videoProjectId: video.id });

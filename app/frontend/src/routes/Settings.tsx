@@ -5,6 +5,7 @@ import { Modal } from "../components/ui/Modal";
 import { es } from "../i18n/es";
 import { api, isApiError } from "../services/api";
 import { useStore } from "../store/useStore";
+import { AiBlock } from "../wizard/AiBlock";
 import type { Frecuencia, Nivel, Objetivo } from "../types";
 
 const MODELOS_FREE = [
@@ -22,9 +23,9 @@ export function Settings() {
   const toast = useStore((s) => s.toast);
 
   const [perfil, setPerfil] = useState({
-    canalNombre: profile.canalNombre,
+    canalNombre: profile.canalNombre ?? "",
     canalUrl: profile.canalUrl ?? "",
-    nicho: profile.nicho,
+    nicho: profile.nicho ?? "",
     nivel: profile.nivel,
     frecuenciaObjetivo: profile.frecuenciaObjetivo,
     objetivoPrincipal: profile.objetivoPrincipal,
@@ -66,7 +67,13 @@ export function Settings() {
 
   const guardarPerfil = async () => {
     try {
-      await patchProfile({ ...perfil, canalUrl: perfil.canalUrl || null });
+      // Vacío = "todavía sin decidir" → null (el backend acepta nulls desde T021)
+      await patchProfile({
+        ...perfil,
+        canalNombre: perfil.canalNombre.trim() || null,
+        nicho: perfil.nicho.trim() || null,
+        canalUrl: perfil.canalUrl || null,
+      });
       toast("success", "Perfil guardado");
     } catch (e) {
       toast("error", isApiError(e) ? e.message : "No se pudo guardar");
@@ -115,6 +122,53 @@ export function Settings() {
           <input className="input" data-testid="settings-canal-nombre" value={perfil.canalNombre} maxLength={80}
             onChange={(e) => setPerfil({ ...perfil, canalNombre: e.target.value })} />
         </div>
+        {/* T022: sugerir nombres con IA — solo si el perfil aún no tiene nombre pero sí nicho */}
+        {!profile.canalNombre && profile.nicho && (
+          <div data-testid="nombres-canal-block" style={{ marginBottom: "var(--space-4)" }}>
+            <AiBlock
+              tipo="sugerir_nombres_canal"
+              etiqueta={es.nombresCanal.etiqueta}
+              tip={es.nombresCanal.tip}
+              opciones={{ nicho: profile.nicho }}
+              render={(resultados, parseFallido) => {
+                if (parseFallido || !resultados.length) {
+                  return (
+                    <p style={{ color: "var(--text-secondary)", fontSize: "var(--text-sm)" }}>
+                      {es.nombresCanal.parseFallido}
+                    </p>
+                  );
+                }
+                return (
+                  <ul className="ai-cards">
+                    {(resultados as Array<{ nombre: string; porQue: string | null }>).map((r, i) => (
+                      <li key={i} className="ai-card" data-testid={`nombre-sugerido-${i}`}>
+                        <div>
+                          <strong>{r.nombre}</strong>
+                          {r.porQue && (
+                            <p style={{ margin: 0, fontSize: "var(--text-sm)", color: "var(--text-secondary)" }}>
+                              {r.porQue}
+                            </p>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          className="btn btn-secondary btn-sm"
+                          data-testid={`nombre-usar-${i}`}
+                          onClick={() => {
+                            setPerfil((s) => ({ ...s, canalNombre: r.nombre }));
+                            toast("info", es.nombresCanal.aplicadoLocal);
+                          }}
+                        >
+                          {es.nombresCanal.usar}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                );
+              }}
+            />
+          </div>
+        )}
         <div className="field">
           <label className="label">URL del canal</label>
           <input className="input" data-testid="settings-canal-url" value={perfil.canalUrl}
@@ -138,8 +192,9 @@ export function Settings() {
           </div>
           <div className="field">
             <label className="label">Frecuencia objetivo</label>
-            <select className="select" data-testid="settings-frecuencia" value={perfil.frecuenciaObjetivo}
-              onChange={(e) => setPerfil({ ...perfil, frecuenciaObjetivo: e.target.value as Frecuencia })}>
+            <select className="select" data-testid="settings-frecuencia" value={perfil.frecuenciaObjetivo ?? ""}
+              onChange={(e) => setPerfil({ ...perfil, frecuenciaObjetivo: (e.target.value || null) as Frecuencia | null })}>
+              <option value="">{es.onboarding.frecuenciaNoSe}</option>
               {Object.entries(es.frecuencias).map(([v, l]) => (
                 <option key={v} value={v}>{l}</option>
               ))}

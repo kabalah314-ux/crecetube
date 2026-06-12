@@ -39,14 +39,19 @@ export function Dashboard() {
     void api.get<VideoProject[]>("/api/videos").then(setVideos).catch(() => setVideos([]));
   }, []);
 
+  // Recomendación fuerte (T021): también si falta el nombre o el nicho del canal.
+  const perfilIncompleto = Boolean(
+    profile && (profile.tieneCanalYa === false || !profile.canalNombre || !profile.nicho)
+  );
+
   useEffect(() => {
-    if (profile?.tieneCanalYa === false) {
+    if (perfilIncompleto) {
       void api
         .get<ViabilidadData | null>("/api/viabilidad")
         .then((d) => setViabilidad(d ?? null))
         .catch(() => setViabilidad(null));
     }
-  }, [profile?.tieneCanalYa]);
+  }, [perfilIncompleto]);
 
   useEffect(() => {
     if (!profile) return;
@@ -74,9 +79,9 @@ export function Dashboard() {
     <div className="page">
       <div className="page-head">
         <div>
-          <h1>Hola, {profile?.canalNombre ?? "creador"}</h1>
+          <h1>Hola, {profile?.canalNombre || "creador"}</h1>
           <p>
-            {profile?.nicho} · objetivo: {profile ? es.objetivos[profile.objetivoPrincipal] : ""}
+            {profile?.nicho ? `${profile.nicho} · ` : ""}objetivo: {profile ? es.objetivos[profile.objetivoPrincipal] : ""}
           </p>
         </div>
         <Link to="/videos/nuevo" className="btn btn-primary" data-testid="dashboard-new-video">
@@ -84,7 +89,7 @@ export function Dashboard() {
         </Link>
       </div>
 
-      {profile?.tieneCanalYa === false && viabilidad !== undefined && !viabilidad?.completado && !viabilidad?.saltado && (
+      {perfilIncompleto && viabilidad !== undefined && !viabilidad?.completado && !viabilidad?.saltado && (
         <div
           className="card"
           data-testid="dashboard-card-viabilidad"
@@ -100,10 +105,14 @@ export function Dashboard() {
           <Target size={28} style={{ color: "var(--accent)", flexShrink: 0 }} />
           <div style={{ flex: 1, minWidth: 200 }}>
             <p style={{ fontWeight: 700, marginBottom: "var(--space-1)" }}>
-              {es.viabilidad.bannerDashboardTitulo}
+              {profile?.tieneCanalYa === false
+                ? es.viabilidad.bannerDashboardTitulo
+                : es.viabilidad.bannerDashboardTituloIncompleto}
             </p>
             <p style={{ color: "var(--text-secondary)", fontSize: "var(--text-sm)" }}>
-              {es.viabilidad.bannerDashboardDesc}
+              {profile?.tieneCanalYa === false
+                ? es.viabilidad.bannerDashboardDesc
+                : es.viabilidad.bannerDashboardDescIncompleto}
             </p>
           </div>
           <Link to="/viabilidad" className="btn btn-primary btn-sm">

@@ -1,77 +1,94 @@
-# Implementor Log — T016+T017 LOTE 1 (backend: multi-usuario + multi-canal + auth)
-**Fecha:** 2026-06-12
-**Agente:** IMPLEMENTOR
-**Resultado tests:** `npm test --workspace app/backend` → **73 pass / 0 fail** (9 archivos de test)
+# Implementor Log — LOTE A (T021: onboarding adaptativo)
 
-## Archivos creados
-- `app/backend/src/middleware/auth.js` — cookie JWT `ct_session` (HS256, jose, 30 días). Sin cookie válida o sin `SESSION_SECRET` → `req.userId = "local"` (nunca 401).
-- `app/backend/src/routes/auth.js` — `POST /api/auth/registro` (scrypt salt:hash, 422/409), `POST /api/auth/login` (timingSafeEqual, 401), `POST /api/auth/google` (jose createRemoteJWKSet contra certs de Google, issuer accounts.google.com, audience GOOGLE_CLIENT_ID, upsert por googleSub→email), `POST /api/auth/logout`, `GET /api/auth/me` (modo `local`|`cuenta`).
-- `app/backend/src/routes/canales.js` — CRUD `/api/canales`. DELETE 422 `CHANNEL_NOT_DELETABLE` si es por defecto o tiene vídeos. PATCH acepta `nombre` y `esPorDefecto:true` (mueve el default).
-- `app/backend/tests/auth.test.mjs` — registro→me→logout→login, password mala 401, duplicado 409, aislamiento de datos local/cuenta, cookie manipulada → modo local, google sin client id → 503.
-- `app/backend/tests/canales.test.mjs` — CRUD + default + filtro `?canalId=` + default en POST /videos + `gestionMulticanal` en perfil.
+**Fecha:** 2026-06-12
+**Estado:** Implementación completa. tsc OK · build OK · tests backend 78/78 OK.
 
 ## Archivos modificados
-- `app/backend/src/db.js` — **4 migraciones versionadas** (meta `schemaVersion`): v1 tabla `users` (+seed usuario `local`) + columna `userId TEXT NOT NULL DEFAULT 'local'` en profile/videos/deleted_videos/templates/ai_interactions/metric_snapshots; v2 tabla `channels` + canal por defecto del usuario local (nombre = `canalNombre` del perfil o "Mi canal") + `videos.canalId` + adopción (columna Y JSON interno del vídeo); v3 `course_progress` recreada con PK `(userId, asignaturaId)`; v4 `viabilidad` recreada con PK `(userId, id)`. Helpers exportados: `ensureDefaultChannel`, `adoptVideosSinCanal`. `addColumn()` tolera "duplicate column" (reanudación segura).
-- `app/backend/src/config.js` — `SESSION_SECRET`, `GOOGLE_CLIENT_ID`.
-- `app/backend/src/server.js` — `cookieParser()` + `authMiddleware` ANTES de las rutas; monta `/api/auth` y `/api/canales`.
-- `app/backend/src/routes/profile.js` — escopado por userId (adiós `LIMIT 1`); `getProfileRow(db, userId)`; campo `gestionMulticanal` (default false, validado booleano-opcional).
-- `app/backend/src/routes/videos.js` — todo escopado; `GET /` acepta `?canalId=`; `POST /` acepta `canalId` (default: canal por defecto, 422 si es ajeno); `PATCH /:id` permite mover de canal validando propiedad; soft-delete/restaurar con userId.
-- `app/backend/src/routes/curso.js`, `metricas.js`, `ia.js` — escopados por `req.userId` en todas las queries e inserts.
-- `app/backend/src/routes/plantillas.js` — visibles: `esPrecargada=1 OR userId=?` (precargadas globales); propias con userId.
-- `app/backend/src/routes/viabilidad.js` — singleton POR usuario (PK compuesta).
-- `app/backend/src/routes/system.js` — export/import escopados; export incluye `canales`; import los restaura y `adoptVideosSinCanal` cubre backups v1 antiguos sin canales. `EXPORT_VERSION` sigue en 1 (formato compatible).
-- `app/backend/src/videoDefaults.js` — `canalId: null` en el shape del vídeo.
-- `app/backend/tests/helpers.mjs` — fija `SESSION_SECRET` de tests (las llamadas SIN cookie siguen siendo modo local: intención de los tests intacta); `call()` acepta `{ cookie }` y devuelve `setCookie`.
-- `app/backend/package.json` — dependencias nuevas: `jose@^6.2.3`, `cookie-parser@^1.4.7` (las dos autorizadas, ninguna más). `package-lock.json` raíz actualizado.
-- `.env.example` — `SESSION_SECRET=` y `GOOGLE_CLIENT_ID=` comentados (vacíos = modo local; init.sh no los exige al estar comentados).
+
+| Archivo | Cambio |
+|---------|--------|
+| `app/frontend/src/types.ts` | `canalNombre`, `nicho` → `string \| null`; `frecuenciaObjetivo` → `Frecuencia \| null` |
+| `app/frontend/src/i18n/es.ts` | `tuCanalTituloNuevo` → "¿Tienes un nombre pensado para tu canal?"; nuevos: `nombreTodaviaNo`, `nichoTituloNuevo` ("¿Tienes clara la temática?"), `nichoNoSe`, `frecuenciaNoSe`, `sinDecidir`; `bienvenidaToast` acepta `string \| null` (fallback "creador"); `viabilidad.bannerDashboardTituloIncompleto` + `bannerDashboardDescIncompleto` |
+| `app/frontend/src/routes/Onboarding.tsx` | Bifurcación completa (ver abajo) |
+| `app/frontend/src/routes/Dashboard.tsx` | `perfilIncompleto = tieneCanalYa===false \|\| !canalNombre \|\| !nicho`; useEffect de viabilidad y condición del banner usan esa variable; banner con texto variante según rama; saludo `canalNombre \|\| "creador"`; subtítulo nicho null-safe (sin "·" huérfano) |
+| `app/frontend/src/routes/Settings.tsx` | Inputs `?? ""` (canalNombre/nicho); `guardarPerfil()` normaliza vacío→null; select frecuencia con `<option value="">Aún no lo sé</option>` ("" ↔ null) |
+| `app/frontend/src/routes/TemplateDetail.tsx` | **Fix extra para tsc** (no estaba en el inventario del explorer): `profile.canalNombre` se usaba como `string`; ahora `profile?.canalNombre ? ... : v.valorPorDefecto` |
+| `app/backend/src/routes/profile.js` | `validate()`: canalNombre/nicho aceptan `null` o string 1-80/1-60; frecuenciaObjetivo acepta `null` o valor de FRECUENCIAS. Aplica a POST y PATCH |
+| `app/backend/src/prompts.js` | Solo `construirContexto()`: `canalNombre ?? "(sin especificar)"`, `nicho ?? "(sin especificar)"` |
+| `e2e/01-onboarding.spec.ts` | Nuevo describe "rama sin canal" (ver abajo). El test existente NO cambió de lógica |
+
+## Detalle Onboarding.tsx
+
+- `pasosActivos(draft)`: `[0,1,3..9]` si `tieneCanalYa===false`, `[0..9]` en el resto (incl. `null` para que la barra no salte antes del paso 1). Helpers `siguientePasoActivo`/`anteriorPasoActivo` a nivel de módulo.
+- `next()` y botón Atrás usan los helpers; la barra y el contador son dinámicos: `pasoVisual = indexOf(paso)` sobre activos, `totalVisibles = activos.length - 1` (el paso 0 no cuenta). **Rama con canal: "Paso X de 9". Rama sin canal: "Paso X de 8".**
+- Paso 3: título ya condicional (`tuCanalTituloNuevo`); input `value={draft.canalNombre ?? ""}`; botón "Todavía no" (`onboarding-nombre-todavia-no`, solo rama sin canal) → `canalNombre=null` y avanza. `valida(3)`: nombre obligatorio solo si `tieneCanalYa`.
+- Paso 4: título adaptado en rama sin canal; chip "Aún no lo sé" (`onboarding-nicho-no-se`) → `nicho=null`, `valida(4)` lo acepta. El campo libre ya existía (input con placeholder), no se duplicó — la tarea decía "si no lo tiene ya".
+- Paso 6: Card extra "Aún no lo sé" (`onboarding-frequency-no-se`). **Decisión menor:** en el Draft uso centinela `"no_se"` (no `null`) para distinguir "eligió no sé" de "no eligió nada" (null sigue bloqueando en `valida(6)`); `crear()` lo convierte a `null`.
+- `crear()`: `(draft.canalNombre ?? "").trim() || null`, ídem nicho; `gestionMulticanal: false` automático en rama sin canal; frecuencia `"no_se"` → `null`.
+- Resumen (paso 9): la fila multicanal se OCULTA en rama sin canal (su botón Editar saltaría a un paso inexistente); nombre/nicho/frecuencia muestran "Todavía sin decidir" en vez de null.
+
+## Detalle e2e
+
+- El nuevo describe va **antes** del existente y limpia en `afterEach` con `POST /api/import {replaceAll:true, data:{version:1}}` (vía proxy Vite). Motivo: los 3 specs comparten BD y usuario "local" en orden (01 con-canal crea el perfil que usan 02/03); el afterEach garantiza limpieza incluso si el test falla.
+- Flujo verificado: "Todavía no" canal → multicanal ausente (`toHaveCount(0)`) → nombre "Todavía no" → nicho "Aún no lo sé" → frecuencia "Aún no lo sé" → dashboard con heading `/Hola, creador/` y `dashboard-card-viabilidad` visible.
 
 ## Decisiones menores
-1. El SCHEMA base queda en forma v0: BD nueva y BD existente pasan por la MISMA lista de migraciones (un solo camino de upgrade).
-2. `viabilidad` no estaba en el explorer-log (es posterior, T018) pero es dato de usuario: escopada igualmente. Código real > explorer-log.
-3. El campo real del perfil es `canalNombre` (el encargo decía "nombreCanal"): usado el real.
-4. Auth endpoints devuelven 503 `AUTH_NOT_CONFIGURED` si falta `SESSION_SECRET`/`GOOGLE_CLIENT_ID`; el resto de la app jamás exige sesión.
-5. `GET /api/auth/me` con cookie válida de un usuario ya inexistente responde modo local (sin 500).
-6. Email se normaliza a minúsculas en registro/login; duplicado → 409 `EMAIL_ALREADY_EXISTS` (patrón 409 del repo).
-7. El canal por defecto de una cuenta nueva se llama "Mi canal" (al registrarse aún no hay perfil); el lote 2 puede renombrarlo en onboarding vía `PATCH /api/canales/:id`.
 
-## Dudas
-- Ninguna bloqueante.
+1. Testid del chip de nicho: `onboarding-nicho-no-se` (literal del encargo del orquestador; el explorer sugería `onboarding-niche-no-se`). Frecuencia: `onboarding-frequency-no-se`.
+2. Banner Dashboard: variante "incompleto" cuando `tieneCanalYa !== false` (tiene canal pero falta nombre/nicho); texto original cuando `tieneCanalYa === false`. CTA sin cambios.
+3. Tests backend: NO necesitaron ajuste — el caso `canalNombre: ""` sigue dando 422 (vacío ≠ null), que respeta su intención.
+4. Saludo Dashboard: cambié `?? "creador"` por `|| "creador"` para cubrir perfiles antiguos con `canalNombre: ""`.
+
+## Verificación (rápida, según rol)
+
+- `npx tsc --noEmit` (frontend): limpio.
+- `npm run build` (frontend): OK (warning preexistente de chunk >500 kB, no relacionado).
+- `npm test --workspace app/backend`: 78/78 pass.
+- Suite E2E NO ejecutada (corresponde al reviewer).
+
+Sin DUDAs pendientes.
 
 ---
 
-# Implementor Log — T016+T017 LOTE 2 (frontend: acceso + sidebar + onboarding multicanal + vista Proyectos)
+# LOTE B (T022: cadena del método — requisitos por generador + bloqueo duro + sugerir nombres)
+
 **Fecha:** 2026-06-12
-**Agente:** IMPLEMENTOR (continuación: un agente anterior dejó el lote al ~40%)
-**Verificación:** `npx tsc --noEmit` limpio · `npm run build` (frontend) OK (37s; warning de chunk >500 kB ya preexistente) · `npm test --workspace app/backend` → 73 pass / 0 fail.
+**Estado:** Implementación completa. tests backend 94/94 OK (eran 78) · tsc limpio · build OK.
 
-## Encontrado ya hecho (agente anterior) — NO rehecho
-- `app/frontend/src/routes/Acceso.tsx` — página completa (login, registro, GIS bajo demanda, testids).
-- `app/frontend/src/services/api.ts` — `credentials: "include"`.
-- `app/frontend/src/store/useStore.ts` — `auth`, `authConfig`, `loadAuth()` (me + config en paralelo, fallback a modo local), `logout()` (recarga con `window.location.assign("/")`).
-- `app/frontend/src/types.ts` — `AuthUser`, `AuthConfig`, `Channel`, `gestionMulticanal` en `UserProfile`.
-- `app/frontend/src/i18n/es.ts` — bloques `acceso`, `proyectos`, strings multicanal del onboarding, `nav.proyectos`.
-- Backend: `GET /api/auth/config` YA existía en `app/backend/src/routes/auth.js` (líneas 44-49) con la forma exacta pedida. No tocado.
+## Archivos creados
 
-## Archivos modificados (este lote)
-- `app/frontend/src/App.tsx` — ruta `/acceso` registrada FUERA de `RequireProfile` (antes del grupo con Layout).
-- `app/frontend/src/components/Layout.tsx` — `loadAuth()` al montar si `auth === null`; en `sidebar-foot`: modo `cuenta` → nombre/email (`sidebar-cuenta`) + botón Salir (`sidebar-logout`); modo `local` + `authConfigurada` → NavLink discreto a `/acceso` (`sidebar-login`); modo local sin auth → sidebar idéntico a antes. Etiqueta del nav de vídeos pasa a `es.nav.proyectos` si `profile.gestionMulticanal`. NAV condicional de Viabilidad intacto.
-- `app/frontend/src/routes/Onboarding.tsx` — paso 2 nuevo "¿Gestionas un canal o varios?" (radio-cards, testids `onboarding-multichannel-single`/`-multi`); pasos 2..8 renumerados a 3..9 (valida, pasos, resumen con fila "Canales", progreso "Paso X de 9", submit); `gestionMulticanal: Boolean(...)` en `createProfile`.
-- `app/frontend/src/routes/VideosList.tsx` — dividido en `VideosList` (router), `ProyectosGrid` (rejilla de canales: GET /api/canales + conteo de vídeos por canal vía GET /api/videos; `proyectos-grid`, `proyecto-card-{id}`, `proyectos-add` con `window.prompt` → POST /api/canales) y `ListaVideos` (lista de siempre, ahora con `?canalId=` en el fetch, título = nombre del canal, enlace de volver `videos-volver-proyectos`, "Nuevo vídeo" propaga canalId). Con `gestionMulticanal=false` el comportamiento es idéntico al anterior.
-- `app/frontend/src/routes/NewVideo.tsx` — lee `?canalId=` y lo incluye en el POST /api/videos; el enlace de volver conserva el canal.
-- `app/frontend/src/routes/Acceso.tsx` — aviso de modo local ahora también proactivo (`authConfig.authConfigurada === false`), no solo tras un intento fallido.
-- `app/frontend/src/i18n/es.ts` — `bienvenidaSub` "6 preguntas" → "7 preguntas"; `proyectos.volver`, `proyectos.errorCrear`.
-- `app/frontend/src/styles/onboarding.css` — `.acceso-grid` (la clase la usaba Acceso.tsx pero NO existía).
-- `app/frontend/src/styles/components.css` — `.proyecto-card` (+hover, meta).
-- `app/frontend/src/styles/layout.css` — `.sidebar-cuenta` (no clicable, ellipsis).
-- `e2e/01-onboarding.spec.ts` — paso multicanal añadido tras "¿ya tienes canal?", comentarios renumerados (10 pasos). NO ejecutado (orden expresa).
+| Archivo | Contenido |
+|---------|-----------|
+| `app/backend/src/requisitos.js` | Única fuente de verdad: mapa generador→requisitos + `evaluarRequisitos(tipo, { video, profile })` → `null \| { falta, pasoSlug, mensaje }`. Mensajes en tono Romu con consecuencia. 11 generadores con requisitos activos; `romu_aprueba` y `evaluacion_nicho` exentos explícitos |
+| `app/backend/tests/requisitos.test.mjs` | 2 tests / 14 subtests: unidad de cada generador (bloqueado+desbloqueado), HTTP 422 REQUISITO_FALTANTE con `details[0].{falta,pasoSlug}` (titulo, descripcion×2, temas_canal, sugerir_nombres_canal), generador de nombres con stub (feliz: dedupe/truncado/máx 5 + historial; malformado: degradación) |
+
+## Archivos modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `app/backend/src/routes/ia.js` | Import `evaluarRequisitos`; chequeo tras cargar el vídeo y ANTES de los bloques de contexto extra → `throw new ApiError("REQUISITO_FALTANTE", 422, mensaje, [{falta, pasoSlug}])`. `ApiError` ya soporta `details` (4º arg) y `errorHandler` ya lo serializa: sin cambios en errors.js |
+| `app/backend/src/prompts.js` | Generador NUEVO `sugerir_nombres_canal` (patrón exacto: maxTokens 600, temp 0.9, salida `{"nombres":[{"nombre","porQue"}]}`, 5 ítems, normalizador con dedupe/trim/truncado nombre≤80 porQue≤200). Usa `extraerCorpusIdeacion(2000)` como contexto del método |
+| `app/backend/tests/ia-metricas.test.mjs` | El fixture del vídeo ahora cumple la cadena (PATCH con 3 palabrasClave + 1 seoPregunta + tituloFinal) para que titulo/seo_preguntas/hook/hashtags sigan en 200 |
+| `app/frontend/src/wizard/AiBlock.tsx` | Estado `bloqueado` al capturar 422 `REQUISITO_FALTANTE`; render candado (`Lock`) + mensaje del backend + enlace "Ir al paso →" (`data-testid="aiblock-bloqueado"`, enlace `aiblock-bloqueado-ir`); botón Generar deshabilitado en ese estado. Helper `enlacePaso(pasoSlug, videoProjectId)`: configuracion→`/configuracion`, viabilidad→`/viabilidad`, resto→`/videos/{id}/wizard/{slug}` (excluye el centinela `videoProjectId="viabilidad"`) |
+| `app/frontend/src/routes/Viabilidad.tsx` | Card nuevo en paso 5 tras la evaluación de nicho: AiBlock `sugerir_nombres_canal` (opciones `{nicho: subNicho||perfil.nicho, ideaCanal, pvu}`); tarjetas con "Usar este" → `patchProfile({canalNombre})` + toast. Testids `nombres-canal-block`, `nombre-sugerido-{i}`, `nombre-usar-{i}` |
+| `app/frontend/src/routes/Settings.tsx` | Bajo el campo "Nombre del canal", visible SOLO si `!profile.canalNombre && profile.nicho`: mismo AiBlock; "Usar este" aplica al estado local del formulario (`setPerfil`) + toast "Recuerda guardar" (el guardado usa el botón existente, según explorer-log) |
+| `app/frontend/src/i18n/es.ts` | `wizard.bloqueadoTitulo`, `wizard.bloqueadoIrAlPaso`; sección nueva `nombresCanal` (etiqueta, tip, usar, aplicadoToast, aplicadoLocal, errorAplicar, parseFallido) |
+| `app/frontend/src/styles/wizard.css` | `.ai-bloqueado` + icono/título/mensaje/enlace, con tokens (`--accent-gold`, `--bg-elevated`, `--border-subtle`…), junto al resto de estilos del bloque IA |
 
 ## Decisiones menores
-1. Pregunta multicanal incondicional (también si `tieneCanalYa=false`): el encargo no la condicionaba.
-2. Conteo de vídeos por canal calculado en cliente (GET /api/videos completo) porque GET /api/canales no devuelve conteos; evita tocar backend fuera del encargo.
-3. Borradores de onboarding antiguos (paso > 2 guardado) saltarían la pregunta nueva → `gestionMulticanal` queda `false` (default seguro, igual que hoy).
-4. "Añadir canal" usa `window.prompt` (string `proyectos.promptNombre` ya lo había dejado preparado el agente anterior); sin modal nuevo.
-5. El canal por defecto NO se renombra en onboarding (decisión 7 del lote 1 lo dejaba como opcional); fuera del encargo delegado.
 
-## Para el reviewer
-- Verificación en navegador pendiente (rol implementor: solo tsc/build/tests). Flujos a cubrir: /acceso (con y sin SESSION_SECRET), sidebar en los 3 modos, onboarding 10 pasos, vista Proyectos con gestionMulticanal=true.
-- Durante la verificación hubo UN crash transitorio de `vite build` (error nativo de Node, código 2147483651); el reintento inmediato compiló bien dos veces. No parece relacionado con el código.
+1. **Bloqueo reactivo, no proactivo:** hacerlo proactivo exigiría duplicar el mapa de requisitos en el frontend (el explorer lo prohíbe: "Frontend NO duplica el mapa"). El orquestador lo permitía ("si el error llega al pulsar, vale").
+2. `services/api.ts` NO necesitó cambios: el `ApiError` del cliente ya expone `details` (línea 7 y parser línea 35). Verificado, no tocado.
+3. No añadí prop `videoId` a AiBlock: todos los callers del wizard ya pasan `videoProjectId={video.id}`; el enlace se construye con esa prop. El centinela `"viabilidad"` que usa Viabilidad.tsx queda excluido de los enlaces al wizard.
+4. El botón queda deshabilitado mientras dura el estado bloqueado (directiva literal). Si el generador convive en la misma página con el campo que falta (p. ej. `seo_preguntas` en investigación), el usuario debe salir/volver al paso para reintentar. Anotado por si el reviewer quiere relajarlo.
+5. El chequeo de requisitos va DESPUÉS de `resolveIaConfig` (sin clave sigue ganando el 503 `AI_NOT_CONFIGURED`, como esperan los tests existentes) y ANTES de los bloques de contexto extra (no se hace trabajo de BD inútil).
+6. En el HTTP test de `temas_canal`/`sugerir_nombres_canal` bloqueados se pone `nicho: null` vía PATCH (nullable desde el lote A) y se restaura después.
+
+## Verificación (rápida, según rol)
+
+- `npm test --workspace app/backend`: **94/94 pass** (78 previos + 16 nuevos).
+- `npx tsc --noEmit` (frontend): limpio.
+- `npm run build` (frontend): OK (warning preexistente de chunk >500 kB).
+- E2E/Playwright NO ejecutados (corresponde al reviewer). Hay un preview server corriendo por si el reviewer quiere verificar visualmente el estado `aiblock-bloqueado` y los bloques de nombres.
+
+Sin DUDAs pendientes en el LOTE B.

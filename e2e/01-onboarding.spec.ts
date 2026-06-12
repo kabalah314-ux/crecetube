@@ -1,7 +1,71 @@
-// Spec 01 — Onboarding completo (02 §2.2 + pregunta multicanal de T017)
+// Spec 01 — Onboarding completo (02 §2.2 + multicanal de T017 + bifurcación de T021)
 // Verifica que sin perfil cualquier ruta redirige a /onboarding,
 // y que completar los 10 pasos crea el perfil y aterriza en /dashboard.
 import { test, expect } from "@playwright/test";
+
+// Rama sin canal (T021): se salta el paso multicanal y acepta "Todavía no" / "Aún no lo sé".
+// Va PRIMERO y limpia la BD al terminar (import replaceAll) para que el test de la rama
+// con canal parta de cero y deje el perfil que esperan los specs 02 y 03.
+test.describe("Onboarding — rama sin canal", () => {
+  test.afterEach(async ({ request }) => {
+    // Reset del usuario "local": borra perfil/vídeos/canales; las plantillas precargadas se conservan
+    const r = await request.post("/api/import", { data: { replaceAll: true, data: { version: 1 } } });
+    expect(r.ok()).toBeTruthy();
+  });
+
+  test("salta multicanal, acepta 'no lo sé' y saluda como creador genérico", async ({ page }) => {
+    await page.goto("/");
+    await expect(page).toHaveURL(/\/onboarding/);
+
+    // Paso 0 — Bienvenida
+    await page.getByTestId("onboarding-start").click();
+
+    // Paso 1 — "Todavía no" tengo canal
+    await page.getByTestId("onboarding-has-channel-no").click();
+    await page.getByTestId("onboarding-next").click();
+
+    // El paso multicanal NO aparece: se aterriza directamente en la pregunta del nombre
+    await expect(page.getByTestId("onboarding-channel-name")).toBeVisible();
+    await expect(page.getByTestId("onboarding-multichannel-single")).toHaveCount(0);
+
+    // Nombre — "Todavía no" (canalNombre = null) avanza directamente
+    await page.getByTestId("onboarding-nombre-todavia-no").click();
+
+    // Nicho — "Aún no lo sé" (nicho = null)
+    await expect(page.getByTestId("onboarding-niche")).toBeVisible();
+    await page.getByTestId("onboarding-nicho-no-se").click();
+    await page.getByTestId("onboarding-next").click();
+
+    // Nivel
+    await page.getByTestId("onboarding-level-principiante").click();
+    await page.getByTestId("onboarding-next").click();
+
+    // Frecuencia — "Aún no lo sé" (frecuenciaObjetivo = null)
+    await page.getByTestId("onboarding-frequency-no-se").click();
+    await page.getByTestId("onboarding-next").click();
+
+    // Objetivo
+    await page.getByTestId("onboarding-goal-suscriptores").click();
+    await page.getByTestId("onboarding-next").click();
+
+    // IA — saltar
+    await page.getByTestId("onboarding-ai-skip").click();
+
+    // Resumen — crear perfil
+    await page.getByTestId("onboarding-submit").click();
+    await expect(page).toHaveURL(/\/dashboard/, { timeout: 15_000 });
+
+    // Cerrar el tutorial de OpenRouter si aparece (perfil sin clave IA)
+    const tutorialClose = page.getByTestId("openrouter-tutorial-close");
+    if (await tutorialClose.isVisible()) {
+      await tutorialClose.click();
+    }
+
+    // Saludo genérico (canalNombre null) y banner de viabilidad visible
+    await expect(page.getByRole("heading", { name: /Hola, creador/ })).toBeVisible();
+    await expect(page.getByTestId("dashboard-card-viabilidad")).toBeVisible();
+  });
+});
 
 test.describe("Onboarding — 10 pasos hasta el dashboard", () => {
   test("redirige a /onboarding cuando no hay perfil y completa el flujo", async ({ page }) => {
