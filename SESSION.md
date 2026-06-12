@@ -2,32 +2,27 @@
 
 Proyecto: CRECETUBE Assistant
 Última sesión: 2026-06-12
-Estado general: **21/22 tareas completadas** — v1 + capa Romuald + Fase 2 + curso 63/169 (oculta vacías) + tutorial OpenRouter + viabilidad + multi-usuario con login-first en producción (Google/email) + multi-canal Proyectos + recomendador IA de temas + sello Romu aprueba + onboarding adaptativo (ramas con/sin canal, "no sé" en todo) + cadena del método (11 generadores con requisitos y bloqueo duro en tono Romu + sugeridor de nombres). TODO EN PRODUCCIÓN (crecetube.vercel.app). Solo queda T012 en curso (más tandas de vídeos del usuario).
+Estado general: **22/25 tareas completadas** — TODO EN PRODUCCIÓN (crecetube.vercel.app): v1 + capa Romuald + curso 63/169 (oculta vacías) + tutorial OpenRouter + viabilidad + login-first multi-usuario (Google/email) + multi-canal Proyectos + recomendador de temas + sello Romu aprueba + onboarding adaptativo + cadena del método (bloqueo duro) + **modo demo** ("Probar la demo" en /acceso → cuenta efímera "Recetas en 15" precargada; purga a 7 días).
 
 ---
 
 ## Tarea actual
-T012 `en_progreso` — el usuario aporta vídeos de YouTube y el agente redacta. **Tandas 1+2 completadas: 63/169 asignaturas** (seed v4 en producción). Regla: en conflicto gana el vídeo MÁS NUEVO. Pipeline: `node scripts/extraer-transcripciones.mjs <ids>` → agente `redactor` por lote (fragmentos G*.json) → `scripts/fusionar-contenido-curso.mjs` (sube version; BD local y Turso recargan solas) → control de calidad (¡vigilar ortografía: G7 llegó sin tildes y hubo que corregirlo!). Quedan 106 pendientes (`_pendientes.md`); secciones enteras sin material: s7 sorteos, s8 tráiler, s15 comunidad, s16 crossplatform, s18 email. OJO: el endpoint de subtítulos de YouTube aplica rate limit tras ~20 vídeos seguidos — el extractor reintenta con backoff y si persiste hay que esperar ~35 min.
+**T024 `en_progreso` — IA por campo ("Rellenar con IA" en todo campo de texto)**: la EXPLORACIÓN ESTÁ HECHA (explorer fable, plan completo en `progress/explorer-log.md`). Arquitectura decidida: generador genérico `rellenar_campo` + registro backend `campos.js` (espejo de requisitos.js; 13 campos huérfanos del wizard + 8 de viabilidad; reglas Romuald viajan desde consejos.ts en opciones.reglaCampo) + componente único `FieldIA.tsx` (botón Sparkles + pestañita con 3 estados: bloqueado-422-con-enlace / sugerencias Usar-Añadir / configura-IA); listas chip a chip sin machacar; timestamps deterministas sin IA; StepIdea reutiliza temas_canal con tarjetas "Usar esta". **PLAN EN 4 LOTES**: A backend (campos.js+prompts+ia.js) ∥ B frontend (FieldIA+camposIA.ts) con contrato congelado `{"sugerencias":[...]}`; luego C integración (~17 inserciones en 5-6 Step*.tsx) ∥ D = T025. Implementors en fable; reviewer opus al final de C+D.
+- T025 `pendiente` (depende T024, es el lote D): pantalla de propuesta DENTRO de /viabilidad (GET null y no saltado → intro Empezar/Saltar) + redirect desde Onboarding.crear() si tieneCanalYa=false + Modal al crear canal en VideosList; campos de viabilidad con FieldIA. DECISIÓN tomada: la viabilidad sigue siendo singleton por usuario (per-canal = refinamiento futuro).
+- T012 `en_progreso`: curso 63/169; quedan 106 (lista en `app/guia_maestra/contenido_fragmentos/_pendientes.md`); pipeline: `node scripts/extraer-transcripciones.mjs <ids>` → agente `redactor` → `scripts/fusionar-contenido-curso.mjs` → vigilar ortografía (G7 llegó sin tildes). Secciones enteras sin material: s2, s7, s8, s15, s16, s18. OJO rate limit de YouTube tras ~20 vídeos (esperar ~35 min).
 
-## Últimas decisiones tomadas
-- Capa de consejos Romuald (T008–T011) completada, verificada con QA visual en navegador y commiteada (d449e71, f7a22c3).
-- T013 PDF de plantillas: pdfkit, sanitizado WinAnsi (transcribe → ≤ ✓, omite emojis), botón .pdf en TemplateDetail.
-- T014 E2E Playwright: 3 specs (onboarding, wizard, capa Romuald) en puertos propios 8002/5174 con BD temporal; `npm run test:e2e` (NO incluido en `npm test`). Proxy de vite parametrizado con BACKEND_PORT (defecto 8001).
-- Vercel NO se despliega solo con el push a GitHub: hay que lanzar `npx vercel deploy --prod`.
-- `improvements/002`: patrón recurrente de comillas tipográficas alteradas al escribir código (2 apariciones: T009 y T013).
+## Últimas decisiones
+- Modelos agentes: implementor=fable, reviewer=opus, explorer=sonnet (subir a fable con model-override en análisis de diseño pesados, hecho en T024), redactor=sonnet. El usuario quiere el razonamiento pesado en fable.
+- Login-first en producción (RequireSesion): anónimos → /acceso; modo local solo sin auth configurada (PC).
+- El onboarding sale UNA vez por cuenta (verificado en producción con la cuenta QA).
+- Nota del explorer T024: dijo "no existe Playwright" — ES FALSO (e2e/ + playwright.config.ts existen, 8 casos); el reviewer de T024 debe correr la suite completa.
 
 ## Próximo paso
-Acciones SOLO del usuario:
-1. **Crear su cuenta en crecetube.vercel.app/acceso y pegar su clave OpenRouter en Configuración** (el agente no introduce claves) → estrenar los 11 generadores IA (9 del wizard + Ideas + sello Romu) en vivo con el agente.
-2. **T012 tandas siguientes**: más vídeos de YouTube para las 106 asignaturas pendientes (lista en `app/guia_maestra/contenido_fragmentos/_pendientes.md`; el curso las oculta hasta que se rellenen). Secciones enteras sin cubrir: s2 (Studio), s7 (sorteos), s8 (tráiler), s15 (comunidad), s16 (crossplatform), s18 (email).
-3. Opcional: borrar el usuario QA de producción (qa.smoke@crecetube.test) y "Publicar app" en Google Auth Platform cuando quiera abrir el login con Google a todo el mundo (hoy: usuarios de prueba).
-
-Credenciales/config ya en producción: Turso, SESSION_SECRET, GOOGLE_CLIENT_ID (orígenes localhost:5173 y crecetube.vercel.app).
-
-Estado del deploy: **100% operativa** (crecetube.vercel.app, 2026-06-11). Backend con Turso conectado — `/api/plantillas` sirve las 25 plantillas con seeds, `/api/videos` operativo. BD fresh (sin usuarios aún, se crean en onboarding).
+1. **Próximo hilo**: implementar T024 lotes A y B en paralelo (fable) → C → D(T025) → reviewer → deploy. Todo el diseño está en progress/explorer-log.md.
+2. **Usuario**: crear su cuenta en crecetube.vercel.app/acceso + pegar su clave OpenRouter en Configuración (el agente NO introduce claves) → estrenar los 12 generadores. Más vídeos para T012 cuando pueda. Opcional: borrar usuario QA (qa.smoke@crecetube.test), "Publicar app" en Google Auth Platform (hoy en modo Prueba con su email como tester).
 
 ## Bloqueadores activos
-Ninguno en el código. La API de producción espera credenciales Turso (acción del usuario, no bloquea el trabajo local).
+Ninguno. Producción operativa (Turso + SESSION_SECRET + GOOGLE_CLIENT_ID en Vercel; client ID documentado en T016).
 
 ---
 

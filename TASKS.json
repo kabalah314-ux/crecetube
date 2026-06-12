@@ -5,8 +5,8 @@
   "resumen": {
     "total": 25,
     "pendientes": 1,
-    "en_progreso": 3,
-    "completadas": 21,
+    "en_progreso": 2,
+    "completadas": 22,
     "bloqueadas": 0,
     "tokens_estimados_totales": 0
   },
@@ -281,11 +281,11 @@
       "descripcion": "Petición usuario 2026-06-12: botón 'Probar la demo' en /acceso que crea una cuenta demo efímera por visitante (sin onboarding) con datos realistas que muestran la app en pleno uso: perfil completo con nicho, gestionMulticanal con 2 canales, ~6 vídeos en etapas variadas (publicado con snapshot de métricas, sprint día 3, guion a medias, idea, evergreen 30+ días, miniatura), checklists avanzadas, progreso del curso y notas. Distintivo DEMO en el sidebar. users.esDemo + limpieza al arrancar de demos de más de 7 días. Visible solo con auth configurada (producción).",
       "fase": "desarrollo",
       "prioridad": "alta",
-      "estado": "en_progreso",
+      "estado": "completada",
       "depende_de": "T016",
       "tokens_estimados": "alto",
       "complejidad": "alta",
-      "resultado": null
+      "resultado": "POST /api/auth/demo: cuenta efimera por visitante con seed 'Recetas en 15' (2 canales, 6 videos en etapas variadas con snapshots progresivos, 7 clases de curso, viabilidad hecha), boton Probar la demo en /acceso, badge DEMO, migracion v5 + purga a 7 dias. Reviewer APROBADO sin arreglos (104/104, 8/8 E2E). Verificado en produccion: 201, 6 videos, 2 canales"
     },
     {
       "id": "T024",
